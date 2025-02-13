@@ -1,6 +1,6 @@
 // app/register/page.js
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './register.css';
 
 export default function Register() {
@@ -9,11 +9,21 @@ export default function Register() {
     password: '',
     firstName: '',
     lastName: '',
-    dateOfBirth: '',
+    aboutMe: '',
     avatar: null,
-    nickname: '',
-    aboutMe: ''
+    socialLinks: ''
   });
+
+  const [progress, setProgress] = useState(0);
+  const [isRequired, setIsRequired] = useState(false);
+
+  useEffect(() => {
+    const requiredFields = ['email', 'password', 'firstName', 'lastName'];
+    const filledFields = requiredFields.filter(field => formData[field].trim() !== '');
+    const newProgress = (filledFields.length / requiredFields.length) * 100;
+    setProgress(newProgress);
+    setIsRequired(newProgress === 100);
+  }, [formData]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -37,50 +47,48 @@ export default function Register() {
 
   return (
     <div className="register-container">
-      <div className="background-shapes">
-        <div className="shape shape-1"></div>
-        <div className="shape shape-2"></div>
-      </div>
-
+      <div className="background-glow"></div>
+      
       <div className="register-card">
+        <div className="progress-bar">
+          <div 
+            className="progress-fill"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+
         <div className="register-header">
-          <div className="avatar-circle">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <line x1="20" y1="8" x2="20" y2="14"></line>
-              <line x1="23" y1="11" x2="17" y2="11"></line>
-            </svg>
-          </div>
           <h1>Create Account</h1>
-          <p>Please fill in your information</p>
+          <p>Join our community</p>
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-section">
-            <h2>Required Information</h2>
-
-            <div className="name-group">
+          <div className="form-section required">
+            <div className="input-grid">
               <div className="input-wrapper">
                 <input
                   type="text"
                   name="firstName"
                   placeholder="First Name"
+                  id="firstname"
                   required
                   value={formData.firstName}
                   onChange={handleChange}
                 />
+                <div className="input-glow"></div>
               </div>
 
               <div className="input-wrapper">
                 <input
                   type="text"
                   name="lastName"
+                  id="lastname"
                   placeholder="Last Name"
                   required
                   value={formData.lastName}
                   onChange={handleChange}
                 />
+                <div className="input-glow"></div>
               </div>
             </div>
 
@@ -88,60 +96,54 @@ export default function Register() {
               <input
                 type="email"
                 name="email"
+                id="email"
                 placeholder="Email"
                 required
                 value={formData.email}
                 onChange={handleChange}
               />
+              <div className="input-glow"></div>
             </div>
 
             <div className="input-wrapper">
               <input
                 type="password"
                 name="password"
+                id='password'
                 placeholder="Password"
                 required
                 value={formData.password}
                 onChange={handleChange}
               />
-            </div>
-
-            <div className="input-wrapper">
-              <input
-                type="date"
-                name="dateOfBirth"
-                required
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-              />
+              <div className="input-glow"></div>
             </div>
           </div>
 
-          <div className="form-section">
-            <h2>Optional Information</h2>
-
-            <div className="input-wrapper">
-              <input
-                type="text"
-                name="nickname"
-                placeholder="Nickname"
-                value={formData.nickname}
-                onChange={handleChange}
-              />
-            </div>
-
+          <div className={`form-section optional ${isRequired ? 'revealed' : ''}`}>
             <div className="input-wrapper">
               <textarea
                 name="aboutMe"
                 placeholder="About Me"
-                rows="4"
+                rows="3"
                 value={formData.aboutMe}
                 onChange={handleChange}
               ></textarea>
+              <div className="input-glow"></div>
+            </div>
+
+            <div className="input-wrapper">
+              <input
+                type="text"
+                name="socialLinks"
+                placeholder="Social Media Links"
+                value={formData.socialLinks}
+                onChange={handleChange}
+              />
+              <div className="input-glow"></div>
             </div>
 
             <div className="file-input-wrapper">
-              <label>Profile Picture (Optional)</label>
+              <label>Profile Picture</label>
               <input
                 type="file"
                 name="avatar"
@@ -151,11 +153,19 @@ export default function Register() {
             </div>
           </div>
 
-          <button type="submit" className="submit-button">
-            Create Account
+          <button onClick={handleSubmit} type="submit" id="register-button" className="submit-button">
+            Join Now
+            <div className="button-glow"></div>
           </button>
         </form>
       </div>
     </div>
   );
 }
+
+
+// function Register() {
+//     const register_button = document.getElementById("register-button")
+//     register_button.addEventListener("submit")
+
+// }
