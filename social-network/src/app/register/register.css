@@ -1,0 +1,228 @@
+/* app/register/register.css */
+.register-container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, #1a1a1a, #000000);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .background-shapes {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+  
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: pulse 4s infinite;
+  }
+  
+  .shape-1 {
+    top: 5%;
+    left: 5%;
+    width: 300px;
+    height: 300px;
+    background: rgba(254, 141, 59, 0.3);
+  }
+  
+  .shape-2 {
+    bottom: 5%;
+    right: 5%;
+    width: 300px;
+    height: 300px;
+    background: rgba(254, 141, 59, 0.2);
+    animation-delay: 2s;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 0.5; }
+  }
+  
+  .register-card {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(to bottom right, #fe8d3b, #ff6b2b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+  
+  .avatar-circle svg {
+    width: 40px;
+    height: 40px;
+    color: white;
+  }
+  
+  .register-header h1 {
+    color: white;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .register-header p {
+    color: #a0a0a0;
+    font-size: 0.875rem;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .form-section h2 {
+    color: white;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .name-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .input-wrapper {
+    width: 100%;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  input[type="date"] {
+    color-scheme: dark;
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  input::placeholder,
+  textarea::placeholder {
+    color: #a0a0a0;
+  }
+  
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #fe8d3b;
+    box-shadow: 0 0 0 2px rgba(254, 141, 59, 0.2);
+  }
+  
+  .file-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .file-input-wrapper label {
+    color: #a0a0a0;
+    font-size: 0.875rem;
+  }
+  
+  input[type="file"] {
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    color: #a0a0a0;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button {
+    background: #fe8d3b;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button:hover {
+    background: #ff6b2b;
+  }
+  
+  .submit-button {
+    background: #fe8d3b;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.875rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .submit-button:hover {
+    background: #ff6b2b;
+  }
+  
+  .submit-button:active {
+    transform: translateY(1px);
+  }
+  
+  @media (max-width: 640px) {
+    .register-container {
+      padding: 1rem;
+    }
+  
+    .register-card {
+      padding: 1.5rem;
+    }
+  
+    .name-group {
+      grid-template-columns: 1fr;
+    }
+  
+    .shape {
+      width: 200px;
+      height: 200px;
+    }
+  }
