@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0a0a0a;
+  background: #080B11;
   position: relative;
   overflow: hidden;
   padding: 2rem;
@@ -18,21 +18,25 @@
   width: 100%;
   height: 100%;
   background: radial-gradient(circle at 50% 50%, 
-    rgba(76, 0, 255, 0.1) 0%,
-    rgba(76, 0, 255, 0.05) 25%,
+    rgba(79, 248, 104, 0.1) 0%,
+    rgba(79, 248, 104, 0.05) 25%,
     transparent 50%);
   pointer-events: none;
 }
 
+
 .register-card {
   width: 100%;
   max-width: 500px;
-  background: rgba(20, 20, 20, 0.95);
-  border-radius: 20px;
+  background: rgba(20, 20, 20, 0);
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+
   padding: 2rem;
   position: relative;
-  border: 1px solid rgba(76, 0, 255, 0.1);
-  box-shadow: 0 0 40px rgba(76, 0, 255, 0.1);
+  
+  border: 1px solid rgba(79, 248, 104, 0.212);
+  box-shadow: 0 0 40px rgba(79, 248, 104, 0.212);
   backdrop-filter: blur(10px);
 }
 
@@ -49,7 +53,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4c00ff, #8c00ff);
+  background: linear-gradient(90deg, #4FF868, #28A745);
   transition: width 0.3s ease-in-out;
 }
 
@@ -75,7 +79,12 @@
 .form-section {
   margin-bottom: 2rem;
 }
-
+.info-lable {
+  color: rgba(255, 255, 255, 0.6);
+  font-size:16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
 .input-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -91,7 +100,7 @@
 .input-glow {
   position: absolute;
   inset: -1px;
-  background: linear-gradient(90deg, #4c00ff, #8c00ff);
+  background: linear-gradient(90deg, #4FF868, #28A745);
   border-radius: 8px;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -104,15 +113,18 @@ input, textarea {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  color: white;
+  color: azure;
   font-size: 1rem;
   transition: all 0.3s ease;
   resize: none;
 }
+input::placeholder , textarea::placeholder{
+  color: #ccc;
+}
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: #4c00ff;
+  border-color: #28A745;
 }
 
 input:focus + .input-glow,
@@ -139,7 +151,7 @@ textarea:focus + .input-glow {
 
 .file-input-wrapper label {
   display: block;
-  color: rgba(255, 255, 255, 0.6);
+  color:  white;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
@@ -147,7 +159,7 @@ textarea:focus + .input-glow {
 .submit-button {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(90deg, #4c00ff, #8c00ff);
+  background: linear-gradient(90deg, #4FF868, #28A745);
   color: white;
   border: none;
   border-radius: 8px;
@@ -165,7 +177,7 @@ textarea:focus + .input-glow {
 .button-glow {
   position: absolute;
   inset: -5px;
-  background: linear-gradient(90deg, #4c00ff, #8c00ff);
+  background: linear-gradient(90deg, #4FF868, #28A745);
   opacity: 0;
   transition: opacity 0.3s ease;
   filter: blur(20px);

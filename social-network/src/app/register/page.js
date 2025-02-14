@@ -64,6 +64,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="form-section required">
+          <p className='info-lable'>required info</p>
             <div className="input-grid">
               <div className="input-wrapper">
                 <input
@@ -120,6 +121,7 @@ export default function Register() {
           </div>
 
           <div className={`form-section optional ${isRequired ? 'revealed' : ''}`}>
+          <p className='info-lable'>optional info</p>
             <div className="input-wrapper">
               <textarea
                 name="aboutMe"
