@@ -47,6 +47,11 @@ export default function Register() {
 
   return (
     <div className="register-container">
+      <div className="background-shapes">
+        <div className="shape shape-1"></div>
+        <div className="shape shape-2"></div>
+      </div>
+
       <div className="background-glow"></div>
       
       <div className="register-card">
