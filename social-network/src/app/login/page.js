@@ -1,12 +1,28 @@
 'use client';
 // import React, { useState } from 'react';
 import './login.css';
+import { Navbarrend } from '../page.js';
+import Link from "next/link";
+
+
+export function LoginButton({ text , path }) {
+  return (
+    <Link href={path} className="login-buttonn">
+      <span className="button-glow"></span>
+      {text}
+    </Link>
+  );
+}
 
 export default function Login(){
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
 
   return (
+   
+    <div className='hero'>
+      <Navbarrend NavButton={() => <LoginButton text="Register" path="/register" />} />
+
     <div className="login-container">
       <div className="background-shapes">
         <div className="shape shape-1"></div>
@@ -59,11 +75,12 @@ export default function Login(){
             Sign In
           </button>
 
-          <a href="/register" className="forgot-password">
-            Forgot password?
-          </a>
+          <Link href="/register" className="forgot-password">
+            sign up
+          </Link>
         </form>
       </div>
     </div>
-  );
-};
+    </div>
+  )
+}

@@ -2,6 +2,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import './register.css';
+import { LoginButton } from '../login/page.js';
+import { Navbarrend } from '../page.js';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -46,7 +48,10 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
+
+    <div className='hero'>
+      <Navbarrend NavButton={() => <LoginButton text="Login" path="/login" />} />
+      <div className="register-container">
       <div className="background-shapes">
         <div className="shape shape-1"></div>
         <div className="shape shape-2"></div>
@@ -166,6 +171,7 @@ export default function Register() {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 }

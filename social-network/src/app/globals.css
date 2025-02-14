@@ -41,3 +41,97 @@ a {
     color-scheme: dark;
   }
 }
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(8, 11, 17, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(79, 248, 104, 0.2);
+  z-index: 50;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.logo-image {
+  object-fit: contain;
+}
+
+.logo-text {
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.login-buttonn {
+  position: relative;
+  padding: 0.5rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: linear-gradient(90deg, #4FF868, #28A745);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.button-glow {
+  position: absolute;
+  inset: -5px;
+  background: linear-gradient(90deg, #4FF868, #28A745);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+}
+
+.login-button:hover .button-glow {
+  opacity: 0.5;
+}
+
+/* Media Queries */
+@media (max-width: 640px) {
+  .navbar-container {
+    padding: 0 0.5rem;
+  }
+  
+  .logo-text {
+    font-size: 1rem;
+  }
+  
+  .login-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+}
