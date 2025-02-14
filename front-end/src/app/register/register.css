@@ -74,7 +74,7 @@
   padding: 2rem;
   position: relative;
   
-  border: 1px solid rgba(79, 248, 104, 0.212);
+  /* border: 1px solid rgba(79, 248, 104, 0.212); */
   box-shadow: 0 0 40px rgba(79, 248, 104, 0.212);
   backdrop-filter: blur(10px);
 }
@@ -86,7 +86,6 @@
   width: 100%;
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -197,7 +196,7 @@ textarea:focus + .input-glow {
 
 .submit-button {
   width: 100%;
-  padding: 1rem;
+  padding: 0.8rem;
   background: linear-gradient(90deg, #4FF868, #28A745);
   color: white;
   border: none;

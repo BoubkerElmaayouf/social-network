@@ -25,12 +25,20 @@ export function Navbarrend({ NavButton }) {
               height={40}
               className="logo-image"
             />
-            <span className="logo-text">UNION</span>
+            {/* <span className="logo-text">UNION</span> */}
           </Link>
         </div>
         {NavButton && <NavButton />} {/* Render the passed component */}
       </div>
     </nav>
   );
+}
+
+export function Footer() { 
+  return (
+    <footer className="footer">
+      <p>&copy; 2025 Union. All rights reserved.</p>
+    </footer>
+  )
 }
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import './register.css';
 import { LoginButton } from '../login/page.js';
-import { Navbarrend } from '../page.js';
+import { Footer, Navbarrend } from '../page.js';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -172,6 +172,7 @@ export default function Register() {
         </form>
       </div>
     </div>
+    <Footer/>
     </div>
   );
 }

@@ -25,6 +25,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+
 *{
   box-sizing: border-box;
   padding: 0;
@@ -134,4 +158,17 @@ a {
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
   }
+}
+
+.footer {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+  background: rgba(8, 11, 17, 0.8);
+  color: #28A745;
+  border-top: 1px solid rgba(79, 248, 104, 0.2);
+  backdrop-filter: blur(10px);
 }

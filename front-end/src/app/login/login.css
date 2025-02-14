@@ -65,12 +65,11 @@
 .login-card {
   width: 100%;
   max-width: 400px;
-  background: rgba(39, 38, 38, 0);
+  background: rgba(20, 20, 20, 0);
 
   border-radius: 15px;
   padding: 2rem;
   position: relative;
-  border: 1px solid rgba(79, 248, 104, 0.212);
   box-shadow: 0 0 40px rgba(79, 248, 104, 0.212);
   backdrop-filter: blur(10px);
 }

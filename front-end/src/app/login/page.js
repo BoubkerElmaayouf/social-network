@@ -1,7 +1,7 @@
 "use client";
 // import React, { useState } from 'react';
 import "./login.css";
-import { Navbarrend } from "../page.js";
+import { Navbarrend, Footer } from "../page.js";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -146,6 +146,7 @@ export default function Login() {
           </form>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
