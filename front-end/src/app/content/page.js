@@ -412,6 +412,11 @@ export function Navbar() {
         router.push('/profile')
         setIsDropdownOpen(false)
     }
+
+    const handleLogout = () => {
+        router.push('/login')
+        setIsDropdownOpen(false)
+    }
     
     return (
         <nav className="navbar">
@@ -470,10 +475,7 @@ export function Navbar() {
                             </button>
                             <button 
                                 className="dropdown-item"
-                                onClick={() => {
-                                    // nms7o lcoookie mn browser
-                                    setIsDropdownOpen(false);
-                                }}
+                                onClick={handleLogout}
                             >
                                 Logout
                             </button>
