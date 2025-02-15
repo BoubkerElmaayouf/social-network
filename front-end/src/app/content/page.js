@@ -16,9 +16,11 @@ export default function Content() {
         <div className='hero'>
             <Navbar/>
             <Leftsidebar/>
+
             <div className='main-content'>
+                {/* <Chatbox/> */}
             </div>
-            <Footer/>
+            {/* <Footer/> */}
         </div>
     );
 }
@@ -82,15 +84,102 @@ export function Leftsidebar() {
 //     );
 // }
 
-export function chatbox() {
+
+export function Chatbox() {
+    const [messages, setMessages] = useState([
+        { id: 1, text: "Hey, how's it going?", sender: 'other', timestamp: '09:41' },
+        { id: 2, text: "Pretty good! Working on some new features.", sender: 'self', timestamp: '09:42' },
+        { id: 3, text: "That sounds interesting! Can you tell me more about it?", sender: 'other', timestamp: '09:43' }
+    ]);
+    const [newMessage, setNewMessage] = useState('');
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (newMessage.trim()) {
+            const newMsg = {
+                id: messages.length + 1,
+                text: newMessage,
+                sender: 'self',
+                timestamp: new Date().toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false 
+                })
+            };
+            setMessages([...messages, newMsg]);
+            setNewMessage('');
+        }
+    };
+
     return (
-        <div className='chatbox'>
+        <div className="chatbox">
+            <div className="chat-header">
+                <div className="chat-user-info">
+                    <div className="user-avatar">
+                        <span className="user-status"></span>
+                    </div>
+                    <span className="user-name">John Doe</span>
+                </div>
+            </div>
+
+            <div className="messages-container">
+                {messages.map((message) => (
+                    <div 
+                        key={message.id} 
+                        className={`message-wrapper ${message.sender === 'self' ? 'message-self' : 'message-other'}`}
+                    >
+                        <div className="message">
+                            <p className="message-text">{message.text}</p>
+                            <span className="message-timestamp">{message.timestamp}</span>
+                            <div className="message-glow"></div>
+                        </div>
+                    </div>
+                ))}
+                <div ref={messagesEndRef} />
+            </div>
+
+            <form className="chat-input-form" onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    className="chat-input"
+                />
+                <button 
+                    type="submit" 
+                    className="send-button"
+                    disabled={!newMessage.trim()}
+                >
+                    <svg 
+                        width="24" 
+                        height="24" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path 
+                            d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9" 
+                            stroke="currentColor" 
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </button>
+            </form>
         </div>
     );
 }
-
-// Navbar.js
-
 
 export function Navbar() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
