@@ -73,7 +73,9 @@ a {
   right: 0;
   background: rgba(8, 11, 17, 0.8);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(79, 248, 104, 0.2);
+  box-shadow: 0px 4px 6px -2px rgba(79, 248, 104, 0.1);
+
+  /* border-bottom: 1px solid rgba(79, 248, 104, 0.2); */
   z-index: 50;
 }
 

@@ -1,0 +1,281 @@
+/* Add these styles to your existing CSS */
+
+.profile-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.profile-button:hover {
+    background: rgba(79, 248, 104, 0.1);
+    border-radius: 0.5rem;
+}
+
+.profile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(79, 248, 104, 0.5);
+    transition: border-color 0.3s ease;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 160px;
+    background: rgba(8, 11, 17, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    padding: 0.5rem;
+    z-index: 100;
+    animation: dropdownFade 0.2s ease;
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(79, 248, 104, 0.1);
+    color: #4FF868;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+    .username {
+        display: none;
+    }
+    
+    .profile-button {
+        gap: 0.5rem;
+    }
+}
+
+/******************************* the collapsed sidebar *****************************/
+.sidebar {
+    position: fixed;
+    background: rgba(8, 11, 17, 0.8);
+    backdrop-filter: blur(10px);
+    /* border-right: 1px solid rgba(79, 248, 104, 0.2); */
+    box-shadow: 4px 0px 6px -2px rgba(79, 248, 104, 0.1);
+    transition: all 0.3s ease;
+    z-index: 40;
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+}
+
+.collapse-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.collapse-button:hover {
+    background: rgba(79, 248, 104, 0.1);
+    border-color: rgba(79, 248, 104, 0.4);
+}
+
+.collapse-icon {
+    transition: transform 0.3s ease;
+}
+
+.collapse-icon.rotated {
+    transform: rotate(-90deg);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.nav-item:hover {
+    background: rgba(79, 248, 104, 0.1);
+}
+
+.nav-item:hover .nav-glow {
+    opacity: 1;
+}
+
+.nav-icon {
+    font-size: 1.25rem;
+    min-width: 24px;
+}
+
+.nav-label {
+    margin-left: 0.75rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.nav-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #4FF868, #28A745);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: blur(20px);
+    z-index: -1;
+}
+
+/* Desktop Layout */
+@media (min-width: 769px) {
+    .sidebar {
+        top: 64px; /* Match navbar height */
+        left: 0;
+        bottom: 0;
+        width: 240px;
+    }
+
+    .sidebar.collapsed {
+        width: 80px;
+    }
+
+    .sidebar.collapsed .nav-label {
+        opacity: 0;
+        width: 0;
+    }
+
+    .sidebar.collapsed .nav-item {
+        justify-content: center;
+    }
+
+    .sidebar.collapsed .nav-icon {
+        margin: 0;
+    }
+}
+
+/* Mobile Layout */
+@media (max-width: 768px) {
+    .sidebar {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: auto;
+        border-right: none;
+        border-top: 1px solid rgba(79, 248, 104, 0.2);
+    }
+
+    .sidebar-content {
+        padding: 0.75rem;
+    }
+
+    .collapse-button {
+        display: none;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .nav-item {
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+        flex: 1;
+    }
+
+    .nav-label {
+        margin: 0.25rem 0 0 0;
+        font-size: 0.75rem;
+    }
+
+    .nav-icon {
+        font-size: 1.5rem;
+    }
+}
+
+/* Additional Media Query for Very Small Screens */
+@media (max-width: 360px) {
+    .nav-label {
+        display: none;
+    }
+}
