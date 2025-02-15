@@ -16,6 +16,7 @@ export default function Content() {
         <div className='hero'>
             <Navbar/>
             <Leftsidebar/>
+            <PostContainer/>
 
             <div className='main-content'>
                 {/* <Chatbox/> */}
@@ -25,6 +26,211 @@ export default function Content() {
     );
 }
 
+export  function PostContainer() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        title: '',
+        content: '',
+        privacy: 'public'
+    });
+    const [imagePreview, setImagePreview] = useState(null);
+    const modalRef = useRef(null);
+    const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                setIsModalOpen(false);
+            }
+        };
+
+        if (isModalOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isModalOpen]);
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeImage = () => {
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle post submission logic here
+        console.log('Post data:', { ...formData, image: imagePreview });
+        setIsModalOpen(false);
+        setFormData({
+            title: '',
+            content: '',
+            privacy: 'public'
+        });
+        setImagePreview(null);
+    };
+
+    return (
+        <div className="content-container">
+            <div className="create-post-trigger" onClick={() => setIsModalOpen(true)}>
+                <div className="user-avatar">
+                    <img 
+                        src="/default-avatar.png" 
+                        alt="Your avatar" 
+                        className="avatar-image"
+                    />
+                </div>
+                <div className="trigger-input">
+                    What's on your mind?
+                </div>
+            </div>
+
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="create-post-modal" ref={modalRef}>
+                        <div className="modal-header">
+                            <h2>Create Post</h2>
+                            <button 
+                                className="close-button"
+                                onClick={() => setIsModalOpen(false)}
+                                aria-label="Close modal"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="post-form">
+                            <div className="form-group">
+                                <div className="image-upload-container">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="file-input"
+                                        ref={fileInputRef}
+                                        id="image-upload"
+                                    />
+                                    <label htmlFor="image-upload" className="upload-label">
+                                        <svg 
+                                            width="24" 
+                                            height="24" 
+                                            viewBox="0 0 24 24" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            strokeWidth="2"
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
+                                            <path d="M16 5V3" />
+                                            <path d="M8 14a3 3 0 0 1 3-3h4" />
+                                            <line x1="17" y1="8" x2="17" y2="14" />
+                                            <line x1="14" y1="11" x2="20" y2="11" />
+                                        </svg>
+                                        Upload Image
+                                    </label>
+                                </div>
+                                {imagePreview && (
+                                    <div className="image-preview-container">
+                                        <img 
+                                            src={imagePreview} 
+                                            alt="Preview" 
+                                            className="image-preview"
+                                        />
+                                        <button 
+                                            type="button"
+                                            className="remove-image"
+                                            onClick={removeImage}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    placeholder="Post title"
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        title: e.target.value
+                                    })}
+                                    className="form-input"
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <textarea
+                                    placeholder="Write your post..."
+                                    value={formData.content}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        content: e.target.value
+                                    })}
+                                    className="form-textarea"
+                                    required
+                                />
+                            </div>
+
+                            <div className="privacy-options">
+                                <label className="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="privacy"
+                                        value="public"
+                                        checked={formData.privacy === 'public'}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            privacy: e.target.value
+                                        })}
+                                    />
+                                    <span className="radio-custom"></span>
+                                    Public
+                                </label>
+                                <label className="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="privacy"
+                                        value="private"
+                                        checked={formData.privacy === 'private'}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            privacy: e.target.value
+                                        })}
+                                    />
+                                    <span className="radio-custom"></span>
+                                    Private
+                                </label>
+                            </div>
+
+                            <button type="submit" className="submit-button">
+                                Create Post
+                                <div className="button-glow"></div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
 export function Leftsidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -180,7 +386,7 @@ export function Chatbox() {
         </div>
     );
 }
-
+//  ********* navbar 
 export function Navbar() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
