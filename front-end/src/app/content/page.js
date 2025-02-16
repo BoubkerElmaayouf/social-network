@@ -6,12 +6,28 @@ import { Footer } from '../page.js';
 import Link from 'next/link.js';
 import Image from 'next/image.js';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faComments, faBell, faUserFriends, faUser, faGear, faCog, faBars,faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faComments, faBell, faUserFriends, faUser, faGear, faCog, faBars,faSearch,  faThumbsUp, 
+    faThumbsDown, 
+    faComment, 
+    faClock,
+    faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Content() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
+    const samplePost = {
+        title: "Sample Post Title",
+        content: "This is an example of a post content.",
+        user: {
+            name: "Tomy",
+            avatar: "/default-avatar.svg"
+        },
+        timestamp: "2 hours ago",
+        likes: 123,
+        dislikes: 12,
+        comments: []
+    };
 
     return (
         <div className='hero'>
@@ -21,11 +37,162 @@ export default function Content() {
             <PostContainer />
 
             <div className='main-content'>
-                <Chatbox />
+                {/* <Chatbox /> */}
+                <Post Post={samplePost}/>
             </div>
         </div>
     );
 }
+
+//***************** the created post ***************/
+
+
+export function Post({ post }) {
+    const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false);
+    const [newComment, setNewComment] = useState('');
+    const [comments, setComments] = useState([]);
+
+    const handleSubmitComment = (e) => {
+        e.preventDefault();
+        if (!newComment.trim()) return;
+
+        const comment = {
+            id: Date.now(),
+            content: newComment,
+            author: 'Current User',
+            timestamp: new Date().toISOString(),
+            likes: 0,
+            dislikes: 0
+        };
+
+        setComments([comment, ...comments]);
+        setNewComment('');
+    };
+
+    return (
+        <article className="post">
+            <div className="post-header">
+                <div className="post-user-info">
+                    <div className="user-avatar">
+                        <Image 
+                            src="/default-avatar.svg"
+                            alt="User avatar"
+                            width={40}
+                            height={40}
+                            className="avatar-image"
+                        />
+                    </div>
+                    <div className="user-details">
+                        <h3 className="user-name">belmaayo</h3>
+                        <span className="post-timestamp">
+                            <FontAwesomeIcon icon={faClock} />
+                            <time>2 hours ago</time>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="post-content">
+                <h2 className="post-title">welcome to union </h2>
+                <p className="post-text">lets gooooooooooooooooooooo!!</p>
+                <div className="post-image">
+                    <Image 
+                        src="/public/bugs.jpg"
+                        alt="Post image"
+                        width={500}
+                        height={300}
+                        className="post-image"
+                    />
+                </div>
+            </div>
+
+            <div className="post-actions">
+                <button className="action-button">
+                    <FontAwesomeIcon icon={faThumbsUp} />
+                    <span>123</span>
+                </button>
+                <button className="action-button">
+                    <FontAwesomeIcon icon={faThumbsDown} />
+                    <span>12</span>
+                </button>
+                <button 
+                    className="action-button"
+                    onClick={() => setIsCommentSectionOpen(!isCommentSectionOpen)}
+                >
+                    <FontAwesomeIcon icon={faComment} />
+                    <span>{comments.length}</span>
+                </button>
+            </div>
+
+            {isCommentSectionOpen && (
+                <div className="comments-section">
+                    <form className="comment-form" onSubmit={handleSubmitComment}>
+                        <div className="user-avatar">
+                            <Image 
+                                src="/default-avatar.svg"
+                                alt="Your avatar"
+                                width={32}
+                                height={32}
+                                className="avatar-image"
+                            />
+                        </div>
+                        <input
+                            type="text"
+                            className="comment-input"
+                            placeholder="Write a comment..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                        />
+                        <button 
+                            type="submit"
+                            className="comment-submit"
+                            disabled={!newComment.trim()}
+                        >
+                            <FontAwesomeIcon icon={faPaperPlane} />
+                        </button>
+                    </form>
+
+                    <div className="comments-list">
+                        {comments.map(comment => (
+                            <div key={comment.id} className="comment">
+                                <div className="comment-header">
+                                    <div className="user-avatar">
+                                        <Image 
+                                            src="/default-avatar.svg"
+                                            alt="Commenter avatar"
+                                            width={32}
+                                            height={32}
+                                            className="avatar-image"
+                                        />
+                                    </div>
+                                    <div className="comment-details">
+                                        <span className="comment-author">{comment.author}</span>
+                                        <span className="comment-timestamp">
+                                            <FontAwesomeIcon icon={faClock} />
+                                            <time>Just now</time>
+                                        </span>
+                                    </div>
+                                </div>
+                                <p className="comment-content">{comment.content}</p>
+                                <div className="comment-actions">
+                                    <button className="action-button">
+                                        <FontAwesomeIcon icon={faThumbsUp} />
+                                        <span>{comment.likes}</span>
+                                    </button>
+                                    <button className="action-button">
+                                        <FontAwesomeIcon icon={faThumbsDown} />
+                                        <span>{comment.dislikes}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </article>
+    );
+}
+
 export  function PostContainer() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({
