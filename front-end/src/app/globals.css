@@ -103,6 +103,7 @@ a {
 
 .logo-image {
   object-fit: contain;
+  margin-right: 10px;
 }
 
 .logo-text {
@@ -271,6 +272,11 @@ a {
 }
 
 /* Media Queries */
+@media  (max-width:1559px) {
+  .logo-image {
+    margin-right: 20px;
+  }
+}
 @media (max-width: 768px) {
   .navbar-container {
       grid-template-columns: auto auto;
@@ -294,6 +300,25 @@ a {
   }
   .search-bar {
     width: 100%;
+  }
+  .search-radio-label {
+    gap: 0.2rem;
+    font-size: 0.7rem;
+  }
+  
+  .search-radio-input {
+    width: 10px;
+    height: 10px;
+  }
+  .search-radio-input:checked::after {
+    width: 4px;
+    height: 4px;
+  }
+  .radio-group {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-right: 70px;
   }
  
 }
