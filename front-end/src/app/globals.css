@@ -278,23 +278,34 @@ a {
 
   .search-section {
       position: absolute;
-      top: 100%;
       left: 0;
       right: 0;
       padding: 0.5rem 1rem;
       background: rgba(8, 11, 17, 0.95);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(79, 248, 104, 0.2);
+      width: 30%;
   }
 
   .radio-group {
       display: flex;
   }
+  .search-input {
+    max-width: 50px;
+  }
+  .search-bar {
+    width: 100%;
+  }
+ 
 }
 
 @media (max-width: 480px) {
+  .navbar-container {
+    grid-template-columns: auto auto;
+    display: flex;
+  }
   .search-section {
       padding: 0.5rem;
+      width: 25%;
   }
 
   .search-input {
@@ -304,6 +315,12 @@ a {
 
   .username {
       display: none;
+  }
+  .search-input {
+    min-width: 150px;
+  }
+  .search-bar {
+    width: 100%;
   }
 }
 
