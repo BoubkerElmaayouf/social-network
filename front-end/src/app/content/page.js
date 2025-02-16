@@ -5,27 +5,27 @@ import React from 'react';
 import { Footer } from '../page.js';
 import Link from 'next/link.js';
 import Image from 'next/image.js';
-
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse, faComments, faBell, faUserFriends, faUser, faGear, faCog, faBars,faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from 'react';
-
 import { useRouter } from 'next/navigation';
 
 export default function Content() {
+    const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
+
     return (
         <div className='hero'>
-            <Navbar/>
-            <Leftsidebar/>
-            <PostContainer/>
+            <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
+            <Leftsidebar />
+            <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+            <PostContainer />
 
             <div className='main-content'>
-                {/* <Chatbox/> */}
+                <Chatbox />
             </div>
-            {/* <Footer/> */}
         </div>
     );
 }
-
 export  function PostContainer() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({
@@ -235,10 +235,10 @@ export function Leftsidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const menuItems = [
-        { icon: '👽', label: 'Home', href: '/' },
-        { icon: '👽', label: 'Chat', href: '/chat' },
-        { icon: '👽', label: 'Notification', href: '/notification' },
-        { icon: '👽', label: 'Connect', href: '/connect' }
+        { icon: faHouse, label: 'Home', href: '/' },
+        { icon: faComments, label: 'Chat', href: '/chat' },
+        { icon: faBell, label: 'Notification', href: '/notification' },
+        { icon: faUserFriends, label: 'Connect', href: '/connect' }
     ];
 
     return (
@@ -273,7 +273,7 @@ export function Leftsidebar() {
                             href={item.href}
                             className="nav-item"
                         >
-                            <span className="nav-icon">{item.icon}</span>
+                            <FontAwesomeIcon icon={item.icon} className="nav-icon" />
                             <span className="nav-label">{item.label}</span>
                             <div className="nav-glow"></div>
                         </Link>
@@ -283,12 +283,36 @@ export function Leftsidebar() {
         </aside>
     );
 }
-// export function Rightsidebar() {
-//     return (
-//         <div className='sidebar'>
-//         </div>
-//     );
-// }
+
+
+
+export function Rightsidebar({ isMobileOpen }) {
+    const rightMenuItems = [
+        { icon: faUser, label: 'Profile', href: '/profile' },
+        { icon: faGear, label: 'Settings', href: '/settings' },
+        { icon: faCog, label: 'Preferences', href: '/preferences' }
+    ];
+
+    return (
+        <aside className={`right-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
+            <div className="right-sidebar-content">
+                <nav className="right-sidebar-nav">
+                    {rightMenuItems.map((item, index) => (
+                        <Link 
+                            key={index}
+                            href={item.href}
+                            className="right-nav-item"
+                        >
+                            <FontAwesomeIcon icon={item.icon} className="right-nav-icon" />
+                            <span className="right-nav-label">{item.label}</span>
+                            <div className="right-nav-glow"></div>
+                        </Link>
+                    ))}
+                </nav>
+            </div>
+        </aside>
+    );
+}
 
 
 export function Chatbox() {
@@ -387,12 +411,13 @@ export function Chatbox() {
     );
 }
 //  ********* navbar 
-export function Navbar() {
+
+
+export function Navbar({ setIsMobileRightSidebarOpen }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const router = useRouter();
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -431,9 +456,46 @@ export function Navbar() {
                             className="logo-image"
                         />
                     </Link>
+                <div className="search-section">
+                        <div className="search-input">
+                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            <input type="text" placeholder="Search..." className="search-bar" />
+                            <div className="search-glow"></div>
+                        </div>
+                        
+                        <div className="radio-group">
+                            <label className="search-radio-label">
+                                <input 
+                                    type="radio" 
+                                    name="search-type" 
+                                    value="people" 
+                                    className="search-radio-input"
+                                    defaultChecked 
+                                />
+                                People
+                            </label>
+                            <label className="search-radio-label">
+                                <input 
+                                    type="radio" 
+                                    name="search-type" 
+                                    value="groups" 
+                                    className="search-radio-input"
+                                />
+                                Groups
+                            </label>
+                        </div>
+                     </div>
                 </div>
                 
                 <div className="profile-section" ref={dropdownRef}>
+                    <button 
+                        className="mobile-sidebar-toggle"
+                        onClick={() => setIsMobileRightSidebarOpen(prev => !prev)}
+                        aria-label="Toggle right sidebar"
+                    >
+                        <FontAwesomeIcon icon={faBars} />
+                    </button>
+
                     <button 
                         className="profile-button"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}

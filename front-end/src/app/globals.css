@@ -85,8 +85,8 @@ a {
   padding: 0 1rem;
   height: 64px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
 
 .logo-section {
@@ -159,6 +159,151 @@ a {
   .login-button {
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
+  }
+}
+
+
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.search-input {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.search-bar {
+  width: 100%;
+  height: 40px;
+  padding: 0.5rem 2.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(79, 248, 104, 0.2);
+  border-radius: 20px;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: rgba(79, 248, 104, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+}
+
+.search-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #4FF868, #28A745);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.search-bar:focus ~ .search-glow {
+  opacity: 0.2;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.search-radio-input {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(79, 248, 104, 0.4);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.search-radio-input:checked {
+  border-color: #4FF868;
+}
+
+.search-radio-input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4FF868;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .navbar-container {
+      grid-template-columns: auto auto;
+  }
+
+  .search-section {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      padding: 0.5rem 1rem;
+      background: rgba(8, 11, 17, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(79, 248, 104, 0.2);
+  }
+
+  .radio-group {
+      display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-section {
+      padding: 0.5rem;
+  }
+
+  .search-input {
+      max-width: 50px;
+      /* background-color: rebeccapurple; */
+  }
+
+  .username {
+      display: none;
   }
 }
 

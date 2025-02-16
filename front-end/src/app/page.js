@@ -6,7 +6,7 @@ import "./page.module.css";
 
 export default function Home() {
   return (
-   <a href="/login"></a>
+   <a href="/login">iluhESFLKHZE</a>
   )
 }
 
