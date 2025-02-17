@@ -41,10 +41,29 @@ export default function Register() {
       }));
     }
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    
+  
+
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/register', {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
+  
+      const data = await response.json();
+      alert('Registration successful! Please log in.');
+      // Redirect to login page
+      // window.location.href = '/login';
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
