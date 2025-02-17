@@ -5,7 +5,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #121926;
     --foreground: #ededed;
   }
 }
@@ -66,14 +66,51 @@ a {
   }
 }
 
+/* just some shapes */
+.background-shapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: pulse 4s infinite;
+}
+
+.shape-1 {
+  top: 60%;
+  left: 70%;
+  width: 300px;
+  height: 300px;
+  background: rgba(79, 248, 104, 0.2);
+}
+
+.shape-2 {
+  bottom: 60%;
+  right: 70%;
+  width: 300px;
+  height: 300px;
+  background: rgba(79, 248, 104, 0.2);
+  animation-delay: 2s;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(8, 11, 17, 0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 0px 4px 6px -2px rgba(79, 248, 104, 0.1);
+  background: rgba(8, 11, 17, 0);
+  backdrop-filter: blur(100px);
+  /* box-shadow: 0px 4px 6px -2px rgba(79, 248, 104, 0.1); */
 
   /* border-bottom: 1px solid rgba(79, 248, 104, 0.2); */
   z-index: 50;
@@ -277,6 +314,7 @@ a {
     margin-right: 20px;
   }
 }
+
 @media (max-width: 768px) {
   .navbar-container {
       grid-template-columns: auto auto;
@@ -287,7 +325,7 @@ a {
       left: 0;
       right: 0;
       padding: 0.5rem 1rem;
-      background: rgba(8, 11, 17, 0.95);
+      /* background: rgba(8, 11, 17, 0.95); */
       backdrop-filter: blur(10px);
       width: 30%;
   }

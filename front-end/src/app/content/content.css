@@ -1,3 +1,6 @@
+.hero {
+    background-color: #121926;
+}
 .profile-section {
     position: relative;
     display: flex;
@@ -56,7 +59,7 @@
     top: calc(100% + 0.5rem);
     right: 0;
     min-width: 160px;
-    background: rgba(8, 11, 17, 0.95);
+    background: rgba(8, 11, 17, 0.8);
     backdrop-filter: blur(10px);
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
@@ -110,10 +113,10 @@
 /******************************* the collapsed sidebar *****************************/
 .sidebar {
     position: fixed;
-    background: rgba(8, 11, 17, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(8, 11, 17, 0);
+    backdrop-filter: blur(100px);
     /* border-right: 1px solid rgba(79, 248, 104, 0.2); */
-    box-shadow: 4px 0px 6px -2px rgba(79, 248, 104, 0.1);
+    /* box-shadow: 4px 0px 6px -2px rgba(79, 248, 104, 0.1); */
     transition: all 0.3s ease;
     z-index: 40;
 }
@@ -286,7 +289,7 @@
     right: 0;
     bottom: 0;
     width: 240px;
-    background: rgba(8, 11, 17, 0.8);
+    background: rgba(8, 11, 17, 0);
     backdrop-filter: blur(10px);
     box-shadow: -4px 0px 6px -2px rgba(79, 248, 104, 0.1);
     z-index: 40;
@@ -694,8 +697,8 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(8, 11, 17, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(8, 11, 17, 0);
+    backdrop-filter: blur(100px);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 12px;
     cursor: pointer;
@@ -704,7 +707,7 @@
 
 .create-post-trigger:hover {
     border-color: rgba(79, 248, 104, 0.4);
-    background: rgba(8, 11, 17, 0.9);
+    background: rgba(8, 11, 17, 0.212);
 }
 
 .user-avatar {
@@ -737,7 +740,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(8, 11, 17, 0.8);
+    background: rgba(8, 11, 17, 0.2);
     backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
@@ -875,9 +878,9 @@
     background: linear-gradient(90deg, #4FF868, #28A745);
     border: none;
     border-radius: 8px;
-    color: white;
+    color: black;
     font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     overflow: hidden;
@@ -990,6 +993,153 @@
     border-color: rgba(79, 248, 104, 0.5);
     transform: scale(1.1);
 }
+.target-friends-section {
+    margin-bottom: 1.5rem;
+}
+
+.target-friends-button {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9375rem;
+}
+
+.target-friends-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(79, 248, 104, 0.4);
+}
+
+.friends-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(8, 11, 17, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    animation: fadeIn 0.2s ease;
+}
+
+.friends-modal {
+    width: 90%;
+    max-width: 400px;
+    background: rgba(13, 17, 23, 0.95);
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    border-radius: 12px;
+    animation: slideUp 0.3s ease;
+}
+
+.friends-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(79, 248, 104, 0.2);
+}
+
+.friends-modal-header h3 {
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.friends-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-radius: 8px;
+    color: white;
+}
+
+.friend-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.friend-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(79, 248, 104, 0.3);
+}
+
+.friend-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.friend-name {
+    flex: 1;
+    font-size: 0.9375rem;
+}
+
+.friend-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(79, 248, 104, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.friends-modal-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(79, 248, 104, 0.2);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.confirm-selection {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(90deg, #4FF868, #28A745);
+    border: none;
+    border-radius: 8px;
+    color: black;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.confirm-selection:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .friends-modal {
+        width: 95%;
+        max-width: none;
+        margin: 1rem;
+    }
+
+    .friend-item {
+        padding: 0.5rem;
+    }
+
+    .friend-avatar {
+        width: 32px;
+        height: 32px;
+    }
+}
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
@@ -1023,9 +1173,9 @@
 
 /******************  the post section **********************/
 .post {
-    background: rgba(8, 11, 17, 0.8);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 248, 104, 0.2);
+    background: rgba(8, 11, 17, 0);
+    backdrop-filter: blur(100px);
+    border: 1px solid rgba(79, 248, 104, 0.1);
     border-radius: 12px;
     margin-bottom: 1.5rem;
     overflow: hidden;
@@ -1089,7 +1239,7 @@
 }
 .post-image {
     margin-top: 5px;
-    background-color: peru;
+    background-color: #ccc;
     height: 200px;
     border-radius: 8px;
 }

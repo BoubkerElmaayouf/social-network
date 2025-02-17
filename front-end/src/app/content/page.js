@@ -32,9 +32,16 @@ export default function Content() {
     return (
         <div className='hero'>
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
+            <div className="background-shapes">
+                <div className="shape shape-1"></div>
+                <div className="shape shape-2"></div>
+            </div>
             <Leftsidebar />
             <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
             <PostContainer />
+                {/* just some shade shapes */}
+              
+   
 
             <div className='main-content'>
                 {/* <Chatbox /> */}
@@ -203,6 +210,29 @@ export  function PostContainer() {
     const [imagePreview, setImagePreview] = useState(null);
     const modalRef = useRef(null);
     const fileInputRef = useRef(null);
+
+    // Add these state variables at the top of your PostContainer component
+    const [showFriendsModal, setShowFriendsModal] = useState(false);
+    const [selectedFriends, setSelectedFriends] = useState([]);
+    const friendsModalRef = useRef(null);
+
+    // Add this mock data (replace with your actual friends data)
+    const friends = [
+        { id: 1, name: 'simo fadil', avatar: '/default-avatar.png' },
+        { id: 2, name: 'belmaayo the king', avatar: '/default-avatar.png' },
+        { id: 3, name: 'oriaxnxx', avatar: '/default-avatar.png' },
+    ];
+
+    // Add this function to handle friend selection
+    const handleFriendSelection = (friendId) => {
+        setSelectedFriends(prev => {
+            if (prev.includes(friendId)) {
+                return prev.filter(id => id !== friendId);
+            }
+            return [...prev, friendId];
+        });
+    };
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -386,7 +416,59 @@ export  function PostContainer() {
                                     Private
                                 </label>
                             </div>
+                            <div className="target-friends-section">
+                                <button 
+                                    type="button"
+                                    className="target-friends-button"
+                                    onClick={() => setShowFriendsModal(true)}
+                                >
+                                    Target Friends
+                                </button>
+                            </div>
+                            {showFriendsModal && (
+                                <div className="friends-modal-overlay">
+                                    <div className="friends-modal" ref={friendsModalRef}>
+                                        <div className="friends-modal-header">
+                                            <h3>Select Friends</h3>
+                                            <button 
+                                                className="close-button"
+                                                onClick={() => setShowFriendsModal(false)}
+                                                aria-label="Close modal"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="friends-list">
+                                            {friends.map(friend => (
+                                                <label key={friend.id} className="friend-item">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedFriends.includes(friend.id)}
+                                                        onChange={() => handleFriendSelection(friend.id)}
+                                                    />
+                                                    <div className="friend-avatar">
+                                                        <img src={friend.avatar} alt={friend.name} />
+                                                    </div>
+                                                    <span className="friend-name">{friend.name}</span>
+                                                </label>
+                                            ))}
+                                        </div>
 
+                                        <div className="friends-modal-footer">
+                                            <button 
+                                                className="confirm-selection"
+                                                onClick={() => {
+                                                    console.log('Selected friends:', selectedFriends);
+                                                    setShowFriendsModal(false);
+                                                }}
+                                            >
+                                                Confirm Selection
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}           
                             <button type="submit" className="submit-button">
                                 Create Post
                                 <div className="button-glow"></div>
