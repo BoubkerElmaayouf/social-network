@@ -6,7 +6,6 @@
     min-height: calc(100vh - 64px);
     padding: 2rem;
     margin-top: 64px;
-    background: rgba(8, 11, 17, 0.7);
     backdrop-filter: blur(10px);
     color: white;
   }
@@ -15,7 +14,6 @@
     position: relative;
     padding: 2rem;
     border-radius: 12px;
-    background: rgba(8, 11, 17, 0.9);
     border: 1px solid rgba(79, 248, 104, 0.2);
     margin-bottom: 2rem;
   }
@@ -159,7 +157,6 @@
   }
   
   .stat-card {
-    background: rgba(8, 11, 17, 0.9);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
@@ -187,7 +184,6 @@
   
   /* Activity Section */
   .content-section {
-    background: rgba(8, 11, 17, 0.9);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
@@ -206,7 +202,6 @@
   }
   
   .activity-card {
-    background: rgba(8, 11, 17, 0.8);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 8px;
     padding: 1rem;

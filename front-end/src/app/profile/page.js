@@ -31,7 +31,7 @@ export default function Profile() {
                         </div>
                         <div className="profile-details">
                             <div className="profile-name-section">
-                                <h1 className="profile-name">Alex Mitchell</h1>
+                                <h1 className="profile-name">belmmayo</h1>
                                 {/* <span className="profile-badge">Pro Member</span> */}
                             </div>
                             <p className="profile-bio">Full-stack developer passionate about creating innovative solutions and pushing the boundaries of technology.</p>
@@ -64,7 +64,7 @@ export default function Profile() {
                 <div className="profile-stats">
                     <div className="stat-card">
                         <span className="stat-value">128</span>
-                        <span className="stat-label">Projects</span>
+                        <span className="stat-label">Posts</span>
                     </div>
                     <div className="stat-card">
                         <span className="stat-value">15.2k</span>
@@ -76,14 +76,14 @@ export default function Profile() {
                     </div>
                     <div className="stat-card">
                         <span className="stat-value">892</span>
-                        <span className="stat-label">Contributions</span>
+                        <span className="stat-label">Comments</span>
                     </div>
                 </div>
 
                 <div className="profile-content">
                     <div className="content-section">
                         <h2 className="section-title">Recent Activity</h2>
-                        <div className="activity-grid">
+                        {/* <div className="activity-grid">
                             {[1, 2, 3, 4, 5, 6].map((item) => (
                                 <div key={item} className="activity-card">
                                     <div className="activity-header">
@@ -93,7 +93,7 @@ export default function Profile() {
                                     <p className="activity-description">Updated the UI components for Project Alpha with new animations</p>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
