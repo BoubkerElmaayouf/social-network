@@ -388,17 +388,17 @@ a {
 }
 
 .footer {
-  position: absolute;
-  top: 100%;
+  position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  word-break: break-all;
-  background: rgba(8, 11, 17, 0.8);
+  word-break: break-word;
+  /* background: rgba(8, 11, 17, 0.8); */
   color: #28A745;
-  border-top: 1px solid rgba(79, 248, 104, 0.2);
+  /* border-top: 1px solid rgba(79, 248, 104, 0.2); */
   backdrop-filter: blur(10px);
 }

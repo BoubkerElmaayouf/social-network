@@ -8,7 +8,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #080B11;
   position: relative;
   overflow: hidden;
   padding: 2rem;
@@ -65,7 +64,7 @@
 .login-card {
   width: 100%;
   max-width: 400px;
-  background: rgba(20, 20, 20, 0);
+  /* background: rgba(20, 20, 20, 0); */
 
   border-radius: 15px;
   padding: 2rem;

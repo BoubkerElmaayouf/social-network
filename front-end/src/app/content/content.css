@@ -289,9 +289,9 @@
     right: 0;
     bottom: 0;
     width: 240px;
-    background: rgba(8, 11, 17, 0);
+    background: rgba(8, 11, 17, 0.09);
     backdrop-filter: blur(10px);
-    box-shadow: -4px 0px 6px -2px rgba(79, 248, 104, 0.1);
+    /* box-shadow: -4px 0px 6px -2px rgba(79, 248, 104, 0.1); */
     z-index: 40;
 }
 

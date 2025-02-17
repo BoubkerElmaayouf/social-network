@@ -5,6 +5,9 @@ import React from 'react';
 import { Footer } from '../page.js';
 import Link from 'next/link.js';
 import Image from 'next/image.js';
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Prevents FOUC
+config.autoAddCss = false; // Disable automatic CSS injection
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faComments, faBell, faUserFriends, faUser, faGear, faCog, faBars,faSearch,  faThumbsUp, 
     faThumbsDown, 
@@ -36,9 +39,9 @@ export default function Content() {
                 <div className="shape shape-1"></div>
                 <div className="shape shape-2"></div>
             </div>
-            <Leftsidebar />
+            <Leftsidebar/>
             <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
-            <PostContainer />
+            <PostContainer/>
                 {/* just some shade shapes */}
               
    
@@ -49,6 +52,13 @@ export default function Content() {
             </div>
         </div>
     );
+}
+
+export function groupmessage() {
+    return (
+        <div className="groupmessage">
+        </div>
+    )
 }
 
 //***************** the created post ***************/
@@ -481,7 +491,7 @@ export  function PostContainer() {
     );
 }
 export function Leftsidebar() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
     const menuItems = [
         { icon: faHouse, label: 'Home', href: '/' },
