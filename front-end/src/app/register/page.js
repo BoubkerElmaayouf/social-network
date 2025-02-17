@@ -129,6 +129,16 @@ export default function Register() {
               <div className="input-glow"></div>
             </div>
           </div>
+          <div className="input-wrapper">
+              <input
+                type="date"
+                name="socialLinks"
+                placeholder="Social Media Links"
+                value={formData.socialLinks}
+                onChange={handleChange}
+              />
+              <div className="input-glow"></div>
+            </div>
 
           <div className={`form-section optional ${isRequired ? 'revealed' : ''}`}>
           <p className='info-lable'>optional info</p>
@@ -143,16 +153,7 @@ export default function Register() {
               <div className="input-glow"></div>
             </div>
 
-            <div className="input-wrapper">
-              <input
-                type="text"
-                name="socialLinks"
-                placeholder="Social Media Links"
-                value={formData.socialLinks}
-                onChange={handleChange}
-              />
-              <div className="input-glow"></div>
-            </div>
+          
 
             <div className="file-input-wrapper">
               <label>Profile Picture</label>
