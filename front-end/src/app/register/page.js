@@ -22,6 +22,8 @@ export default function Register() {
 
   const [progress, setProgress] = useState(0);
   const [isRequired, setIsRequired] = useState(false);
+  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const requiredFields = ['email', 'password', 'firstName', 'lastName'];
@@ -62,6 +64,12 @@ export default function Register() {
       });
       const data = await response.json();
       console.log(data);
+      if (response.status === 201) {
+        router.push("/content");
+      } else {
+        setError(data);
+
+      }
       
   
       // if (!response.ok) {
@@ -105,6 +113,8 @@ export default function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
+        <div className='error-msg'></div>
+        {error && <div className='error-msg'>{error}</div>}
           <div className="form-section required">
           <p className='info-lable'>required info</p>
             <div className="input-grid">
