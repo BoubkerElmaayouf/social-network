@@ -15,6 +15,7 @@ export default function Register() {
     firstName: '',
     lastName: '',
     aboutMe: '',
+    dateOfBirth: '',
     avatar: null,
     nickName: ''
   });
@@ -59,17 +60,20 @@ export default function Register() {
         },
         body: JSON.stringify(formData)
       });
-  
-      if (!response.ok) {
-        throw new Error(`Registration failed with status ${response.status}`);
-      }
-      
-      if (response.status === 201) {
-        router.push("/login");
-      }
+      const data = await response.json();
+      console.log(data);
       
   
-      router.push("/login");
+      // if (!response.ok) {
+      //   throw new Error(`Registration failed with status ${response.status}`);
+      // }
+      
+      // if (response.status === 201) {
+      //   router.push("/login");
+      // }
+      
+  
+      // router.push("/login");
     } catch (error) {
       alert(error.message);
     }
