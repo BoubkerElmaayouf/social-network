@@ -54,12 +54,12 @@ export default function Content() {
     );
 }
 
-export function groupmessage() {
-    return (
-        <div className="groupmessage">
-        </div>
-    )
-}
+// export function groupmessage() {
+//     return (
+//         <div className="groupmessage">
+//         </div>
+//     )
+// }
 
 //***************** the created post ***************/
 
