@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react';
 import './register.css';
 import { LoginButton } from '../login/page.js';
 import { Footer, Navbarrend } from '../page.js';
-
+// Replace the import
+import { useRouter } from 'next/navigation'; // Instead of 'next/compat/router'
 export default function Register() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -13,7 +16,7 @@ export default function Register() {
     lastName: '',
     aboutMe: '',
     avatar: null,
-    socialLinks: ''
+    nickName: ''
   });
 
   const [progress, setProgress] = useState(0);
@@ -43,6 +46,7 @@ export default function Register() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
     
   
 
@@ -50,17 +54,22 @@ export default function Register() {
     try {
       const response = await fetch('http://localhost:8080/api/register', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(formData)
       });
   
       if (!response.ok) {
-        throw new Error('Registration failed');
+        throw new Error(`Registration failed with status ${response.status}`);
       }
+      
+      if (response.status === 201) {
+        router.push("/login");
+      }
+      
   
-      const data = await response.json();
-      alert('Registration successful! Please log in.');
-      // Redirect to login page
-      // window.location.href = '/login';
+      router.push("/login");
     } catch (error) {
       alert(error.message);
     }
@@ -150,9 +159,8 @@ export default function Register() {
             <div className="input-wrapper">
               <input
                 type="date"
-                name="socialLinks"
-                placeholder="Social Media Links"
-                value={formData.socialLinks}
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
                 onChange={handleChange}
                 required
               />
@@ -163,6 +171,19 @@ export default function Register() {
 
           <div className={`form-section optional ${isRequired ? 'revealed' : ''}`}>
           <p className='info-lable'>optional info</p>
+          <div className="input-wrapper">
+                <input
+                  type="text"
+                  name="nickName"
+                  id="nickName"
+                  placeholder="Nick Name"
+                  required
+                  value={formData.nickName}
+                  onChange={handleChange}
+                />
+                <div className="input-glow"></div>
+          </div>
+
             <div className="input-wrapper">
               <textarea
                 name="aboutMe"
@@ -173,8 +194,6 @@ export default function Register() {
               ></textarea>
               <div className="input-glow"></div>
             </div>
-
-          
 
             <div className="file-input-wrapper">
               <label>Profile Picture</label>
