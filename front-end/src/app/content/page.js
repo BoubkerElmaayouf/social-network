@@ -35,20 +35,13 @@ export default function Content() {
     return (
         <div className='hero'>
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
-            <div className="background-shapes">
-                <div className="shape shape-1"></div>
-                <div className="shape shape-2"></div>
-            </div>
             <Leftsidebar/>
             <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
             <PostContainer/>
-                {/* just some shade shapes */}
-              
-   
 
             <div className='main-content'>
-                {/* <Chatbox /> */}
                 <Post Post={samplePost}/>
+                <Chatbox />
             </div>
         </div>
     );
@@ -113,11 +106,9 @@ export function Post({ post }) {
                 <h2 className="post-title">welcome to union </h2>
                 <p className="post-text">lets gooooooooooooooooooooo!!</p>
                 <div className="post-image">
-                    <Image 
-                        src="/public/bugs.jpg"
+                    <img 
+                        src="https://i.pinimg.com/736x/82/74/c4/8274c45adcf0b0781ab95f9f6692bb2d.jpg"
                         alt="Post image"
-                        width={500}
-                        height={300}
                         className="post-image"
                     />
                 </div>
@@ -546,33 +537,79 @@ export function Leftsidebar() {
 
 
 export function Rightsidebar({ isMobileOpen }) {
-    const rightMenuItems = [
-        { icon: faUser, label: 'Profile', href: '/profile' },
-        { icon: faGear, label: 'Settings', href: '/settings' },
-        { icon: faCog, label: 'Preferences', href: '/preferences' }
+
+    const friends = [
+        { id: 1, name: 'the dude 777', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'online' },
+        { id: 2, name: 'kamal dada', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'offline' },
+        { id: 3, name: 'take controle',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'offline' },
+        { id: 4, name: 'hohouz mohamed',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'online' },
+        { id: 5, name: 'ahmed',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'online' },
+        { id: 6, name: 'banan',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'online' },
+        { id: 7, name: 'l7mar',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', status: 'offline' },
+    ];
+
+    const groups = [
+        { id: 1, name: 'zone01 anounce',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', memberCount: 8 },
+        { id: 2, name: 'tach tach',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', memberCount: 5 },
+        { id: 3, name: 'tach tachh666',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', memberCount: 12 },
+        { id: 4, name: 'tatatatat',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', memberCount: 6 },
+        { id: 5, name: 'takakakaka',  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop', memberCount: 9 },
     ];
 
     return (
         <aside className={`right-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
             <div className="right-sidebar-content">
-                <nav className="right-sidebar-nav">
-                    {rightMenuItems.map((item, index) => (
-                        <Link 
-                            key={index}
-                            href={item.href}
-                            className="right-nav-item"
-                        >
-                            <FontAwesomeIcon icon={item.icon} className="right-nav-icon" />
-                            <span className="right-nav-label">{item.label}</span>
-                            <div className="right-nav-glow"></div>
-                        </Link>
-                    ))}
-                </nav>
+                <div className="right-sidebar-section">
+                    <h3 className="section-title">Friends</h3>
+                    <div className="friends-container scrollable-container">
+                        {friends.map((friend) => (
+                            <div key={friend.id} className="sidebar-item">
+                                <div className="avatar-container">
+                                    <img 
+                                        src={friend.avatar} 
+                                        alt={`${friend.name}'s avatar`}
+                                        className="avatar"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = '/avatars/default.jpg';
+                                        }}
+                                    />
+                                    <span className={`status-indicator ${friend.status}`}></span>
+                                </div>
+                                <span className="item-name">{friend.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="right-sidebar-section">
+                    <h3 className="section-title">Groups</h3>
+                    <div className="groups-container scrollable-container">
+                        {groups.map((group) => (
+                            <div key={group.id} className="sidebar-item">
+                                <div className="avatar-container">
+                                    <img 
+                                        src={group.avatar} 
+                                        alt={`${group.name} group avatar`}
+                                        className="avatar group-avatar"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = '/groups/default.jpg';
+                                        }}
+                                    />
+                                </div>
+                                <div className="item-details">
+                                    <span className="item-name">{group.name}</span>
+                                    <span className="item-meta">{group.memberCount} members</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </aside>
     );
 }
-
 
 export function Chatbox() {
     const [messages, setMessages] = useState([

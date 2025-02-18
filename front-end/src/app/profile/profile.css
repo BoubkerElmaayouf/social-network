@@ -72,8 +72,8 @@
   }
   
   .profile-details {
-    flex: 1;
-    padding-bottom: 1rem;
+    margin-top: -50px;
+    flex:1;
   }
   
   .profile-name-section {
@@ -90,7 +90,7 @@
     margin: 0;
   }
   
-  .profile-badge {
+  /* .profile-badge {
     background: linear-gradient(45deg, rgba(79, 248, 104, 0.2), rgba(40, 167, 69, 0.2));
     border: 1px solid rgba(79, 248, 104, 0.3);
     padding: 0.25rem 0.75rem;
@@ -98,10 +98,10 @@
     font-size: 0.875rem;
     color: #4FF868;
   }
-  
+   */
   .profile-bio {
     color: #a0aec0;
-    margin: 0.5rem 0 1rem;
+    /* margin: 0.5rem 0 1rem; */
     font-size: 1rem;
     line-height: 1.5;
   }

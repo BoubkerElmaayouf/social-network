@@ -21,6 +21,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+            {/* <div className="background-shapes">
+                <div className="shape shape-1"></div>
+                <div className="shape shape-2"></div>
+            </div> */}
         {children}
         {/* <Footer/> */}
       </body>
