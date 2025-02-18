@@ -5,7 +5,7 @@ import { Navbarrend, Footer } from "../page.js";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
-
+ 
 
 export function LoginButton({ text, path }) {
   return (

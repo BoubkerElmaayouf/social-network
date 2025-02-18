@@ -56,6 +56,13 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(formData);
+    //validation formData
+
+    if (formData.email === '' || formData.password === '' || formData.firstName === '' || formData.lastName === '' || formData.dateOfBirth === '' ) { 
+      setError("Please fill out all required fields");
+      return 
+    } 
+
     
   
 
@@ -74,7 +81,8 @@ export default function Register() {
         router.push("/login");
       } else {
         const data = await response.json();
-        setError(data);
+        console.log(data);
+        setError(data.Err);
       }
       // if (!response.ok) {
       //   throw new Error(`Registration failed with status ${response.status}`);
@@ -87,6 +95,8 @@ export default function Register() {
   
       // router.push("/login");
     } catch (error) {
+      console.log(error.message);
+      
       setError(error.message);
     }
   };
