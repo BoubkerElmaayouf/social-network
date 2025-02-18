@@ -4,6 +4,7 @@ import "./login.css";
 import { Navbarrend, Footer } from "../page.js";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 
 export function LoginButton({ text, path }) {
@@ -16,6 +17,8 @@ export function LoginButton({ text, path }) {
 }
 
 export default function Login() {
+
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -33,26 +36,29 @@ export default function Login() {
       };
       
       console.log(userData);
-    // try {
-    //   const response = await fetch("https://your-api-endpoint.com/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(userData),
-    //   });
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
 
-    //   if (!response.ok) {
-    //     throw new Error("Login failed");
-    //   }
+      if (response.status === 200) {
+        router.push("/content");
+      } else {
+        const data = await response.json();
+        setError(data);
+      }
 
-    //   const data = await response.json();
-    //   console.log("Login successful:", data);
-    //   // Handle successful login (e.g., redirect, store token, etc.)
-    // } catch (error) {
-    //   console.error("Error during login:", error);
-    //   // Handle error (e.g., show error message)
-    // }
+      // const data = await response.json();
+      // console.log("Login successful:", data);
+      // // Handle successful login (e.g., redirect, store token, etc.)
+    } catch (error) {
+      console.error("Error during login:", error);
+      // Handle error (e.g., show error message)
+    }
   };
 
   return (

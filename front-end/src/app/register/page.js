@@ -6,7 +6,13 @@ import { LoginButton } from '../login/page.js';
 import { Footer, Navbarrend } from '../page.js';
 // Replace the import
 import { useRouter } from 'next/navigation'; // Instead of 'next/compat/router'
+
+
+
+
 export default function Register() {
+
+
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -49,7 +55,7 @@ export default function Register() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
     
   
 
@@ -62,16 +68,14 @@ export default function Register() {
         },
         body: JSON.stringify(formData)
       });
-      const data = await response.json();
-      console.log(data);
-      if (response.status === 201) {
-        router.push("/content");
-      } else {
-        setError(data);
+      // console.log(data);
 
+      if (response.status === 201) {
+        router.push("/login");
+      } else {
+        const data = await response.json();
+        setError(data);
       }
-      
-  
       // if (!response.ok) {
       //   throw new Error(`Registration failed with status ${response.status}`);
       // }
@@ -83,7 +87,7 @@ export default function Register() {
   
       // router.push("/login");
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
     }
   };
 
