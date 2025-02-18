@@ -115,6 +115,32 @@ a {
   /* border-bottom: 1px solid rgba(79, 248, 104, 0.2); */
   z-index: 50;
 }
+.mobile-sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.mobile-sidebar-toggle:hover {
+  background: rgba(79, 248, 104, 0.1);
+}
+
+/* Mobile Layout */
+@media (max-width: 1100px) {
+  .mobile-sidebar-toggle {
+      display: flex;
+  }
+}
 
 .navbar-container {
   max-width: 1200px;

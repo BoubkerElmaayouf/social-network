@@ -41,7 +41,7 @@ export default function Content() {
 
             <div className='main-content'>
                 <Post Post={samplePost}/>
-                <Chatbox />
+                {/* <Chatbox /> */}
             </div>
         </div>
     );
@@ -107,7 +107,7 @@ export function Post({ post }) {
                 <p className="post-text">lets gooooooooooooooooooooo!!</p>
                 <div className="post-image">
                     <img 
-                        src="https://i.pinimg.com/736x/82/74/c4/8274c45adcf0b0781ab95f9f6692bb2d.jpg"
+                        src="https://i.pinimg.com/736x/5a/9d/a7/5a9da74b344b07bc2a28ad1c065e9fd1.jpg"
                         alt="Post image"
                         className="post-image"
                     />
@@ -198,7 +198,7 @@ export function Post({ post }) {
                 </div>
             )}
         </article>
-    );
+    )
 }
 
 export  function PostContainer() {
@@ -481,14 +481,15 @@ export  function PostContainer() {
         </div>
     );
 }
+
 export function Leftsidebar() {
     const [isCollapsed, setIsCollapsed] = useState(true);
 
     const menuItems = [
-        { icon: faHouse, label: 'Home', href: '/' },
+        { icon: faHouse, label: 'Home', href: '/content' },
         { icon: faComments, label: 'Chat', href: '/chat' },
         { icon: faBell, label: 'Notification', href: '/notification' },
-        { icon: faUserFriends, label: 'Connect', href: '/connect' }
+        { icon: faUserFriends, label: 'Groups', href: '/groups' }
     ];
 
     return (

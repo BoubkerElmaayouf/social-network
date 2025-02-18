@@ -232,6 +232,7 @@
     .sidebar.collapsed .nav-icon {
         margin: 0;
     }
+
 }
 
 /* Mobile Layout */
@@ -243,11 +244,11 @@
         right: 0;
         height: auto;
         border-right: none;
-        border-top: 1px solid rgba(79, 248, 104, 0.2);
+        /* border-top: 1px solid rgba(79, 248, 104, 0.2); */
     }
 
     .sidebar-content {
-        padding: 0.75rem;
+        padding: 0.6rem;
     }
 
     .collapse-button {
@@ -268,11 +269,11 @@
 
     .nav-label {
         margin: 0.25rem 0 0 0;
-        font-size: 0.75rem;
+        font-size: 0.6rem;
     }
 
     .nav-icon {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 }
 
