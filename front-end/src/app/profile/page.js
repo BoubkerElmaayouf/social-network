@@ -14,6 +14,8 @@ import { Post } from "../content/page";
 
 export default function Profile() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
     
     return (
         <div className="profile-hero">
@@ -38,9 +40,14 @@ export default function Profile() {
                             <button className="edit-profile">
                             <FontAwesomeIcon icon={faUserPlus} size="sm" /> Follow
                             </button>
-                            <button className="settings-button">
+                            <button className="settings-button" onClick={toggleSettingsPopup}>
                                 <FontAwesomeIcon icon={faCog} size="sm" />
                             </button>
+                            
+                            <SettingsPopup 
+                                isOpen={isSettingsOpen} 
+                                onClose={() => setIsSettingsOpen(false)} 
+                            />
                         </div>
                     </div>
                 </div>
@@ -72,12 +79,71 @@ export default function Profile() {
                             <Post/>
                             <Post/>
                             <Post/>
-
-                        </div>
-                        
+                        </div>      
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+
+
+const SettingsPopup = ({ isOpen, onClose }) => {
+    const [privacySetting, setPrivacySetting] = useState('private');
+  
+    if (!isOpen) return null;
+  
+    const handleOverlayClick = (e) => {
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      // Here you would typically make an API call to save the settings
+      console.log('Submitting privacy setting:', privacySetting);
+      onClose();
+    };
+  
+    const handlePrivacyChange = (e) => {
+      setPrivacySetting(e.target.value);
+    };
+  
+    return (
+      <div className="setting-popup-overlay" onClick={handleOverlayClick}>
+        <div className="settings-popup">
+          <div className="settings-content">
+            <h2>Privacy Settings</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="setting-radio-group">
+                <label>
+                  <input 
+                    type="radio" 
+                    name="privacy" 
+                    value="private" 
+                    checked={privacySetting === 'private'}
+                    onChange={handlePrivacyChange}
+                  />
+                  Private
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    name="privacy" 
+                    value="public" 
+                    checked={privacySetting === 'public'}
+                    onChange={handlePrivacyChange}
+                  />
+                  Public
+                </label>
+              </div>
+              <button type="submit" className="submit-settings">
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  };
