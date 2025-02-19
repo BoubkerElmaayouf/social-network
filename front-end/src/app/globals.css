@@ -428,3 +428,29 @@ a {
   /* border-top: 1px solid rgba(79, 248, 104, 0.2); */
   backdrop-filter: blur(10px);
 }
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  display: inline-flex;
+  gap: 10px;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  height: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    linear-gradient(rgba(79, 248, 104, 0.212) 0 0) top/100% 40% no-repeat,
+    radial-gradient(farthest-side, rgba(79, 248, 104, 0.212) 95%, #0000) 50%/8px 8px no-repeat
+    #fff;
+  animation: l7 1.5s infinite alternate ease-in;
+}
+
+@keyframes l7 {
+  0%,
+  70% {background-size:100% 40%,8px 8px}
+  85% {background-size:100% 120%,8px 8px}
+  100% {background-size:100% 40%,8px 8px}
+}
