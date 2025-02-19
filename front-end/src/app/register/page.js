@@ -82,7 +82,7 @@ export default function Register() {
       } else {
         const data = await response.json();
         console.log(data);
-        setError(data.Err);
+        setError(data.error);
       }
       // if (!response.ok) {
       //   throw new Error(`Registration failed with status ${response.status}`);

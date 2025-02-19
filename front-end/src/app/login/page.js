@@ -17,6 +17,8 @@ export function LoginButton({ text, path }) {
 }
 
 export default function Login() {
+  const [error, setError] = useState(null);
+
 
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -40,16 +42,18 @@ export default function Login() {
       const response = await fetch("http://localhost:8080/api/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
 
+      
       if (response.status === 200) {
         router.push("/content");
       } else {
         const data = await response.json();
-        setError(data);
+        console.log(data);
+        setError(data.error);
       }
 
       // const data = await response.json();
@@ -110,6 +114,8 @@ export default function Login() {
             <h1>Welcome Back</h1>
             <p>Please sign in to continue</p>
           </div>
+          {error && <div className='error-msg'>{error}</div>}
+
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-group">
