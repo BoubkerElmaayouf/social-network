@@ -1,0 +1,238 @@
+.group-hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #111827;
+}
+
+.group-container {
+    position: relative;
+    width: min(100%, calc(100% - 500px));
+    margin-left: 250px;
+    min-height: calc(100vh - 64px);
+    padding: clamp(1rem, 3vw, 2rem);
+    margin-top: 64px;
+    backdrop-filter: blur(10px);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Group Header Section */
+.group-header {
+    position: relative;
+    padding: clamp(0.75rem, 2vw, 1rem);
+    height: auto;
+    min-height: 230px;
+    border-radius: 12px;
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+    background: rgba(17, 24, 39, 0.8);
+}
+
+.group-cover {
+    height: 200px;
+    border-radius: 8px;
+    background: linear-gradient(45deg, rgba(79, 248, 104, 0.1), rgba(40, 167, 69, 0.1));
+    margin-bottom: -170px;
+    position: relative;
+    overflow: hidden;
+}
+
+.group-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #4FF868, #28A745);
+    opacity: 0.1;
+    filter: blur(50px);
+}
+
+/* Group Info Section */
+.group-info {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: clamp(1rem, 2vw, 2rem);
+    padding: 0 clamp(0.5rem, 1vw, 1rem);
+}
+
+.group-avatar {
+    width: clamp(80px, 10vw, 100px);
+    height: clamp(80px, 10vw, 100px);
+    flex-shrink: 0;
+    border-radius: 12px;
+    border: 3px solid rgba(79, 248, 104, 0.3);
+    background: linear-gradient(45deg, rgba(79, 248, 104, 0.2), rgba(40, 167, 69, 0.2));
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4FF868;
+}
+
+.group-details {
+    flex: 1;
+    min-width: 250px;
+}
+
+.group-name-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.group-name {
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.group-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    background: rgba(79, 248, 104, 0.1);
+    border: 1px solid rgba(79, 248, 104, 0.3);
+    color: #4FF868;
+    font-size: 0.875rem;
+}
+
+.group-description {
+    color: #a0aec0;
+    margin: 0.5rem 0 1rem;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.5;
+}
+
+/* Group Actions */
+.group-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.join-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(79, 248, 104, 0.3);
+    background: rgba(79, 248, 104, 0.1);
+    color: #4FF868;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    font-weight: 500;
+}
+
+.join-group:hover {
+    background: rgba(79, 248, 104, 0.2);
+    border-color: rgba(79, 248, 104, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Stats Section */
+.group-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: clamp(0.75rem, 2vw, 1rem);
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.stat-card {
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    border-radius: 12px;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(79, 248, 104, 0.05);
+}
+
+.stat-card:hover {
+    border-color: rgba(79, 248, 104, 0.4);
+    transform: translateY(-2px);
+    background: rgba(79, 248, 104, 0.1);
+}
+
+.stat-value {
+    display: block;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 600;
+    color: #4FF868;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #a0aec0;
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+}
+.group-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+    .group-container {
+        width: calc(100% - 250px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .group-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .group-actions {
+        margin: 1rem auto 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .group-container {
+        width: 100%;
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    .group-header {
+        margin-bottom: 1rem;
+    }
+    
+    .group-avatar {
+        margin-top: -50px;
+    }
+    
+    .group-details {
+        min-width: 100%;
+    }
+    
+    .group-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .group-name-section {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .group-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .group-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}

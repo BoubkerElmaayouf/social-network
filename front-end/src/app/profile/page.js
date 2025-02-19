@@ -10,6 +10,8 @@ import {
     faUserPlus, 
 } from '@fortawesome/free-solid-svg-icons';
 
+import { Post } from "../content/page";
+
 export default function Profile() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
     
@@ -21,9 +23,9 @@ export default function Profile() {
             <div className="profile-container">
                 <div className="profile-header">
                     <div className="profile-cover"></div>
-                    <div className="profile-info">
-                        <div className="profile-avatar">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop" alt="Profile" />
+                    <div className="user_profile-info">
+                        <div className="user_profile-avatar">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=600&fit=crop" alt="Profile" />
                         </div>
                         <div className="profile-details">
                             <div className="profile-name-section">
@@ -65,6 +67,13 @@ export default function Profile() {
                 <div className="profile-content">
                     <div className="content-section">
                         <h2 className="section-title">Recent Activity</h2>
+                        <div className="created-Posts">
+                            <Post/>
+                            <Post/>
+                            <Post/>
+                            <Post/>
+
+                        </div>
                         
                     </div>
                 </div>
