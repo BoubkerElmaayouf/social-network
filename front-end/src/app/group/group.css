@@ -248,7 +248,8 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(17, 24, 39, 0.8);
+    background: rgba(17, 24, 39, 0.2);
+    filter: blur(100);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 12px;
 }
@@ -299,7 +300,8 @@
 }
 
 .popup-content {
-    background: #1a2333;
+    background: rgba(17, 24, 39, 1);
+    filter: blur(100);
     border-radius: 12px;
     padding: 2rem;
     position: relative;
@@ -360,7 +362,7 @@
 }
 
 .form-popup h2 {
-    color: white;
+    color: #28A745;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
 }
@@ -384,9 +386,10 @@
     background: rgba(79, 248, 104, 0.05);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 8px;
-    color: white;
+    color: #ccc;
     font-size: 1rem;
     transition: all 0.3s ease;
+    resize: none;
 }
 
 .form-group input:focus,
@@ -413,7 +416,7 @@
     gap: 0.5rem;
     padding: 0.75rem 1rem;
     background: rgba(79, 248, 104, 0.1);
-    border: 1px solid rgba(79, 248, 104, 0.2);
+    border: 1px dashed rgba(79, 248, 104, 0.2);
     border-radius: 8px;
     color: #4FF868;
     cursor: pointer;
@@ -429,12 +432,39 @@
     max-width: 100%;
     border-radius: 8px;
     overflow: hidden;
+    position: relative;
 }
 
 .image-preview img {
     width: 100%;
     height: auto;
     display: block;
+}
+
+.remove-image {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.remove-image:hover {
+    background: rgba(255, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
 }
 
 .submit-button {

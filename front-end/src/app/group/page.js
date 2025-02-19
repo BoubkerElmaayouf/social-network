@@ -101,6 +101,12 @@ export function CreateGroupPost() {
         setShowEventForm(false);
         setShowPostForm(false);
     };
+    const removeImage = () => {
+        setSelectedImage(null);
+        // Reset the file input
+        const fileInput = document.getElementById('postImage');
+        if (fileInput) fileInput.value = '';
+    };
 
     return (
         <div className='create-group-post'>
@@ -217,6 +223,13 @@ export function CreateGroupPost() {
                                     {selectedImage && (
                                         <div className='image-preview'>
                                             <img src={selectedImage} alt="Preview" />
+                                            <button 
+                                                type="button"
+                                                className="remove-image"
+                                                onClick={removeImage}
+                                            >
+                                                ×
+                                            </button>
                                         </div>
                                     )}
                                 </div>

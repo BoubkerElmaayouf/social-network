@@ -8,6 +8,14 @@ import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../content/page";
 //     faCog, 
 //     faUserPlus, 
 // } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+    faUserGroup, 
+    faTimes, 
+    faImage,
+    faArrowRight,
+    faPlus
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function Groups() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
@@ -76,6 +84,9 @@ export default function Groups() {
                 <div className="groups-header">
                     <h1 className="groups-title">Discover Groups</h1>
                     <p className="groups-subtitle">Join communities that match your interests</p>
+                    <div className="create-group">
+                     <CreateGroupForm/>
+                    </div>
                 </div>
 
                 <div className="groups-grid">
@@ -117,6 +128,108 @@ export default function Groups() {
                     ))}
                 </div>
             </main>
+        </div>
+    );
+}
+
+export function CreateGroupForm() {
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedImage(URL.createObjectURL(file));
+        }
+    };
+
+    const removeImage = () => {
+        setSelectedImage(null);
+        const fileInput = document.getElementById('groupImage');
+        if (fileInput) fileInput.value = '';
+    };
+
+    return (
+        <div className="create-group">
+            <div className="create-group-input">
+                <div className="user-avatar">
+                    <FontAwesomeIcon icon={faUserGroup} />
+                </div>
+                <button 
+                    className="create-button"
+                    onClick={() => setShowCreateForm(true)}
+                >
+                    <FontAwesomeIcon icon={faPlus} />
+                    Create Your Group
+                </button>
+            </div>
+
+            {showCreateForm && (
+                <div className="popup-overlay" onClick={() => setShowCreateForm(false)}>
+                    <div className="popup-content" onClick={e => e.stopPropagation()}>
+                        <button 
+                            className="close-button"
+                            onClick={() => setShowCreateForm(false)}
+                        >
+                            <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                        
+                        <h2>Create New Group</h2>
+                        <form className="create-group-form">
+                            <div className="form-group">
+                                {/* <label htmlFor="groupTitle">Group Title</label> */}
+                                <input 
+                                    type="text" 
+                                    id="groupTitle" 
+                                    placeholder="Enter group title"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                {/* <label htmlFor="groupDescription">Group Description</label> */}
+                                <textarea 
+                                    id="groupDescription" 
+                                    placeholder="Describe your group..."
+                                    rows="4"
+                                ></textarea>
+                            </div>
+
+                            <div className="form-group">
+                                {/* <label htmlFor="groupImage">Group Image</label> */}
+                                <div className="image-upload-container">
+                                    <input 
+                                        type="file" 
+                                        id="groupImage" 
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                    />
+                                    <label htmlFor="groupImage" className="image-upload-label">
+                                        <FontAwesomeIcon icon={faImage} />
+                                        <span>Choose Group Image</span>
+                                    </label>
+                                    {selectedImage && (
+                                        <div className="image-preview">
+                                            <img src={selectedImage} alt="Preview" />
+                                            <button 
+                                                type="button"
+                                                className="remove-image"
+                                                onClick={removeImage}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <button type="submit" className="submit-button">
+                                Create Group
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
