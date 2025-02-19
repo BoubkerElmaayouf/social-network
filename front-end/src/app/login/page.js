@@ -3,9 +3,9 @@
 import "./login.css";
 import { Navbarrend, Footer } from "../page.js";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
- 
+import { checkAuth } from "@/utilis/ auth"; 
 
 export function LoginButton({ text, path }) {
   return (
@@ -18,11 +18,27 @@ export function LoginButton({ text, path }) {
 
 export default function Login() {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Add a loading state
 
 
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+
+    // Check if the user is already authenticated
+    useEffect( () => {
+      const verifyAuth = async () => {
+        const isAuthenticated = await checkAuth();
+        if (isAuthenticated) {
+          router.push("/content"); // Redirect to the index page if authenticated
+        } else {
+          setLoading(false); // Update the loading state
+        }
+      };
+  
+     verifyAuth();
+    }, [router]);
 
 
 
@@ -64,6 +80,10 @@ export default function Login() {
       // Handle error (e.g., show error message)
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a loading spinner
+  }
 
   return (
     <div className="hero">
