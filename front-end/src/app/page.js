@@ -10,8 +10,6 @@ export default function Home() {
   )
 }
 
-
-
 export function Navbarrend({ NavButton }) {
   return (
     <nav className="navbar">
