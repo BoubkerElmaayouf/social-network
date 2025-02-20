@@ -855,10 +855,18 @@ export function Chatbox() {
 }
 //  ********* navbar
 
-export function Navbar({ setIsMobileRightSidebarOpen }) {
+export  function  Navbar({ setIsMobileRightSidebarOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [userdata, setUserdata] = useState(null);
   const router = useRouter();
+  useEffect(() => {
+    async function getUserData() {
+      const userdata = await fetchUserInfo(); 
+      setUserdata(userdata); // Store the user data in state
+    }
+    getUserData();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -947,15 +955,15 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className="profile-avatar">
-              <Image
-                src="../public/global_avatar.svg"
+              <img
+                src={userdata?.avatar || "https://i.pinimg.com/736x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg"}
                 alt="Profile"
                 width={32}
                 height={32}
                 className="avatar-image"
               />
             </div>
-            <span className="username">Belmaayo</span>
+            <span className="username">{userdata?.firstName || "loading..."}</span>
             <svg
               className={`dropdown-arrow ${isDropdownOpen ? "open" : ""}`}
               width="12"
@@ -990,4 +998,24 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
       </div>
     </nav>
   );
+}
+
+
+export  async function fetchUserInfo() {
+    try {
+        const response = await fetch("http://localhost:8080/api/users/info", {
+            method: "GET",
+            credentials: "include",
+          });
+      
+          if (response.status === 200) {
+            const data = await response.json();
+            return  data;
+          } else {
+            return false;
+          }
+    } catch (error) {
+        console.error("Error checking authentication:", error);
+        return false;
+    }
 }
