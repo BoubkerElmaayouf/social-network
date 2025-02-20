@@ -858,8 +858,8 @@ export function Chatbox() {
 export  function  Navbar({ setIsMobileRightSidebarOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [userdata, setUserdata] = useState(null);
   const router = useRouter();
+  const [userdata, setUserdata] = useState(null);
   useEffect(() => {
     async function getUserData() {
       const userdata = await fetchUserInfo(); 

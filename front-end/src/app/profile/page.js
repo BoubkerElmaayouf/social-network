@@ -10,13 +10,25 @@ import {
     faUserPlus, 
 } from '@fortawesome/free-solid-svg-icons';
 
+import { fetchUserInfo } from "../content/page.js";
+
 import { Post } from "../content/page";
 
 export default function Profile() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
     const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
-    
+
+      const [userdata, setUserdata] = useState(null);
+      useEffect(() => {
+        async function getUserData() {
+          const userdata = await fetchUserInfo(); 
+          setUserdata(userdata); // Store the user data in state
+        }
+        getUserData();
+      }, [])
+
     return (
         <div className="profile-hero">
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
@@ -27,14 +39,14 @@ export default function Profile() {
                     <div className="profile-cover"></div>
                     <div className="user_profile-info">
                         <div className="user_profile-avatar">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=600&fit=crop" alt="Profile" />
+                            <img src={userdata?.avatar || ""} alt="Profile" />
                         </div>
                         <div className="profile-details">
                             <div className="profile-name-section">
-                                <h1 className="profile-name">belmmayo</h1>
-                                {/* <span className="profile-badge">Pro Member</span> */}
+                                <h1 className="profile-name">{userdata?.firstName + " " + userdata?.lastName}</h1>
+                                <span className="profile-badge">{userdata?.nickName || ""}</span>
                             </div>
-                            <p className="profile-bio">Full-stack developer passionate about creating innovative solutions and pushing the boundaries of technology.</p>
+                            <p className="profile-bio">{userdata?.aboutme || ""}</p>
                         </div>
                         <div className="profile-actions">
                             <button className="edit-profile">
@@ -55,19 +67,22 @@ export default function Profile() {
                 <div className="profile-stats">
                     <div className="stat-card">
                         <span className="stat-value">128</span>
-                        <span className="stat-label">Posts</span>
+                        <span className="stat-label">posts</span>
                     </div>
                     <div className="stat-card">
-                        <span className="stat-value">15.2k</span>
-                        <span className="stat-label">Followers</span>
+                        <span className="stat-value">{userdata?.nbr}</span>
+                        <span className="stat-label">followers</span>
                     </div>
                     <div className="stat-card">
-                        <span className="stat-value">2.1k</span>
-                        <span className="stat-label">Following</span>
+                    <span className="stat-value">
+                      {userdata?.datebirth ? formatDate(userdata.datebirth) : "loading..."}
+                    </span>
+
+                        <span className="stat-label">birth date</span>
                     </div>
                     <div className="stat-card">
-                        <span className="stat-value">892</span>
-                        <span className="stat-label">Comments</span>
+                        <span className="stat-value">{userdata?.type === true ? "Private" : "Public"}</span>
+                        <span className="stat-label">account</span>
                     </div>
                 </div>
 
@@ -147,3 +162,8 @@ const SettingsPopup = ({ isOpen, onClose }) => {
       </div>
     );
   };
+
+function formatDate(isoDate) {
+    const [year, month, day] = isoDate.split("T")[0].split("-");
+    return `${day}/${month}/${year}`;
+}
