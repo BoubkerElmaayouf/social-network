@@ -82,7 +82,7 @@ export default function Login() {
   };
 
   if (loading) {
-    return <div className="loader"></div>
+    return <div></div>
   }
 
   return (

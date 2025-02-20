@@ -63,17 +63,38 @@ export default function Register() {
       return 
     } 
 
+
+
     
   
 
   
     try {
+
+
+      const formDataToSend = new FormData();
+
+      // Append each field separately
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("password", formData.password);
+      formDataToSend.append("firstName", formData.firstName);
+      formDataToSend.append("lastName", formData.lastName);
+      formDataToSend.append("dateOfBirth", formData.dateOfBirth);
+      if (formData.nickName) {
+        formDataToSend.append("nickName", formData.nickName);
+      } 
+       if (formData.aboutMe) {
+        formDataToSend.append("aboutMe", formData.aboutMe);
+      }
+      if (formData.avatar) {
+        formDataToSend.append("avatar", formData.avatar);
+      }
+
+            
       const response = await fetch('http://localhost:8080/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+
+        body: formDataToSend
       });
       // console.log(data);
 
@@ -96,8 +117,9 @@ export default function Register() {
       // router.push("/login");
     } catch (error) {
       console.log(error.message);
+      setError("Registration failed please try again later");
       
-      setError(error.message);
+      // setError(error.message);
     }
   };
 
