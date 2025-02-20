@@ -213,6 +213,7 @@ export function Post({ post }) {
 }
 
 export function PostContainer() {
+    const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -269,11 +270,14 @@ export function PostContainer() {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      setImageFile(file);
+
     }
   };
 
   const removeImage = () => {
     setImagePreview(null);
+    setImageFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -298,9 +302,9 @@ export function PostContainer() {
         newPostForm.append("title", formData.title);
         newPostForm.append("content", formData.content);
         newPostForm.append("privacy", formData.privacy);
-        if (imagePreview) newPostForm.append("image", imagePreview);
+        if (imageFile) newPostForm.append("image", imageFile);
 
-            
+     
         const response = await fetch("http://localhost:8080/api/post/add", {
             method: "POST",
             headers: {
@@ -322,9 +326,12 @@ export function PostContainer() {
             setImagePreview(null);
             // router.push("/content");
         } else {
-            const data = await response.json();
-            console.log(data);
-            setError(data.error);
+            console.log(response.status);
+            
+            // const data = await response.json();
+            console.log("fqsdqfs");
+            // console.log(data.error)
+            // setError(data.error);
         }
 
     } catch (error) {
