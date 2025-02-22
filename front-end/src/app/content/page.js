@@ -956,7 +956,7 @@ export  function  Navbar({ setIsMobileRightSidebarOpen }) {
           >
             <div className="profile-avatar">
               <img
-src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar}` : "/default-avatar.svg"}
+src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar.split("/")[1]}?path=${userdata.avatar.split("/")[2]}` : "/default-avatar.svg"}
 alt="Profile"
                 width={32}
                 height={32}
