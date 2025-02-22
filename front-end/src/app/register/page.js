@@ -111,7 +111,7 @@ export default function Register() {
   };
 
   return (
-    <div className='hero'>
+    <div className='register-hero'>
       <Navbarrend NavButton={() => <LoginButton text="Login" path="/login" />} />
       <div className="register-container">
         <div className="background-shapes">
