@@ -78,7 +78,7 @@ export  function Post({ post }) {
           <div className="user-avatar">
             <img
               src={post?.avatar
-                ? `http://localhost:8080/${post.avatar.split("/")[1]}?path=${post.avatar.split("/")[2]}`
+                ? `http://localhost:8080/images?path=${post.avatar}`
                 : "/default-img.jpg"}
               alt="User avatar"
               width={40}
@@ -970,7 +970,7 @@ export  function  Navbar({ setIsMobileRightSidebarOpen }) {
           >
             <div className="profile-avatar">
               <img
-src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar.split("/")[1]}?path=${userdata.avatar.split("/")[2]}` : "/default-avatar.svg"}
+src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata.avatar}` : "/default-avatar.svg"}
 alt="Profile"
                 width={32}
                 height={32}
