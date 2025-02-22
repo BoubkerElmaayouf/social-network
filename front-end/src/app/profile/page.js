@@ -39,11 +39,11 @@ export default function Profile() {
                     <div className="profile-cover"></div>
                     <div className="user_profile-info">
                         <div className="user_profile-avatar">
-                            <img src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar.split("/")[1]}?path=${userdata.avatar.split("/")[2]}` : "/default-avatar.svg"} alt="Profile" />
+                            <img src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar.split("/")[1]}?path=${userdata.avatar.split("/")[2]}` : "/default-img.jpg"} alt="Profile" />
                         </div>
                         <div className="profile-details">
                             <div className="profile-name-section">
-                                <h1 className="profile-name">{userdata?.firstName + " " + userdata?.lastName}</h1>
+                                <h1 className="profile-name">{userdata?.firstName + " " + userdata?.lastName || "loading..."}</h1>
                                 <span className="profile-badge">{userdata?.nickName || ""}</span>
                             </div>
                             <p className="profile-bio">{userdata?.aboutme || ""}</p>
