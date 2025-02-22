@@ -131,22 +131,75 @@ export default function Groups() {
         </div>
     );
 }
-
 export function CreateGroupForm() {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        image: null,
+    });
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedImage(URL.createObjectURL(file));
+            setFormData({ ...formData, image: file });
         }
     };
 
     const removeImage = () => {
         setSelectedImage(null);
+        setFormData({ ...formData, image: null });
         const fileInput = document.getElementById('groupImage');
         if (fileInput) fileInput.value = '';
+    };
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData({ ...formData, [id]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Here you can handle the form submission
+        console.log('Form Data:', formData);
+
+        // Example: Send formData to an API
+        const submitData = new FormData();
+        submitData.append('title', formData.title);
+        submitData.append('description', formData.description);
+        if (formData.image) {
+            submitData.append('image', formData.image);
+        }
+
+        // Example API call (replace with your actual API endpoint)
+        fetch('http://localhost:8080/api/groups/add', {
+            method: 'POST',
+            body: submitData,
+            credentials: 'include',
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success (e.g., show a success message, reset the form, etc.)
+            resetForm();
+        })
+        .catch((error) => {
+            console.error('Error fetching:', error);
+            // Handle error (e.g., show an error message)
+        });
+    };
+
+    const resetForm = () => {
+        setFormData({
+            title: '',
+            description: '',
+            image: null,
+        });
+        setSelectedImage(null);
+        setShowCreateForm(false);
     };
 
     return (
@@ -175,27 +228,28 @@ export function CreateGroupForm() {
                         </button>
                         
                         <h2>Create New Group</h2>
-                        <form className="create-group-form">
+                        <form className="create-group-form" onSubmit={handleSubmit}>
                             <div className="form-group">
-                                {/* <label htmlFor="groupTitle">Group Title</label> */}
                                 <input 
                                     type="text" 
-                                    id="groupTitle" 
+                                    id="title" 
                                     placeholder="Enter group title"
+                                    value={formData.title}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
                             <div className="form-group">
-                                {/* <label htmlFor="groupDescription">Group Description</label> */}
                                 <textarea 
-                                    id="groupDescription" 
+                                    id="description" 
                                     placeholder="Describe your group..."
                                     rows="4"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
                                 ></textarea>
                             </div>
 
                             <div className="form-group">
-                                {/* <label htmlFor="groupImage">Group Image</label> */}
                                 <div className="image-upload-container">
                                     <input 
                                         type="file" 
