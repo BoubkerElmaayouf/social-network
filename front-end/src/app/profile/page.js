@@ -23,7 +23,7 @@ export default function Profile() {
       const [userdata, setUserdata] = useState(null);
       useEffect(() => {
         async function getUserData() {
-          const userdata = await fetchUserInfo(); 
+          const userdata = await fetchUserInfo("api/users/info"); 
           setUserdata(userdata); // Store the user data in state
         }
         getUserData();

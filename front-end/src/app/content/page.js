@@ -1,6 +1,7 @@
 "use client";
 import "./content.css";
-import React from "react";
+import React, { use } from "react";
+// import "@public/default-img.jpg";
 // import './content.css';
 import { Footer } from "../page.js";
 import Link from "next/link.js";
@@ -31,19 +32,6 @@ import { useRouter } from "next/navigation";
 export default function Content() {
   const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] =
     useState(false);
-  const samplePost = {
-    title: "Sample Post Title",
-    content: "This is an example of a post content.",
-    user: {
-      name: "Tomy",
-      avatar: "/default-avatar.svg",
-    },
-    timestamp: "2 hours ago",
-    likes: 123,
-    dislikes: 12,
-    comments: [],
-  };
-
   return (
     <div className="hero">
       <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
@@ -52,23 +40,15 @@ export default function Content() {
       <PostContainer />
 
       <div className="main-content">
-        <Post Post={samplePost} />
-        {/* <Chatbox /> */}
+      <PostList/>
       </div>
     </div>
   );
 }
 
-// export function groupmessage() {
-//     return (
-//         <div className="groupmessage">
-//         </div>
-//     )
-// }
-
 //***************** the created post ***************/
 
-export function Post({ post }) {
+export  function Post({ post }) {
   const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
@@ -90,13 +70,16 @@ export function Post({ post }) {
     setNewComment("");
   };
 
+
   return (
     <article className="post">
       <div className="post-header">
         <div className="post-user-info">
           <div className="user-avatar">
-            <Image
-              src="/default-avatar.svg"
+            <img
+              src={post?.avatar
+                ? `http://localhost:8080/${post.avatar.split("/")[1]}?path=${post.avatar.split("/")[2]}`
+                : "/default-img.jpg"}
               alt="User avatar"
               width={40}
               height={40}
@@ -104,25 +87,23 @@ export function Post({ post }) {
             />
           </div>
           <div className="user-details">
-            <h3 className="user-name">belmaayo</h3>
+            <h3 className="user-name">{post?.first_name + " " + post?.last_name}</h3>
             <span className="post-timestamp">
               <FontAwesomeIcon icon={faClock} />
-              <time>2 hours ago</time>
+              <time>{post?.created_at}</time>
             </span>
           </div>
         </div>
       </div>
 
       <div className="post-content">
-        <h2 className="post-title">welcome to union </h2>
-        <p className="post-text">lets gooooooooooooooooooooo!!</p>
-        <div className="post-image">
-          <img
-            src="https://i.pinimg.com/736x/5a/9d/a7/5a9da74b344b07bc2a28ad1c065e9fd1.jpg"
-            alt="Post image"
-            className="post-image"
-          />
-        </div>
+        <h2 className="post-title">{post?.title || "loading title..."}</h2>
+        <p className="post-text">{post?.content || "loading content..."}</p>
+        {post?.image && ( // Only render if post.image exists and is not empty
+            <div className="post-image">
+              <img src={post.image} alt="Post image" className="post-image01" />
+            </div>
+        )}
       </div>
 
       <div className="post-actions">
@@ -211,6 +192,39 @@ export function Post({ post }) {
     </article>
   );
 }
+// *** listing the posts ********** //
+export  function PostList() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      const data = await fetchUserInfo("api/post/getAll");
+      if (data) {
+        setPosts(data);
+      } else {
+        setError("Failed to fetch posts");
+      }
+      setLoading(false);
+    }
+    fetchPosts();
+  }, []);
+
+  if (loading) return <p>Loading posts...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div className="post-list">
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+    </div>
+  );
+}
+
+
+
 
 export function PostContainer() {
     const [imageFile, setImageFile] = useState(null);
@@ -862,7 +876,7 @@ export  function  Navbar({ setIsMobileRightSidebarOpen }) {
   const [userdata, setUserdata] = useState(null);
   useEffect(() => {
     async function getUserData() {
-      const userdata = await fetchUserInfo(); 
+      const userdata = await fetchUserInfo("api/users/info"); 
       setUserdata(userdata); // Store the user data in state
     }
     getUserData();
@@ -1001,24 +1015,22 @@ alt="Profile"
 }
 
 
-export  async function fetchUserInfo() {
-    try {
-        const response = await fetch("http://localhost:8080/api/users/info", {
-            method: "GET",
-            credentials: "include",
-          });
-      
-          if (response.status === 200) {
-            const data = await response.json();
-            console.log(data);
-            
-            return  data;
+export async function fetchUserInfo(path) {
+  try {
+      const response = await fetch(`http://localhost:8080/${path}`, {
+          method: "GET",
+          credentials: "include",
+      });
 
-          } else {
-            return false;
-          }
-    } catch (error) {
-        console.error("Error checking authentication:", error);
-        return false;
-    }
+      if (response.status === 200) {
+          const data = await response.json();
+          console.log(data);
+          return data;
+      } else {
+          return false;
+      }
+  } catch (error) {
+      console.error("Error fetching user info:", error);
+      return false;
+  }
 }
