@@ -40,7 +40,7 @@ export default function Content() {
       <PostContainer />
 
       <div className="main-content">
-      <PostList/>
+        <PostList />
       </div>
     </div>
   );
@@ -48,7 +48,7 @@ export default function Content() {
 
 //***************** the created post ***************/
 
-export  function Post({ post }) {
+export function Post({ post }) {
   const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
@@ -100,9 +100,9 @@ export  function Post({ post }) {
         <h2 className="post-title">{post?.title || "loading title..."}</h2>
         <p className="post-text">{post?.content || "loading content..."}</p>
         {post?.image && ( // Only render if post.image exists and is not empty
-            <div className="post-image">
-              <img src={post.image} alt="Post image" className="post-image01" />
-            </div>
+          <div className="post-image">
+            <img src={post.image} alt="Post image" className="post-image01" />
+          </div>
         )}
       </div>
 
@@ -193,7 +193,7 @@ export  function Post({ post }) {
   );
 }
 // *** listing the posts ********** //
-export  function PostList() {
+export function PostList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -227,7 +227,7 @@ export  function PostList() {
 
 
 export function PostContainer() {
-    const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -311,45 +311,45 @@ export function PostContainer() {
 
     try {
 
-        const newPostForm = new FormData();
-        
-        newPostForm.append("title", formData.title);
-        newPostForm.append("content", formData.content);
-        newPostForm.append("privacy", formData.privacy);
-        if (imageFile) newPostForm.append("image", imageFile);
+      const newPostForm = new FormData();
 
-     
-        const response = await fetch("http://localhost:8080/api/post/add", {
-            method: "POST",
-            headers: {
-                // "Content-Type": "application/json",
-            },
-            body: newPostForm,
-            credentials: "include"
+      newPostForm.append("title", formData.title);
+      newPostForm.append("content", formData.content);
+      newPostForm.append("privacy", formData.privacy);
+      if (imageFile) newPostForm.append("image", imageFile);
+
+
+      const response = await fetch("http://localhost:8080/api/post/add", {
+        method: "POST",
+        headers: {
+          // "Content-Type": "application/json",
+        },
+        body: newPostForm,
+        credentials: "include"
+      });
+
+
+      if (response.status === 201) {
+        console.log("Post created successfully");
+        setIsModalOpen(false);
+        setFormData({
+          title: "",
+          content: "",
+          privacy: "public",
         });
+        setImagePreview(null);
+        // router.push("/content");
+      } else {
+        console.log(response.status);
 
-
-        if (response.status === 201) {
-            console.log("Post created successfully");
-            setIsModalOpen(false);
-            setFormData({
-              title: "",
-              content: "",
-              privacy: "public",
-            });
-            setImagePreview(null);
-            // router.push("/content");
-        } else {
-            console.log(response.status);
-            
-            // const data = await response.json();
-            console.log("fqsdqfs");
-            // console.log(data.error)
-            // setError(data.error);
-        }
+        // const data = await response.json();
+        console.log("fqsdqfs");
+        // console.log(data.error)
+        // setError(data.error);
+      }
 
     } catch (error) {
-        console.error("Error during login:", error);
+      console.error("Error during login:", error);
 
     }
   };
@@ -820,9 +820,8 @@ export function Chatbox() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`message-wrapper ${
-              message.sender === "self" ? "message-self" : "message-other"
-            }`}
+            className={`message-wrapper ${message.sender === "self" ? "message-self" : "message-other"
+              }`}
           >
             <div className="message">
               <p className="message-text">{message.text}</p>
@@ -869,14 +868,14 @@ export function Chatbox() {
 }
 //  ********* navbar
 
-export  function  Navbar({ setIsMobileRightSidebarOpen }) {
+export function Navbar({ setIsMobileRightSidebarOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
   const [userdata, setUserdata] = useState(null);
   useEffect(() => {
     async function getUserData() {
-      const userdata = await fetchUserInfo("api/users/info"); 
+      const userdata = await fetchUserInfo("api/users/info");
       setUserdata(userdata); // Store the user data in state
     }
     getUserData();
@@ -902,10 +901,29 @@ export  function  Navbar({ setIsMobileRightSidebarOpen }) {
     setIsDropdownOpen(false);
   };
 
-  const handleLogout = () => {
-    router.push("/login");
-    setIsDropdownOpen(false);
-  };
+  const handleLogout = async () => {
+    try {
+        const response = await fetch("http://localhost:8080/api/logout", {
+            method: "POST",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error("Logout failed");
+        }
+
+        if (response.status === 200) {
+            console.log("Logout successful");
+            router.push("/login");
+        }
+    } catch (error) {
+        console.error("Error logging out:", error);
+    } finally {
+        setIsDropdownOpen(false);
+    }
+};
+
+
 
   return (
     <nav className="navbar">
@@ -970,8 +988,8 @@ export  function  Navbar({ setIsMobileRightSidebarOpen }) {
           >
             <div className="profile-avatar">
               <img
-src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata.avatar}` : "/default-avatar.svg"}
-alt="Profile"
+                src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata.avatar}` : "/default-avatar.svg"}
+                alt="Profile"
                 width={32}
                 height={32}
                 className="avatar-image"
@@ -1017,20 +1035,20 @@ alt="Profile"
 
 export async function fetchUserInfo(path) {
   try {
-      const response = await fetch(`http://localhost:8080/${path}`, {
-          method: "GET",
-          credentials: "include",
-      });
+    const response = await fetch(`http://localhost:8080/${path}`, {
+      method: "GET",
+      credentials: "include",
+    });
 
-      if (response.status === 200) {
-          const data = await response.json();
-          console.log(data);
-          return data;
-      } else {
-          return false;
-      }
-  } catch (error) {
-      console.error("Error fetching user info:", error);
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } else {
       return false;
+    }
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    return false;
   }
 }
