@@ -956,8 +956,8 @@ export  function  Navbar({ setIsMobileRightSidebarOpen }) {
           >
             <div className="profile-avatar">
               <img
-                src={userdata?.avatar || "https://i.pinimg.com/736x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg"}
-                alt="Profile"
+src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar}` : "/default-avatar.svg"}
+alt="Profile"
                 width={32}
                 height={32}
                 className="avatar-image"
@@ -1010,7 +1010,10 @@ export  async function fetchUserInfo() {
       
           if (response.status === 200) {
             const data = await response.json();
+            console.log(data);
+            
             return  data;
+
           } else {
             return false;
           }

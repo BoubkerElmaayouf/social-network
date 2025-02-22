@@ -39,7 +39,7 @@ export default function Profile() {
                     <div className="profile-cover"></div>
                     <div className="user_profile-info">
                         <div className="user_profile-avatar">
-                            <img src={userdata?.avatar || ""} alt="Profile" />
+                            <img src={userdata?.avatar ? `http://localhost:8080/${userdata.avatar}` : "/default-avatar.svg"} alt="Profile" />
                         </div>
                         <div className="profile-details">
                             <div className="profile-name-section">
