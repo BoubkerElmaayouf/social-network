@@ -70,16 +70,17 @@ export function Post({ post }) {
     setNewComment("");
   };
 
-
   return (
     <article className="post">
       <div className="post-header">
         <div className="post-user-info">
           <div className="user-avatar">
             <img
-              src={post?.avatar
-                ? `http://localhost:8080/images?path=${post.avatar}`
-                : "/default-img.jpg"}
+              src={
+                post?.avatar
+                  ? `http://localhost:8080/images?path=${post.avatar}`
+                  : "/default-img.jpg"
+              }
               alt="User avatar"
               width={40}
               height={40}
@@ -87,7 +88,9 @@ export function Post({ post }) {
             />
           </div>
           <div className="user-details">
-            <h3 className="user-name">{post?.first_name + " " + post?.last_name}</h3>
+            <h3 className="user-name">
+              {post?.first_name + " " + post?.last_name}
+            </h3>
             <span className="post-timestamp">
               <FontAwesomeIcon icon={faClock} />
               <time>{post?.created_at}</time>
@@ -101,7 +104,11 @@ export function Post({ post }) {
         <p className="post-text">{post?.content || "loading content..."}</p>
         {post?.image && ( // Only render if post.image exists and is not empty
           <div className="post-image">
-            <img src={ `http://localhost:8080/images?path=${post.image}`} alt="Post image" className="post-image01" />
+            <img
+              src={`http://localhost:8080/images?path=${post.image}`}
+              alt="Post image"
+              className="post-image01"
+            />
           </div>
         )}
       </div>
@@ -223,9 +230,6 @@ export function PostList() {
   );
 }
 
-
-
-
 export function PostContainer() {
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -285,7 +289,6 @@ export function PostContainer() {
       };
       reader.readAsDataURL(file);
       setImageFile(file);
-
     }
   };
 
@@ -310,7 +313,6 @@ export function PostContainer() {
     // setImagePreview(null);
 
     try {
-
       const newPostForm = new FormData();
 
       newPostForm.append("title", formData.title);
@@ -318,16 +320,14 @@ export function PostContainer() {
       newPostForm.append("privacy", formData.privacy);
       if (imageFile) newPostForm.append("image", imageFile);
 
-
       const response = await fetch("http://localhost:8080/api/post/add", {
         method: "POST",
         headers: {
           // "Content-Type": "application/json",
         },
         body: newPostForm,
-        credentials: "include"
+        credentials: "include",
       });
-
 
       if (response.status === 201) {
         console.log("Post created successfully");
@@ -347,10 +347,8 @@ export function PostContainer() {
         // console.log(data.error)
         // setError(data.error);
       }
-
     } catch (error) {
       console.error("Error during login:", error);
-
     }
   };
 
@@ -820,8 +818,9 @@ export function Chatbox() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`message-wrapper ${message.sender === "self" ? "message-self" : "message-other"
-              }`}
+            className={`message-wrapper ${
+              message.sender === "self" ? "message-self" : "message-other"
+            }`}
           >
             <div className="message">
               <p className="message-text">{message.text}</p>
@@ -901,29 +900,33 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
     setIsDropdownOpen(false);
   };
 
+  const handle_search = (e) => {
+    e.preventDefault();
+    const searchType = document.querySelector('input[name="search-type"]:checked').value;
+    const searchQuery = e.target.querySelector(".search-bar").value;
+    router.push(`/search?query=${searchQuery}&type=${searchType}`);
+  };
   const handleLogout = async () => {
     try {
-        const response = await fetch("http://localhost:8080/api/logout", {
-            method: "POST",
-            credentials: "include",
-        });
+      const response = await fetch("http://localhost:8080/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
 
-        if (!response.ok) {
-            throw new Error("Logout failed");
-        }
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
 
-        if (response.status === 200) {
-            console.log("Logout successful");
-            router.push("/login");
-        }
+      if (response.status === 200) {
+        console.log("Logout successful");
+        router.push("/login");
+      }
     } catch (error) {
-        console.error("Error logging out:", error);
+      console.error("Error logging out:", error);
     } finally {
-        setIsDropdownOpen(false);
+      setIsDropdownOpen(false);
     }
-};
-
-
+  };
 
   return (
     <nav className="navbar">
@@ -941,11 +944,15 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
           <div className="search-section">
             <div className="search-input">
               <FontAwesomeIcon icon={faSearch} className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="search-bar"
-              />
+
+              <form onSubmit={handle_search} action="/search" method="get">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="search-bar"
+                />
+              </form>
+
               <div className="search-glow"></div>
             </div>
 
@@ -988,14 +995,20 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
           >
             <div className="profile-avatar">
               <img
-                src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata.avatar}` : "/default-avatar.svg"}
+                src={
+                  userdata?.avatar
+                    ? `http://localhost:8080/images?path=${userdata.avatar}`
+                    : "/default-avatar.svg"
+                }
                 alt="Profile"
                 width={32}
                 height={32}
                 className="avatar-image"
               />
             </div>
-            <span className="username">{userdata?.firstName || "loading..."}</span>
+            <span className="username">
+              {userdata?.firstName || "loading..."}
+            </span>
             <svg
               className={`dropdown-arrow ${isDropdownOpen ? "open" : ""}`}
               width="12"
@@ -1031,7 +1044,6 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
     </nav>
   );
 }
-
 
 export async function fetchUserInfo(path) {
   try {
