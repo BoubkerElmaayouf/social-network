@@ -73,7 +73,7 @@ export default function Search() {
                   >
                     <div className="result-content">
                       <img
-                        src={group.Path}
+                        src={`http://localhost:8080/images?path=${group.Path}`}
                         alt={`${group.Title} group avatar`}
                         className="avatar"
                       />

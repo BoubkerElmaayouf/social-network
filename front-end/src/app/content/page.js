@@ -38,7 +38,7 @@ export default function Content() {
       <Leftsidebar />
       <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
       <PostContainer />
-
+      <Chatbox/>
       <div className="main-content">
         <PostList />
       </div>
@@ -355,13 +355,13 @@ export function PostContainer() {
   return (
     <div className="content-container">
       <div className="create-post-trigger" onClick={() => setIsModalOpen(true)}>
-        <div className="user-avatar">
+        {/* <div className="user-avatar">
           <img
             src="/default-avatar.png"
             alt="Your avatar"
             className="avatar-image"
           />
-        </div>
+        </div> */}
         <div className="trigger-input">What's on your mind?</div>
       </div>
 
@@ -754,6 +754,7 @@ export function Rightsidebar({ isMobileOpen }) {
 }
 
 export function Chatbox() {
+  const [isVisible, setIsVisible] = useState(true);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -803,6 +804,8 @@ export function Chatbox() {
     }
   };
 
+  if (!isVisible) return null;
+
   return (
     <div className="chatbox">
       <div className="chat-header">
@@ -811,6 +814,13 @@ export function Chatbox() {
             <span className="user-status"></span>
           </div>
           <span className="user-name">John Doe</span>
+          <button 
+            className="close-button"
+            onClick={() => setIsVisible(false)}
+            aria-label="Close chat"
+          >
+            ×
+          </button>
         </div>
       </div>
 
@@ -818,9 +828,7 @@ export function Chatbox() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`message-wrapper ${
-              message.sender === "self" ? "message-self" : "message-other"
-            }`}
+            className={`message-wrapper ${message.sender === "self" ? "message-self" : "message-other"}`}
           >
             <div className="message">
               <p className="message-text">{message.text}</p>
@@ -902,6 +910,11 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
 
   const handle_search = (e) => {
     e.preventDefault();
+    const searchInput = e.target.querySelector(".search-bar")
+    if (searchInput.value === "") { 
+      searchInput.style.border = "1px solid rgba(226, 24, 24, 0.8)";
+      return;
+    }    
     const searchType = document.querySelector('input[name="search-type"]:checked').value;
     const searchQuery = e.target.querySelector(".search-bar").value;
     router.push(`/search?query=${searchQuery}&type=${searchType}`);
