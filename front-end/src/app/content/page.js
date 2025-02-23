@@ -101,7 +101,7 @@ export function Post({ post }) {
         <p className="post-text">{post?.content || "loading content..."}</p>
         {post?.image && ( // Only render if post.image exists and is not empty
           <div className="post-image">
-            <img src={post.image} alt="Post image" className="post-image01" />
+            <img src={ `http://localhost:8080/images?path=${post.avatar}`} alt="Post image" className="post-image01" />
           </div>
         )}
       </div>
