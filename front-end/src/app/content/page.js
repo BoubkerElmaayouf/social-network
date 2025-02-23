@@ -116,11 +116,11 @@ export function Post({ post }) {
       <div className="post-actions">
         <button className="action-button">
           <FontAwesomeIcon icon={faThumbsUp} />
-          <span>123</span>
+          <span>{post?.likes}</span>
         </button>
         <button className="action-button">
           <FontAwesomeIcon icon={faThumbsDown} />
-          <span>12</span>
+          <span>{post?.dislikes}</span>
         </button>
         <button
           className="action-button"

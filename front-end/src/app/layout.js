@@ -1,6 +1,8 @@
+"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "./page";
+// import { useEffect } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,12 +14,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Union",
-  description: "we believe in solidarity",
-};
 
 export default function RootLayout({ children }) {
+    // useEffect(() => {
+    //   document
+    //     .querySelectorAll("[cz-shortcut-listen]")
+    //     .forEach((el) => el.removeAttribute("cz-shortcut-listen"));
+    // }, []);
+
   return (
     <html lang="en">
       <head>
