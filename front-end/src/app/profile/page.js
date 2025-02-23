@@ -66,11 +66,11 @@ export default function Profile() {
 
                 <div className="profile-stats">
                     <div className="stat-card">
-                        <span className="stat-value">128</span>
+                        <span className="stat-value">{userdata?.nbrPosts}</span>
                         <span className="stat-label">posts</span>
                     </div>
                     <div className="stat-card">
-                        <span className="stat-value">{userdata?.nbr}</span>
+                        <span className="stat-value">{userdata?.followers}</span>
                         <span className="stat-label">followers</span>
                     </div>
                     <div className="stat-card">
