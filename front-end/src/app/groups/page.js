@@ -82,7 +82,7 @@ export default function Groups() {
 
             <main className="groups-main">
                 <div className="groups-header">
-                    <h1 className="groups-title">Discover Groups</h1>
+                    <h1 className="groups-title">Your Groups</h1>
                     <p className="groups-subtitle">Join communities that match your interests</p>
                     <div className="create-group">
                      <CreateGroupForm/>
@@ -113,13 +113,12 @@ export default function Groups() {
                                 
                                 <div className="group-action">
                                     <button 
-                                        className={`group-button ${group.isJoined ? 'visit-button' : 'join-button'}`}
-                                        onClick={() => group.isJoined 
-                                            ? handleVisitGroup(group.id) 
-                                            : handleJoinGroup(group.id)
-                                        }
+                                        className='group-button visit-button'
+                                        // onClick={
+                                        //      handleVisitGroup(group.id)  
+                                        // }
                                     >
-                                        {group.isJoined ? 'Visit' : 'Join'}
+                                        Visit
                                     </button>
                                 </div>
                             </div>

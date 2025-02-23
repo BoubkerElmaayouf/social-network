@@ -815,7 +815,7 @@ export function Chatbox() {
           </div>
           <span className="user-name">John Doe</span>
           <button 
-            className="close-button"
+            className="closet-button"
             onClick={() => setIsVisible(false)}
             aria-label="Close chat"
           >

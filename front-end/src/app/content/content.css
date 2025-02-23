@@ -683,7 +683,7 @@
     gap: 0.75rem;
 }
 
-.close-button {
+.closet-button {
     position: absolute;
     right: 0;
     top: 50%;
@@ -698,7 +698,7 @@
     transition: color 0.3s ease;
 }
 
-.close-button:hover {
+.closet-button:hover {
     color: #fff;
 }
 

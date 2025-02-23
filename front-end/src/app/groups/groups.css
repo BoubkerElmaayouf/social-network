@@ -134,29 +134,18 @@
     transition: all 0.2s ease;
 }
 
-.join-button {
+.visit-button {
     background: linear-gradient(90deg, #4FF868, #28A745);
     color: #080B11;
     box-shadow: 0 0 10px rgba(79, 248, 104, 0.3);
 }
 
-.join-button:hover {
+.visit-button:hover {
     box-shadow: 0 0 15px rgba(79, 248, 104, 0.5);
     transform: scale(1.05);
 }
 
-.visit-button {
-    background: transparent;
-    color: #4FF868;
-    border: 1px solid #4FF868;
-    box-shadow: 0 0 10px rgba(79, 248, 104, 0.1);
-}
 
-.visit-button:hover {
-    background: rgba(79, 248, 104, 0.1);
-    box-shadow: 0 0 15px rgba(79, 248, 104, 0.2);
-    transform: scale(1.05);
-}
 
 /* Responsive Layouts */
 @media (max-width: 1100px) {
