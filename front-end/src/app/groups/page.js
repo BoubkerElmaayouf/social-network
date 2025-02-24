@@ -2,7 +2,7 @@
 import React from "react"
 import "./groups.css"
 import { useState, useEffect } from "react";
-import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../content/page";
+import { Navbar, Chatbox, ChatApplication, Leftsidebar } from "../content/page";
 import {fetchUserInfo} from "../content/page.js"
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { 
@@ -45,7 +45,8 @@ export default function Groups() {
             <div className="groups-hero">
                 <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
                 <Leftsidebar />
-                <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+                {/* <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} /> */}
+                <ChatApplication/>
                 <main className="groups-main">
                     <div className="flex items-center justify-center h-full">
                         <p>Loading groups...</p>
@@ -60,7 +61,8 @@ export default function Groups() {
             <div className="groups-hero">
                 <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
                 <Leftsidebar />
-                <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+                {/* <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} /> */}
+                <ChatApplication/>
                 <main className="groups-main">
                     <div className="flex items-center justify-center h-full">
                         <p className="text-red-500">{error}</p>
@@ -74,7 +76,8 @@ export default function Groups() {
         <div className="groups-hero">
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
             <Leftsidebar />
-            <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+            {/* <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} /> */}
+            <ChatApplication/>
 
             <main className="groups-main">
                 <div className="groups-header">

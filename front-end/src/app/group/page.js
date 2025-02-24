@@ -7,7 +7,7 @@ import {  faUsers, faArrowRight,   faUserGroup,
     faPencilAlt,
     faImage} from '@fortawesome/free-solid-svg-icons';
 import "./group.css"
-import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../content/page";
+import { Navbar, Chatbox, ChatApplication, Leftsidebar } from "../content/page";
 import { useState } from 'react';
 // import Head from "next/head";
 
@@ -23,7 +23,7 @@ export default function Group() {
         <div className="group-hero">
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
             <Leftsidebar/>
-            <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+            <ChatApplication/>
             <div className="group-container">
                 <div className="group-header">
                     <div className="group-cover"></div>
@@ -35,7 +35,7 @@ export default function Group() {
                                         src='https://i.pinimg.com/736x/16/11/ce/1611ce69030dd0b3a27aa56a224fb76f.jpg' 
                                         alt='group-img'
                                         
-                                    />
+                            />
                         </div>
                         <div className="group-details">
                             <div className="group-name-section">
