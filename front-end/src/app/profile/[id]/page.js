@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 
 
 export default function Profile({ params }) {
+
   const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [userdata, setUserdata] = useState(null);
@@ -27,7 +28,9 @@ export default function Profile({ params }) {
   const router = useRouter();
 
   const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
-
+  if (userId == 0) {
+    router.push("/notfound");
+  }
   useEffect(() => {
 
     const fetchData = async () => {
