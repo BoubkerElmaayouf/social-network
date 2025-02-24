@@ -17,19 +17,29 @@ import { Post } from "../../content/page";
 export default function Profile({params}) {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [userdata, setUserdata] = useState(null);
+    const [postdata, setPostdata] = useState(null);
 
     const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
 
-      const [userdata, setUserdata] = useState(null);
-      useEffect(() => {
-        async function getUserData() {
-          const userdata = await fetchUserInfo(`api/users/profile?profileId=${params.id}`); 
+    useEffect(() => {
+      if (!params?.id) return; 
+      async function fetchData() {
+          try {
+              const [userResponse, postResponse] = await Promise.all([
+                  fetchUserInfo(`api/users/profile?profileId=${params.id}`),
+                  fetchUserInfo(`api/post/getuserpost?targetId=${params.id}`)
+              ]);
+              setUserdata(userResponse || []);
+              setPostdata(postResponse || []);
+          } catch (error) {
+              console.error("Error fetching data:", error);
+          } 
+      }
 
-          setUserdata(userdata); // Store the user data in state
-        }
-        getUserData();
-      }, [])
-
+      fetchData();
+  }, [])
+  
     return (
         <div className="profile-hero">
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
@@ -91,7 +101,9 @@ export default function Profile({params}) {
                     <div className="content-section">
                         <h2 className="section-title">Recent Activity</h2>
                         <div className="created-Posts">
-                          
+                            {postdata?.map((post) => (
+                                <Post key={post.id} post={post} />
+                            ))}
                         </div>      
                     </div>
                 </div>
