@@ -1,20 +1,20 @@
 "use client"
 
 import React from "react"
-import "./profile.css"
+import "../profile.css"
 import { useState, useEffect } from "react";
-import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../content/page";
+import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../../content/page";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
     faCog, 
     faUserPlus, 
 } from '@fortawesome/free-solid-svg-icons';
 
-import { fetchUserInfo } from "../content/page.js";
+import { fetchUserInfo } from "../../content/page.js";
 
-import { Post } from "../content/page";
+import { Post } from "../../content/page";
 
-export default function Profile() {
+export default function Profile({params}) {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -23,9 +23,8 @@ export default function Profile() {
       const [userdata, setUserdata] = useState(null);
       useEffect(() => {
         async function getUserData() {
-          const userdata = await fetchUserInfo("api/users/info"); 
-          console.log(userdata);
-          
+          const userdata = await fetchUserInfo(`api/users/profile?profileId=${params.id}`); 
+
           setUserdata(userdata); // Store the user data in state
         }
         getUserData();

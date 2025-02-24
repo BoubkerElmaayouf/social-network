@@ -1067,7 +1067,6 @@ export async function fetchUserInfo(path) {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log(data);
       return data;
     } else {
       return false;
