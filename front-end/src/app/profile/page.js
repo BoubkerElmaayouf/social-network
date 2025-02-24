@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { fetchUserInfo } from "../content/page.js";
-
+// import { useRouter } from "next/router";
 import { Post } from "../content/page";
 
 export default function Profile() {
@@ -19,6 +19,7 @@ export default function Profile() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
+  // const router = useRouter();
 
   const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
 
@@ -32,7 +33,7 @@ export default function Profile() {
         ]);
         setUserdata(userResponse || []);
         setPostdata(postResponse || []);
-      } catch (error) {
+      } catch (error) {   
         console.error("Error fetching data:", error);
       }
     }

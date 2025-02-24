@@ -801,11 +801,13 @@ export async function fetchUserInfo(path) {
       credentials: "include",
     });
 
-    if (response.status === 200) {
+    const status = response.status; 
+
+    if (status === 200) {
       const data = await response.json();
-      return data;
+      return data 
     } else {
-      return false;
+      return { status, data: null }; 
     }
   } catch (error) {
     console.error("Error fetching user info:", error);
