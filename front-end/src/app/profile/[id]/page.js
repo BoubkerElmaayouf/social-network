@@ -23,7 +23,7 @@ export default function Profile({params}) {
     const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
 
     useEffect(() => {
-      if (!params?.id) return; 
+
       async function fetchData() {
           try {
               const [userResponse, postResponse] = await Promise.all([
@@ -38,7 +38,7 @@ export default function Profile({params}) {
       }
 
       fetchData();
-  }, [])
+  }, []);
   
     return (
         <div className="profile-hero">
