@@ -91,10 +91,7 @@ export default function Profile({params}) {
                     <div className="content-section">
                         <h2 className="section-title">Recent Activity</h2>
                         <div className="created-Posts">
-                            <Post/>
-                            <Post/>
-                            <Post/>
-                            <Post/>
+                          
                         </div>      
                     </div>
                 </div>

@@ -76,10 +76,10 @@ export function Post({ post }) {
         <div className="post-user-info">
           <div className="user-avatar">
             <img
-              src={
-                post.creator?.avatar
+              src={ 
+                  post.creator?.avatar 
                   ? `http://localhost:8080/images?path=${post.creator.avatar}`
-                  : "/default-img.jpg"
+                  : "/default-img.jpg" || "/default-avatar.svg"
               }
               alt="User avatar"
               width={40}
