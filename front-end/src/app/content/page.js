@@ -77,8 +77,8 @@ export function Post({ post }) {
           <div className="user-avatar">
             <img
               src={
-                post?.avatar
-                  ? `http://localhost:8080/images?path=${post.avatar}`
+                post.creator?.avatar
+                  ? `http://localhost:8080/images?path=${post.creator.avatar}`
                   : "/default-img.jpg"
               }
               alt="User avatar"
@@ -89,7 +89,7 @@ export function Post({ post }) {
           </div>
           <div className="user-details">
             <h3 className="user-name">
-              {post?.first_name + " " + post?.last_name}
+              {post.creator?.first_name + " " + post.creator?.last_name}
             </h3>
             <span className="post-timestamp">
               <FontAwesomeIcon icon={faClock} />
