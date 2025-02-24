@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, {use} from "react"
 import "../profile.css"
 import { useState, useEffect } from "react";
 import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../../content/page";
@@ -19,16 +19,18 @@ export default function Profile({params}) {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [userdata, setUserdata] = useState(null);
     const [postdata, setPostdata] = useState(null);
+    const resolvedParams = use(params);
+    const userId = resolvedParams.id;
 
     const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
 
     useEffect(() => {
 
-      async function fetchData() {
+      const fetchData = async () => {
           try {
               const [userResponse, postResponse] = await Promise.all([
-                  fetchUserInfo(`api/users/profile?profileId=${params.id}`),
-                  fetchUserInfo(`api/post/getuserpost?targetId=${params.id}`)
+                  fetchUserInfo(`api/users/profile?profileId=${userId}`),
+                  fetchUserInfo(`api/post/getuserpost?targetId=${userId}`)
               ]);
               setUserdata(userResponse || []);
               setPostdata(postResponse || []);
@@ -38,7 +40,7 @@ export default function Profile({params}) {
       }
 
       fetchData();
-  }, []);
+  }, [userId]);
   
     return (
         <div className="profile-hero">
