@@ -2,13 +2,7 @@
 import React from "react"
 import "./groups.css"
 import { useState, useEffect } from "react";
-import { Navbar, Chatbox, ChatApplication, Leftsidebar } from "../content/page";
-import {fetchUserInfo} from "../content/page.js"
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { 
-//     faCog, 
-//     faUserPlus, 
-// } from '@fortawesome/free-solid-svg-icons';
+import { fetchUserInfo } from "@/utilis/fetching_data.js"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
     faUserGroup, 
@@ -17,6 +11,9 @@ import {
     faArrowRight,
     faPlus
 } from '@fortawesome/free-solid-svg-icons';
+import { ChatApplication } from "@/utilis/component/ChatApplication";
+import { Leftsidebar } from "@/utilis/component/leftsidebar";
+import { Navbar } from "@/utilis/component/navbar";
 
 export default function Groups() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);

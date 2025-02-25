@@ -3,16 +3,18 @@
 import React, { use } from "react"
 import "../profile.css"
 import { useState, useEffect } from "react";
-import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../../content/page";
+import { ChatApplication } from "@/utilis/component/ChatApplication";
+import { Leftsidebar } from "@/utilis/component/leftsidebar";
+import { Navbar } from "@/utilis/component/navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { fetchUserInfo } from "../../content/page.js";
+import { fetchUserInfo } from "@/utilis/fetching_data";
 
-import { Post } from "../../content/page";
+import { Post } from "@/utilis/component/display_post";
 import { useRouter } from "next/navigation";
 
 
@@ -59,7 +61,7 @@ export default function Profile({ params }) {
     <div className="profile-hero">
       <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
       <Leftsidebar />
-      <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+      <ChatApplication/>
       <div className="profile-container">
         <div className="profile-header">
           <div className="profile-cover"></div>

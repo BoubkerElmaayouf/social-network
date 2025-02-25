@@ -1,26 +1,24 @@
 "use client"
-
 import React from "react"
 import "./profile.css"
 import { useState, useEffect } from "react";
-import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../content/page";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
-
-import { fetchUserInfo } from "../content/page.js";
-// import { useRouter } from "next/router";
-import { Post } from "../content/page";
+import { ChatApplication } from "@/utilis/component/ChatApplication";
+import { Leftsidebar } from "@/utilis/component/leftsidebar";
+import { Navbar } from "@/utilis/component/navbar";
+import { fetchUserInfo } from "@/utilis/fetching_data.js"; 
+import { Post } from "@/utilis/component/display_post";
 
 export default function Profile() {
   const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
-  // const router = useRouter();
-
   const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
 
   useEffect(() => {
@@ -40,11 +38,12 @@ export default function Profile() {
 
     fetchData();
   }, []);
+  
   return (
     <div className="profile-hero">
       <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
       <Leftsidebar />
-      <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+      <ChatApplication/>
       <div className="profile-container">
         <div className="profile-header">
           <div className="profile-cover"></div>

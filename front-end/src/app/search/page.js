@@ -1,12 +1,15 @@
 "use client";
 
-import { Navbar, Chatbox, Rightsidebar, Leftsidebar } from "../content/page";
+import { ChatApplication } from "@/utilis/component/ChatApplication";
+import { Leftsidebar } from "@/utilis/component/leftsidebar";
 import { useState } from "react";
 import Link from "next/link";
 import "./search.css";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { Navbar } from "@/utilis/component/navbar";
 
+// ***** search for groups or people ******//
 export default function Search() {
   const searchParams = useSearchParams();
   const [data, setData] = useState(null);
@@ -35,8 +38,8 @@ export default function Search() {
   return (
     <div>
       <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
-      <Leftsidebar />
-      <Rightsidebar isMobileOpen={isMobileRightSidebarOpen} />
+      <Leftsidebar/>
+      <ChatApplication/>
       <div className="search-container">
         <h1>Search</h1>
         <div className="search-results">

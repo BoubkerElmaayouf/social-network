@@ -48,7 +48,6 @@ export default function Login() {
           setLoading(false); // Update the loading state
         }
       };
-  
      verifyAuth();
     }, [router]);
 

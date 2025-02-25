@@ -7,7 +7,9 @@ import {  faUsers, faArrowRight,   faUserGroup,
     faPencilAlt,
     faImage} from '@fortawesome/free-solid-svg-icons';
 import "./group.css"
-import { Navbar, Chatbox, ChatApplication, Leftsidebar } from "../content/page";
+import { ChatApplication } from "@/utilis/component/ChatApplication";
+import { Leftsidebar } from "@/utilis/component/leftsidebar";
+import { Navbar } from "@/utilis/component/navbar";
 import { useState } from 'react';
 // import Head from "next/head";
 
