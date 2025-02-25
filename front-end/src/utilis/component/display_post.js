@@ -65,16 +65,25 @@ export function Post({ post }) {
         throw new Error("Failed to add comment");
       }
 
+      const data = await response.json();
+      console.log(data);
+      
+      setComments([data, ...comments]);
+      setNewComment("");  
+
+
+
+
 
       // Mise à jour locale des commentaires
-      setComments([comment, ...comments]);
-      setNewComment("");
+      // setComments([comment, ...comments]);
+      // setNewComment("");
   } catch (error) {
       console.error("Error submitting comment:", error);
   }
 
-    setComments([comment, ...comments]);
-    setNewComment("");
+    // setComments([comment, ...comments]);
+    // setNewComment("");
   };
 
   const handleRect = async (Id, type) => {
