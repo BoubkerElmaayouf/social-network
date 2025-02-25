@@ -165,6 +165,7 @@ a {
 }
 
 .logo-image {
+  height: 35px;
   object-fit: contain;
   margin-right: 10px;
 }
@@ -360,7 +361,7 @@ a {
 
 .search-bar {
   width: 100%;
-  height: 40px;
+  height: 35px;
   padding: 0.5rem 2.5rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(79, 248, 104, 0.2);

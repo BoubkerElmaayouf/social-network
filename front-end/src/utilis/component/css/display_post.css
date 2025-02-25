@@ -741,3 +741,75 @@
         padding: 0.5rem 0.75rem;
     }
 }
+
+@media (max-width: 393px) {
+    .post {
+        width: 350px;
+    }
+    
+    .post-actions {
+        flex-wrap: wrap;
+    }
+    
+    .action-button {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .post-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .post {
+        width: 310px;
+    }
+    
+    .post-header,
+    .post-content,
+    .post-actions,
+    .comments-section {
+        padding: 0.5rem;
+    }
+    
+    .post-text {
+        font-size: 0.875rem;
+    }
+    
+    .comment-content {
+        font-size: 0.875rem;
+    }
+    
+    .comment-author {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .post {
+        width: 290px;
+    }
+    
+    .post-user-info {
+        gap: 0.5rem;
+    }
+    
+    .action-button {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .comment-input {
+        padding: 0.4rem 0.5rem;
+    }
+    
+    .comment-submit {
+        width: 35px;
+        height: 35px;
+    }
+}
