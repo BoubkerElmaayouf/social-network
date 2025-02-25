@@ -136,29 +136,51 @@ export function Leftsidebar() {
         </div>
         <div className="notification-content">
           <div className={`tab-panel ${activeTab === 'group-invitation' ? 'active' : ''}`} id="group-invitation">
+            <div className='notification-divider'>
             <div className="group-invitation">
               <p className="group-invitation-message">The group is inviting you! Please check it out.</p>
               <a href="#" className="group-invitation-link">View Invitation</a>
             </div>
+
+            <div className="group-invitation">
+              <p className="group-invitation-message">The group is inviting you! Please check it out.</p>
+              <a href="#" className="group-invitation-link">View Invitation</a>
+            </div>
+            </div>
+ 
           </div>
           <div className={`tab-panel ${activeTab === 'follow-requests' ? 'active' : ''}`} id="follow-requests">
             <div className="follow-request">
               <div className="follow-avatar">
-                <div className="follow-avatar-placeholder">U</div>
+                <div className="follow-avatar-placeholder">
+                  <img className='follow-avatar' 
+                  src="/default-img.jpg" 
+                  alt="User Avatar" />
+                </div>
               </div>
               <div className="follow-info">
                 <div className="follow-name">User Name</div>
                 <div className="follow-username">@username</div>
               </div>
+              <Link href="/profile" className="visit-account">
+              Visit
+              </Link>
             </div>
             <div className="follow-request">
               <div className="follow-avatar">
-                <div className="follow-avatar-placeholder">J</div>
+                <div className="follow-avatar-placeholder">
+                <img className='follow-avatar' 
+                  src="/default-img.jpg" 
+                  alt="User Avatar" />
+                </div>
               </div>
               <div className="follow-info">
                 <div className="follow-name">Jane Smith</div>
                 <div className="follow-username">@janesmith</div>
               </div>
+              <Link href="/profile" className="visit-account">
+              Visit
+              </Link>
             </div>
           </div>
           <div className={`tab-panel ${activeTab === 'group-events' ? 'active' : ''}`} id="group-events">

@@ -172,16 +172,15 @@
     }
 }
 
-
 /***************** notification *********** */
 /* Notification Container Styles */
 .notification-container {
-    position: absolute;
+    position: fixed;
     max-height: fit-content;
-    top: 60px;
+    top: 65px;
     right: 20px;
     width: 320px;
-    background: rgba(8, 11, 17, 0.7);
+    background: rgba(18, 25, 39, 0.7);
     backdrop-filter: blur(100px);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -204,7 +203,7 @@
   /* Tab Navigation */
   .notification-tabs {
     display: flex;
-    border-bottom: 1px solid rgba(79, 248, 104, 0.2);
+    /* border-bottom: 1px solid rgba(79, 248, 104, 0.2); */
   }
   
   .notification-tab {
@@ -248,7 +247,7 @@
   /* Tab Content */
   .notification-content {
     position: relative;
-    min-height: 150px;
+    min-height: 200px;
   }
   
   .tab-panel {
@@ -275,6 +274,13 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+  .notification-divider {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
   }
   
   .group-invitation-message {
@@ -344,6 +350,18 @@
   .follow-username {
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.8rem;
+  }
+  .visit-account {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    background-color: #4FF868;
+    color: black;
+    transition: all 0.3s ease-in-out;
+  }
+  .visit-account:hover {
+    transform: translateY(-1px);
   }
   
   /* Group Event Tab */
