@@ -17,6 +17,8 @@ export function Post({ post }) {
   const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState(post.likes);
+  const [dislikes, setDislikes] = useState(post.dislikes);
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
@@ -34,6 +36,27 @@ export function Post({ post }) {
     setComments([comment, ...comments]);
     setNewComment("");
   };
+
+  const handleRect = async (Id, type) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/reactPost/add`, {
+        method: "post",
+        credentials: "include",
+        body: JSON.stringify({ post_id: Id, reaction_type: type }),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setDislikes(data.dislike_count);
+        setLikes(data.like_count );
+      } else {
+        console.log("Failed to like post");
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
 
   return (
     <article className="post">
@@ -67,7 +90,7 @@ export function Post({ post }) {
       <div className="post-content">
         <h2 className="post-title">{post?.title || "loading title..."}</h2>
         <p className="post-text">{post?.content || "loading content..."}</p>
-        {post?.image && ( // Only render if post.image exists and is not empty
+        {post?.image && (
           <div className="post-image">
             <img
               src={`http://localhost:8080/images?path=${post.image}`}
@@ -79,13 +102,13 @@ export function Post({ post }) {
       </div>
 
       <div className="post-actions">
-        <button className="action-button">
+        <button onClick={() => handleRect(post.id, "LIKE")} className="action-button">
           <FontAwesomeIcon icon={faThumbsUp} />
-          <span>{post?.likes}</span>
+          <span>{likes}</span>
         </button>
-        <button className="action-button">
+        <button onClick={() => handleRect(post.id, "DISLIKE")} className="action-button">
           <FontAwesomeIcon icon={faThumbsDown} />
-          <span>{post?.dislikes}</span>
+          <span>{dislikes}</span>
         </button>
         <button
           className="action-button"
