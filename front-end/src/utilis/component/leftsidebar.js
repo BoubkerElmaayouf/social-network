@@ -184,14 +184,14 @@ export function Leftsidebar() {
             </div>
           </div>
           <div className={`tab-panel ${activeTab === 'group-events' ? 'active' : ''}`} id="group-events">
-            <div className="group-event">
-              <div className="group-image">
+            <div className="notification-group-event">
+              <div className="notification-group-image">
                 {/* Placeholder for group image */}
               </div>
-              <div className="group-info">
-                <div className="group-name">Gaming Group</div>
-                <div className="group-event-type">Weekend Tournament</div>
-                <div className="group-actions">
+              <div className="notification-group-info">
+                <div className="notification-group-name">Gaming Group</div>
+                <div className="notification-group-event-type">Weekend Tournament</div>
+                <div className="notification-group-actions">
                   <button className="group-action-btn attend-btn">Attend</button>
                   <button className="group-action-btn ignore-btn">Ignore</button>
                 </div>

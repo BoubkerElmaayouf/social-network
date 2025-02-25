@@ -365,13 +365,13 @@
   }
   
   /* Group Event Tab */
-  .group-event {
+  .notification-group-event {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
   }
   
-  .group-image {
+  .notification-group-image {
     width: 50px;
     height: 50px;
     border-radius: 8px;
@@ -381,29 +381,29 @@
     border: 1px solid rgba(79, 248, 104, 0.3);
   }
   
-  .group-image img {
+  .notification-group-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
   
-  .group-info {
+  .notification-group-info {
     flex: 1;
   }
   
-  .group-name {
+  .notification-group-name {
     color: white;
     font-size: 0.9rem;
     margin-bottom: 4px;
   }
   
-  .group-event-type {
+  .notification-group-event-type {
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.8rem;
     margin-bottom: 8px;
   }
   
-  .group-actions {
+  .notification-group-actions {
     display: flex;
     gap: 8px;
     margin-top: 8px;
