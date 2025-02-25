@@ -1,3 +1,4 @@
+"use client"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faThumbsUp,
@@ -7,31 +8,70 @@ import {
     faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import { fetchUserInfo } from "@/utilis/fetching_data.js";
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState,useRef, use } from "react";
 import "./css/display_post.css"
+import Image from "next/image";
 
 
 //****************** Create Post Component: a function that displays a single post ***********************/
 
 export function Post({ post }) {
   const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false);
-  const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState(post.likes);
+  const [comment, setNewComment] = useState("");
   const [dislikes, setDislikes] = useState(post.dislikes);
 
-  const handleSubmitComment = (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+  const [formComments, setCommentData] = useState({
+    postId: "",
+    content: "",
+  });
 
-    const comment = {
-      id: Date.now(),
-      content: newComment,
-      author: "Current User",
-      timestamp: new Date().toISOString(),
-      likes: 0,
-      dislikes: 0,
-    };
+  const [userdata, setUserdata] = useState(null);
+    useEffect(() => {
+      async function getUserData() {
+        const userdata = await fetchUserInfo("api/users/info");
+        setUserdata(userdata); // Store the user data in state
+      }
+      getUserData();
+    }, []);
+
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!formComments.content.trim()) return;
+    const newCommentForm = new FormData();
+    newCommentForm.append("post_id", formComments.postId);
+    newCommentForm.append("content", formComments.content);
+    try {
+      const response = await fetch("http://localhost:8080/api/comment/add", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+              // "Content-Type": "application/json",
+          },
+          body: newCommentForm, 
+      });
+      if (response.status === 201) {
+        setCommentData({
+          postId: "",
+          content: "",
+        });
+      } else {
+        console.log(response.status);
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to add comment");
+      }
+
+
+      // Mise à jour locale des commentaires
+      setComments([comment, ...comments]);
+      setNewComment("");
+  } catch (error) {
+      console.error("Error submitting comment:", error);
+  }
 
     setComments([comment, ...comments]);
     setNewComment("");
@@ -57,6 +97,16 @@ export function Post({ post }) {
     }
   };
 
+  const getComments = async (postId) => {
+    try {
+      const response = await fetchUserInfo(`/api/comment/get?PostId=${postId}`); 
+      if (response) {
+        setComments(response);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  }
 
   return (
     <article className="post">
@@ -112,19 +162,22 @@ export function Post({ post }) {
         </button>
         <button
           className="action-button"
-          onClick={() => setIsCommentSectionOpen(!isCommentSectionOpen)}
+          onClick={() => {
+            getComments(post.id);
+            setIsCommentSectionOpen(!isCommentSectionOpen);
+          }}
         >
           <FontAwesomeIcon icon={faComment} />
           <span>{comments.length}</span>
         </button>
       </div>
 
-      {isCommentSectionOpen && (
+      {isCommentSectionOpen  && (
         <div className="comments-section">
           <form className="comment-form" onSubmit={handleSubmitComment}>
             <div className="user-avatar">
-              <Image
-                src="/default-avatar.svg"
+              <img
+                src={`http://localhost:8080/images?path=${userdata?.avatar}`}
                 alt="Your avatar"
                 width={32}
                 height={32}
@@ -135,13 +188,17 @@ export function Post({ post }) {
               type="text"
               className="comment-input"
               placeholder="Write a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              value={formComments.content}
+              onChange={(e) => setCommentData({
+                postId: post.id,
+                content: e.target.value
+            })}
+            
             />
             <button
               type="submit"
               className="comment-submit"
-              disabled={!newComment.trim()}
+              disabled={!formComments.content.trim()}
             >
               <FontAwesomeIcon icon={faPaperPlane} />
             </button>
@@ -152,8 +209,8 @@ export function Post({ post }) {
               <div key={comment.id} className="comment">
                 <div className="comment-header">
                   <div className="user-avatar">
-                    <Image
-                      src="/default-avatar.svg"
+                    <img
+                      src={`http://localhost:8080/images?path=${comment.user?.avatar}`}
                       alt="Commenter avatar"
                       width={32}
                       height={32}
@@ -161,14 +218,14 @@ export function Post({ post }) {
                     />
                   </div>
                   <div className="comment-details">
-                    <span className="comment-author">{comment.author}</span>
+                    <span className="comment-author">{comment.user?.first_name + " " + comment.user?.last_name}</span>
                     <span className="comment-timestamp">
                       <FontAwesomeIcon icon={faClock} />
-                      <time>Just now</time>
+                      <time>{comment.created_at}</time>
                     </span>
                   </div>
                 </div>
-                <p className="comment-content">{comment.content}</p>
+                <p className="comment-content">{comment?.content}</p>
                 <div className="comment-actions">
                   <button className="action-button">
                     <FontAwesomeIcon icon={faThumbsUp} />
