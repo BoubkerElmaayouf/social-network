@@ -28,13 +28,13 @@ export default function Profile({ params }) {
   const resolvedParams = use(params);
   const userId = resolvedParams.id;
   const router = useRouter();
-
+  
   const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
   if (userId == 0) {
     router.push("/notfound");
   }
   useEffect(() => {
-
+    
     const fetchData = async () => {
       try {
         const [userResponse, postResponse] = await Promise.all([
@@ -53,7 +53,7 @@ export default function Profile({ params }) {
         console.error("Error fetching data:", error);
       }
     }
-
+    
     fetchData();
   }, [userId]);
 

@@ -19,8 +19,8 @@ export function Post({ post }) {
   const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState(post.likes);
-  const [comment, setNewComment] = useState("");
   const [dislikes, setDislikes] = useState(post.dislikes);
+  // const [comment, setNewComment] = useState("");
 
   const [formComments, setCommentData] = useState({
     postId: "",
@@ -69,12 +69,7 @@ export function Post({ post }) {
       console.log(data);
       
       setComments([data, ...comments]);
-      setNewComment("");  
-
-
-
-
-
+      // setNewComment("");  
       // Mise à jour locale des commentaires
       // setComments([comment, ...comments]);
       // setNewComment("");
@@ -116,6 +111,7 @@ export function Post({ post }) {
       console.error("Error fetching comments:", error);
     }
   }
+
 
   return (
     <article className="post">
@@ -177,7 +173,7 @@ export function Post({ post }) {
           }}
         >
           <FontAwesomeIcon icon={faComment} />
-          <span>{comments.length}</span>
+          <span>{comments.length != 0 ? comments.length : ''}</span>
         </button>
       </div>
 
