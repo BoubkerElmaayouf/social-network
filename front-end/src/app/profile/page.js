@@ -19,7 +19,7 @@ export default function Profile() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
-  const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
+  const toggleSettingsPopup = () => setIsSettingsOpen(!isMobileRightSidebarOpen);
 
   useEffect(() => {
 
@@ -59,9 +59,9 @@ export default function Profile() {
               <p className="profile-bio">{userdata?.aboutme || ""}</p>
             </div>
             <div className="profile-actions">
-              <button className="edit-profile">
+              {/* <button className="edit-profile">
                 <FontAwesomeIcon icon={faUserPlus} size="sm" /> Follow
-              </button>
+              </button> */}
               <button className="settings-button" onClick={toggleSettingsPopup}>
                 <FontAwesomeIcon icon={faCog} size="sm" />
               </button>
@@ -125,10 +125,22 @@ const SettingsPopup = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically make an API call to save the settings
-    console.log('Submitting privacy setting:', privacySetting);
+    const formDataToSend = new FormData()
+    formDataToSend.append("type", privacySetting);
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/changeprofiletype`, {
+        method: "POST",
+        credentials: "include",
+        body: formDataToSend
+      });
+      if (response.status === 200) {
+        alert('Bien')
+      }
+    } catch {
+      console.error("error")
+    }
     onClose();
   };
 

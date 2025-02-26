@@ -21,18 +21,13 @@ import { useRouter } from "next/navigation";
 
 export default function Profile({ params }) {
 
-  const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
   const resolvedParams = use(params);
   const userId = resolvedParams.id;
   const router = useRouter();
   
-  const toggleSettingsPopup = () => setIsSettingsOpen(!isSettingsOpen);
-  if (userId == 0) {
-    router.push("/notfound");
-  }
+
   useEffect(() => {
     
     const fetchData = async () => {
@@ -41,6 +36,9 @@ export default function Profile({ params }) {
           fetchUserInfo(`api/users/profile?profileId=${userId}`),
           fetchUserInfo(`api/post/getuserpost?targetId=${userId}`)
         ]);
+        if (userResponse.status === 303) {
+          router.push("/profile");
+        }
         if (userResponse.status === 404) {
           router.push("/notfound");
         }
@@ -55,10 +53,24 @@ export default function Profile({ params }) {
     }
     fetchData();
   }, [userId]);
+  const handleFollow = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/request?profileId=${userId}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.status === 200) {
+        alert("User followed successfully");
+      }
 
+    } catch {
+      console.error("Error following user");
+    }
+  }
   return (
     <div className="profile-hero">
-      <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
+      <Navbar/>
       <Leftsidebar />
       <ChatApplication/>
       <div className="profile-container">
@@ -76,17 +88,10 @@ export default function Profile({ params }) {
               <p className="profile-bio">{userdata?.aboutme || ""}</p>
             </div>
             <div className="profile-actions">
-              <button className="edit-profile">
+              <button className="edit-profile" onClick={handleFollow}>
                 <FontAwesomeIcon icon={faUserPlus} size="sm" /> Follow
               </button>
-              <button className="settings-button" onClick={toggleSettingsPopup}>
-                <FontAwesomeIcon icon={faCog} size="sm" />
-              </button>
 
-              <SettingsPopup
-                isOpen={isSettingsOpen}
-                onClose={() => setIsSettingsOpen(false)}
-              />
             </div>
           </div>
         </div>
@@ -131,65 +136,6 @@ export default function Profile({ params }) {
 }
 
 
-const SettingsPopup = ({ isOpen, onClose }) => {
-  const [privacySetting, setPrivacySetting] = useState('private');
-
-  if (!isOpen) return null;
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically make an API call to save the settings
-    console.log('Submitting privacy setting:', privacySetting);
-    onClose();
-  };
-
-  const handlePrivacyChange = (e) => {
-    setPrivacySetting(e.target.value);
-  };
-
-  return (
-    <div className="setting-popup-overlay" onClick={handleOverlayClick}>
-      <div className="settings-popup">
-        <div className="settings-content">
-          <h2>Privacy Settings</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="setting-radio-group">
-              <label>
-                <input
-                  type="radio"
-                  name="privacy"
-                  value="private"
-                  checked={privacySetting === 'private'}
-                  onChange={handlePrivacyChange}
-                />
-                Private
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="privacy"
-                  value="public"
-                  checked={privacySetting === 'public'}
-                  onChange={handlePrivacyChange}
-                />
-                Public
-              </label>
-            </div>
-            <button type="submit" className="submit-settings">
-              Submit
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 function formatDate(isoDate) {
   const [year, month, day] = isoDate.split("T")[0].split("-");
