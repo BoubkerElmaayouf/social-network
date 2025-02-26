@@ -10,7 +10,7 @@ import "./group.css"
 import { ChatApplication } from "@/utilis/component/ChatApplication";
 import { Leftsidebar } from "@/utilis/component/leftsidebar";
 import { Navbar } from "@/utilis/component/navbar";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 export default function Group() {
@@ -24,11 +24,12 @@ export default function Group() {
     )
 }
 
-export function CreateGroupPost() {
+export function CreateGroupPost({userdata}) {
     const [showOptionsPopup, setShowOptionsPopup] = useState(false);
     const [showEventForm, setShowEventForm] = useState(false);
     const [showPostForm, setShowPostForm] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+   
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -48,17 +49,18 @@ export function CreateGroupPost() {
         const fileInput = document.getElementById('postImage');
         if (fileInput) fileInput.value = '';
     };
+    
 
     return (
         <div className='create-group-post'>
             <div className='post-input-container'>
                 <div className='group-avatar01'>
                 <img 
-                            className='group-image'
-                                        src='https://i.pinimg.com/736x/16/11/ce/1611ce69030dd0b3a27aa56a224fb76f.jpg' 
-                                        alt='group-img'
+                    className='group-image'
+                    src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata?.avatar}` : "/default-img.jpg"}
+                    alt='group-img'
                                         
-                                    />
+                />
                 </div>
                 <input 
                     type="text"

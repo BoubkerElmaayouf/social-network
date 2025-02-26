@@ -1,17 +1,19 @@
 'use client'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faUsers, faArrowRight,   faUserGroup,
-    faTimes, 
-    faCalendarPlus, 
+import {
+    faUsers, faArrowRight, faUserGroup,
+    faTimes,
+    faCalendarPlus,
     faPencilAlt,
-    faImage} from '@fortawesome/free-solid-svg-icons';
-import {CreateGroupPost} from "../page.js"
+    faImage
+} from '@fortawesome/free-solid-svg-icons';
+import { CreateGroupPost } from "../page.js"
 import { ChatApplication } from "@/utilis/component/ChatApplication";
 import { Leftsidebar } from "@/utilis/component/leftsidebar";
 import { Navbar } from "@/utilis/component/navbar";
 import { useState } from 'react';
-import {use} from "react";
+import { use } from "react";
 import { useEffect } from "react";
 import { fetchUserInfo } from "@/utilis/fetching_data";
 import { Post } from "@/utilis/component/display_post";
@@ -24,10 +26,13 @@ import { useRouter } from "next/navigation";
 //     description: "this is Group that you can join or visit",
 //   };
 
-export default function Group({params}) {
+export default function Group({ params }) {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
     const [groupdata, setGroupdata] = useState([]);
     const router = useRouter();
+    const [userdata, setUserdata] = useState(null);
+
+    
 
     const resolvedParams = use(params);
     const groupId = resolvedParams.id;
@@ -37,37 +42,44 @@ export default function Group({params}) {
     }
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const response = await fetchUserInfo(`api/groups/get?groupId=${groupId}`);
-            if (response.status === 400) {
-              router.push("/notfound");
+            try {
+                const response = await fetchUserInfo(`api/groups/get?groupId=${groupId}`);
+                if (response.status === 400 || response.status === 404) {
+                    router.push("/notfound");
+                }
+                setGroupdata(response || []);
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-            setGroupdata(response || []);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
         };
-    
-        fetchData();
-      }, [groupId]);
-    
 
+        fetchData();
+    }, [groupId]);
+
+    useEffect(() => {
+        async function getUserData() {
+            const userdata = await fetchUserInfo("api/users/info");
+            setUserdata(userdata); // Store the user data in state
+        }
+        getUserData();
+    }, []);
+
+    
     return (
         <div className="group-hero">
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
-            <Leftsidebar/>
-            <ChatApplication/>
+            <Leftsidebar />
+            <ChatApplication />
             <div className="group-container">
                 <div className="group-header">
                     <div className="group-cover"></div>
                     <div className="group-info">
                         <div className="group-avatar">
                             {/* <FontAwesomeIcon icon={faUserGroup} size="2x" /> */}
-                            <img 
-                            className='group-image'
-                                        src={groupdata?.image ? `http://localhost:8080/images?path=${groupdata?.image}` : "/default-img.jpg"} 
-                                        alt='group-img'
-                                        
+                            <img
+                                className='group-image'
+                                src={groupdata?.image ? `http://localhost:8080/images?path=${groupdata?.image}` : "/default-img.jpg"}
+                                alt='group-img'
                             />
                         </div>
                         <div className="group-details">
@@ -109,7 +121,7 @@ export default function Group({params}) {
                         <span className="stat-label">Discussions</span>
                     </div>
                 </div> */}
-            <CreateGroupPost/>
+                <CreateGroupPost userdata={userdata}/>
             </div>
         </div>
 
