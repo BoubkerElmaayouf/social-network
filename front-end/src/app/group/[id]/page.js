@@ -111,25 +111,6 @@ export default function Group({ params }) {
                         </div>
                     </div>
                 </div>
-
-                {/* <div className="group-stats">
-                    <div className="stat-card">
-                        <span className="stat-value">128</span>
-                        <span className="stat-label">Posts</span>
-                    </div>
-                    <div className="stat-card">
-                        <span className="stat-value">2.4k</span>
-                        <span className="stat-label">Members</span>
-                    </div>
-                    <div className="stat-card">
-                        <span className="stat-value">45</span>
-                        <span className="stat-label">Active Now</span>
-                    </div>
-                    <div className="stat-card">
-                        <span className="stat-value">892</span>
-                        <span className="stat-label">Discussions</span>
-                    </div>
-                </div> */}
                 <CreateGroupPost userdata={userdata}/>
                 <InvitePopup 
                     groupId={groupId}
