@@ -14,6 +14,7 @@ import {
 import { ChatApplication } from "@/utilis/component/ChatApplication";
 import { Leftsidebar } from "@/utilis/component/leftsidebar";
 import { Navbar } from "@/utilis/component/navbar";
+import Link from "next/link";
 
 export default function Groups() {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
@@ -115,9 +116,9 @@ export default function Groups() {
                                     </div>
                                     
                                     <div className="group-action">
-                                        <button className="group-button visit-button">
+                                        <Link href={`/group/${group.Id}`} className="group-button visit-button">
                                             Visit
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
                                 <div className="group-card-glow"></div>
@@ -210,7 +211,7 @@ export function CreateGroupForm() {
                     className="create-button"
                     onClick={() => setShowCreateForm(true)}
                 >
-                    <FontAwesomeIcon icon={faPlus} />
+                    <FontAwesomeIcon icon={faPlus}/>
                     Create Your Group
                 </button>
             </div>

@@ -53,7 +53,6 @@ export default function Profile({ params }) {
         console.error("Error fetching data:", error);
       }
     }
-    
     fetchData();
   }, [userId]);
 
