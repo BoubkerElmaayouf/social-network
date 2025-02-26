@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faUsers, faArrowRight, faUserGroup,
     faTimes,
+    faUserPlus,
+    faSearch,
+    faCalendar,
     faCalendarPlus,
     faPencilAlt,
     faImage
@@ -31,8 +34,7 @@ export default function Group({ params }) {
     const [groupdata, setGroupdata] = useState([]);
     const router = useRouter();
     const [userdata, setUserdata] = useState(null);
-
-    
+    const [showInvitePopup, setShowInvitePopup] = useState(false);
 
     const resolvedParams = use(params);
     const groupId = resolvedParams.id;
@@ -98,6 +100,13 @@ export default function Group({ params }) {
                                     Join Group
                                     <FontAwesomeIcon icon={faArrowRight} size="sm" />
                                 </button>
+                                {/* <button onClick={setShowOptionsPopup} className='invite-members join-group'> invite-members</button> */}
+                                <button 
+                                    onClick={() => setShowInvitePopup(true)} 
+                                    className='invite-members join-group'
+                                >
+                                    Invite Members
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -122,8 +131,206 @@ export default function Group({ params }) {
                     </div>
                 </div> */}
                 <CreateGroupPost userdata={userdata}/>
+                <InvitePopup 
+                    groupId={groupId}
+                    isOpen={showInvitePopup}
+                    onClose={() => setShowInvitePopup(false)}
+                />
             </div>
         </div>
 
     );
 }
+
+
+
+export function InvitePopup({ groupId, isOpen, onClose }) {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [inviteStatus, setInviteStatus] = useState({ show: false, message: '', isError: false });
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchUsers();
+        }
+    }, [isOpen]);
+
+    const fetchUsers = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchUserInfo("api/users/info"); // Use fetchUserInfo for consistency
+            console.log(data)
+            if (data && data.status !== 401) {
+                console.log("00000000000",data)
+                // Map API response to match expected format
+                const formattedUsers = data.map(user => ({
+                    id: user.id,
+                    name: user.nickName || `${user.firstName} ${user.lastName}`, // Prefer nickName, fallback to full name
+                    avatar: user.avatar,
+                    email: user.email || "", // Email might not be present in response
+                }));
+                setUsers(formattedUsers);
+            } else {
+                console.error("Unauthorized or invalid response");
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const handleUserSelect = (userId) => {
+        setSelectedUsers(prev => {
+            if (prev.includes(userId)) {
+                return prev.filter(id => id !== userId);
+            } else {
+                return [...prev, userId];
+            }
+        });
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+    console.log("users--------", users);
+
+    const filteredUsers = users.filter(user => 
+        
+        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.username?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const handleInvite = async () => {
+        if (selectedUsers.length === 0) {
+            setInviteStatus({
+                show: true,
+                message: 'Please select at least one user to invite',
+                isError: true
+            });
+            return;
+        }
+
+        try {
+            // Replace with your actual API endpoint
+            const response = await fetch(`http://localhost:8080/api/groups/${groupId}/invite`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ users: selectedUsers })
+            });
+
+            if (response.ok) {
+                setInviteStatus({
+                    show: true,
+                    message: 'Invitations sent successfully!',
+                    isError: false
+                });
+                
+                // Reset selections
+                setSelectedUsers([]);
+                
+                // Auto close after success (optional)
+                setTimeout(() => {
+                    onClose();
+                    setInviteStatus({ show: false, message: '', isError: false });
+                }, 2000);
+            } else {
+                throw new Error('Failed to send invitations');
+            }
+        } catch (error) {
+            console.error('Error sending invitations:', error);
+            setInviteStatus({
+                show: true,
+                message: 'Failed to send invitations. Please try again.',
+                isError: true
+            });
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="invite-popup-overlay">
+            <div className="invite-popup-content">
+                <button className="invite-close-button" onClick={onClose}>
+                    <FontAwesomeIcon icon={faTimes} />
+                </button>
+                
+                <h2 className="invite-popup-title">
+                    <FontAwesomeIcon icon={faUserPlus} />
+                    Invite Members
+                </h2>
+                
+                <div className="invite-search-container">
+                    <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search users..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="invite-search-input"
+                    />
+                </div>
+                
+                {inviteStatus.show && (
+                    <div className={`invite-status-message ${inviteStatus.isError ? 'error' : 'success'}`}>
+                        {inviteStatus.message}
+                    </div>
+                )}
+                
+                <div className="invite-users-container">
+                    {loading ? (
+                        <div className="invite-loading">Loading users...</div>
+                    ) : filteredUsers.length > 0 ? (
+                        filteredUsers.map(user => (
+                            <label key={user.id} className="invite-user-item">
+                                <div className="invite-user-checkbox-container">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedUsers.includes(user.id)}
+                                        onChange={() => handleUserSelect(user.id)}
+                                        className="invite-user-checkbox"
+                                    />
+                                    <span className="custom-checkbox"></span>
+                                </div>
+                                
+                                <div className="invite-user-avatar">
+                                    <img 
+                                        src={user.avatar ? `http://localhost:8080/images?path=${user.avatar}` : "/default-user.jpg"}
+                                        alt={user.name || user.username}
+                                    />
+                                </div>
+                                
+                                <div className="invite-user-info">
+                                    <span className="invite-user-name">{user.name || user.username}</span>
+                                    {user.email && <span className="invite-user-email">{user.email}</span>}
+                                </div>
+                            </label>
+                        ))
+                    ) : (
+                        <div className="invite-no-results">No users found matching "{searchQuery}"</div>
+                    )}
+                </div>
+                
+                <div className="invite-actions">
+                    <span className="invite-selected-count">
+                        {selectedUsers.length} {selectedUsers.length === 1 ? 'user' : 'users'} selected
+                    </span>
+                    <button 
+                        className="invite-submit-button"
+                        onClick={handleInvite}
+                        disabled={selectedUsers.length === 0}
+                    >
+                        Send Invitations
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
