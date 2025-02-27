@@ -115,7 +115,9 @@ export default function Group({ params }) {
                 <InvitePopup 
                     groupId={groupId}
                     isOpen={showInvitePopup}
-                    onClose={() => setShowInvitePopup(false)}
+                    onClose={() => {
+                        setSelectedUsers([]);
+                        setShowInvitePopup(false)}}
                 />
             </div>
         </div>
@@ -141,18 +143,10 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const data = await fetchUserInfo("api/users/info"); // Use fetchUserInfo for consistency
-            if (data && data.status !== 401) {
-                const formattedUsers = data.map(user => ({
-                    id: user.id,
-                    name: user.nickName || `${user.firstName} ${user.lastName}`, // Prefer nickName, fallback to full name
-                    avatar: user.avatar,
-                    email: user.email || "", // Email might not be present in response
-                }));
-                setUsers(formattedUsers);
-            } else {
-                console.error("Unauthorized or invalid response");
-            }
+            const data = await fetchUserInfo("api/users/followers"); // Fixed typo
+            setUsers(data);
+            console.log("77777777777777777777",data);
+            
         } catch (error) {
             console.error("Error fetching users:", error);
         } finally {
@@ -168,18 +162,21 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                 return [...prev, userId];
             }
         });
+        console.log("selectedUsers", selectedUsers);
+
     };
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
-    console.log("users--------", users);
+    console.log("users-6666666666------", users);
 
     const filteredUsers = users.filter(user => 
         
-        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.username?.toLowerCase().includes(searchQuery.toLowerCase())
+        user.LastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.FirstName?.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    console.log("------------5555", filteredUsers);
 
     const handleInvite = async () => {
         if (selectedUsers.length === 0) {
@@ -228,13 +225,17 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
             });
         }
     };
+    useEffect(() => {
+        console.log("selectedUsers", selectedUsers);
+    })
+    
 
     if (!isOpen) return null;
 
     return (
         <div className="invite-popup-overlay">
             <div className="invite-popup-content">
-                <button className="invite-close-button" onClick={onClose}>
+                <button className="invite-close-button" onClick={onClose} >
                     <FontAwesomeIcon icon={faTimes} />
                 </button>
                 
@@ -269,23 +270,24 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                                 <div className="invite-user-checkbox-container">
                                     <input
                                         type="checkbox"
-                                        checked={selectedUsers.includes(user.id)}
-                                        onChange={() => handleUserSelect(user.id)}
+                                        // checked={selectedUsers.includes(user.id)}
+                                        onChange={() => handleUserSelect(user.Id)} 
                                         className="invite-user-checkbox"
+                                        name= {user.id}
                                     />
                                     <span className="custom-checkbox"></span>
                                 </div>
                                 
-                                <div className="invite-user-avatar">
+                                {/* <div className="invite-user-avatar">
                                     <img 
                                         src={user.avatar ? `http://localhost:8080/images?path=${user.avatar}` : "/default-user.jpg"}
                                         alt={user.name || user.username}
                                     />
                                 </div>
-                                
+                                 */}
                                 <div className="invite-user-info">
-                                    <span className="invite-user-name">{user.name || user.username}</span>
-                                    {user.email && <span className="invite-user-email">{user.email}</span>}
+                                    <span className="invite-user-name">{user?.LastName} </span>
+                                    {user.FirstName && <span className="invite-user-email">{user.LastName + " " + user.FirstName}</span>}
                                 </div>
                             </label>
                         ))
