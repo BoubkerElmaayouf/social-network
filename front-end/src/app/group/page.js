@@ -63,7 +63,7 @@ export function CreateGroupPost({ userdata }) {
         if (fileInput) fileInput.value = '';
     };
 
-    const handlePostGrp = (e) => {
+    const handlePostGrp = async (e) => {
         e.preventDefault();  
     
         const formData = new FormData();
