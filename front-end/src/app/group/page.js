@@ -49,6 +49,10 @@ export function CreateGroupPost({userdata}) {
         const fileInput = document.getElementById('postImage');
         if (fileInput) fileInput.value = '';
     };
+
+    const handlePostGrp = () => {
+        
+    }
     
 
     return (
@@ -145,7 +149,7 @@ export function CreateGroupPost({userdata}) {
                             <FontAwesomeIcon icon={faTimes} />
                         </button>
                         <h2>Create Post</h2>
-                        <form className='post-form'>
+                        <form className='post-form' onSubmit={handlePostGrp}>
                             <div className='form-group'>
                                 <label htmlFor="postTitle">Post Title</label>
                                 <input type="text" id="postTitle" placeholder="Enter post title" />

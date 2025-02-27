@@ -49,7 +49,7 @@ export default function Group({ params }) {
                 if (response.status === 400 || response.status === 404) {
                     router.push("/notfound");
                 }
-                setGroupdata(response || []);
+                setGroupdata(response || []);                
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -61,7 +61,7 @@ export default function Group({ params }) {
     useEffect(() => {
         async function getUserData() {
             const userdata = await fetchUserInfo("api/users/info");
-            setUserdata(userdata); // Store the user data in state
+            setUserdata(userdata);
         }
         getUserData();
     }, []);
@@ -142,10 +142,7 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
         setLoading(true);
         try {
             const data = await fetchUserInfo("api/users/info"); // Use fetchUserInfo for consistency
-            console.log(data)
             if (data && data.status !== 401) {
-                console.log("00000000000",data)
-                // Map API response to match expected format
                 const formattedUsers = data.map(user => ({
                     id: user.id,
                     name: user.nickName || `${user.firstName} ${user.lastName}`, // Prefer nickName, fallback to full name
