@@ -8,12 +8,16 @@ import "./search.css";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Navbar } from "@/utilis/component/navbar";
+import { useRouter } from "next/navigation";
+import { checkAuth } from "@/utilis/ auth";
 
 // ***** search for groups or people ******//
 export default function Search() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [data, setData] = useState(null);
   const type = searchParams.get("type");
+  const [loading, setLoading] = useState(true);
   console.log("type :", type);
 
   useEffect(() => {
@@ -21,25 +25,54 @@ export default function Search() {
 
     const queryParams = new URLSearchParams(searchParams);
     const url = `http://localhost:8080/api/search?${queryParams}`;
-    console.log("ulr :", url);
 
-    fetch(url)
+    fetch(url 
+      , {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    )
       .then((res) => {
+        if (res.status === 401) {
+          router.push("/login");
+          return;
+        }
+
         if (!res.ok) throw new Error("Failed to fetch data");
         return res.json();
       })
       .then(setData);
   }, [searchParams]);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      if (!isAuthenticated) {
+        router.push("/login"); // Redirect to the index page if authenticated
+      } else {
+        setLoading(false); // Update the loading state
+      }
+    };
+    verifyAuth();
+  }, [router]);
   console.log(data);
 
   const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] =
     useState(false);
 
+
+  if (loading) {
+    return <></>
+  }
+
   return (
     <div>
       <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
-      <Leftsidebar/>
-      <ChatApplication/>
+      <Leftsidebar />
+      <ChatApplication />
       <div className="search-container">
         <h1>Search</h1>
         <div className="search-results">
