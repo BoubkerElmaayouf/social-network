@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
   faUserPlus,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { ChatApplication } from "@/utilis/component/ChatApplication";
 import { Leftsidebar } from "@/utilis/component/leftsidebar";
@@ -17,18 +18,25 @@ import { Post } from "@/utilis/component/display_post";
 export default function Profile() {
   const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  // const [isFollowing, setIsFollowing] = useState(null);
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
+  const [followPopover, setFollowPopover] = useState(false);
+  const [followingPopover, setFollowingPopover] = useState(false);
+
   const toggleSettingsPopup = () => setIsSettingsOpen(!isMobileRightSidebarOpen);
 
   useEffect(() => {
 
     async function fetchData() {
       try {
-        const [userResponse, postResponse] = await Promise.all([
+        const [userResponse, postResponse, followers, following] = await Promise.all([
           fetchUserInfo(`api/users/info`),
-          fetchUserInfo(`api/post/getuserpost?targetId=0`)
+          fetchUserInfo(`api/post/getuserpost?targetId=0`),
+          fetchUserInfo(`api/users/followers?profileId=0`),
+          fetchUserInfo(`api/users/following?profileId=0`),
         ]);
+
         setUserdata(userResponse || []);
         setPostdata(postResponse || []);
       } catch (error) {   
@@ -38,6 +46,39 @@ export default function Profile() {
 
     fetchData();
   }, []);
+
+    const followersHandler = () => {
+      setFollowPopover(!followPopover);
+      if (followingPopover) setFollowingPopover(false); // Close following popover if open
+    }
+  
+    const followingsHandler = () => {
+      setFollowingPopover(!followingPopover);
+      if (followPopover) setFollowPopover(false); // Close followers popover if open
+    }
+  
+    // Close popovers when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        const followersPopover = document.getElementById('followers-popover');
+        const followingPopover = document.getElementById('following-popover');
+        
+        if (followPopover && followersPopover && !followersPopover.contains(event.target) && 
+            !event.target.closest('.stat-card[data-type="followers"]')) {
+          setFollowPopover(false);
+        }
+        
+        if (followingPopover && followingPopover && !followingPopover.contains(event.target) && 
+            !event.target.closest('.stat-card[data-type="following"]')) {
+          setFollowingPopover(false);
+        }
+      };
+  
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [followPopover, followingPopover]);
   
   return (
     <div className="profile-hero">
@@ -55,8 +96,10 @@ export default function Profile() {
               <div className="profile-name-section">
                 <h1 className="profile-name">{userdata?.firstName + " " + userdata?.lastName || "loading..."}</h1>
                 <span className="profile-badge">{userdata?.nickName || ""}</span>
+              
               </div>
               <p className="profile-bio">{userdata?.aboutme || ""}</p>
+              <p className="profile-bio">birthday: {userdata?.datebirth ? formatDate(userdata.datebirth) : "loading..."}</p>
             </div>
             <div className="profile-actions">
               {/* <button className="edit-profile">
@@ -79,22 +122,72 @@ export default function Profile() {
             <span className="stat-value">{userdata?.nbrPosts}</span>
             <span className="stat-label">posts</span>
           </div>
-          <div className="stat-card">
+          <div className="stat-card" data-type="followers" onClick={followersHandler}>
             <span className="stat-value">{userdata?.followers}</span>
             <span className="stat-label">followers</span>
           </div>
-          <div className="stat-card">
-            <span className="stat-value">
-              {userdata?.datebirth ? formatDate(userdata.datebirth) : "loading..."}
-            </span>
-
-            <span className="stat-label">birth date</span>
+          <div className="stat-card" data-type="following" onClick={followingsHandler}>
+            <span className="stat-value">{userdata?.following}</span>
+            <span className="stat-label">following</span>
           </div>
           <div className="stat-card">
             <span className="stat-value">{userdata?.type === true ? "Private" : "Public"}</span>
             <span className="stat-label">account</span>
           </div>
         </div>
+
+                {/* *********** followers popover ********* */}
+                {followPopover && (
+                  <div id="followers-popover" className="followers-popover">
+                    <div className="followers-header">
+                      <h3>Followers</h3>
+                      <button className="close-popover" onClick={followersHandler}>
+                        <FontAwesomeIcon icon={faTimes} />
+                      </button>
+                    </div>
+                    <div className="followers-list">
+                      {userdata?.followers > 0 ? (
+                        <div className="follower-item">
+                          <div className="follower-avatar">
+                            <img src="/default-img.jpg" alt="Follower" />
+                          </div>
+                          <div className="follower-info">
+                            <span className="follower-name">Follower Name</span>
+                            <span className="follower-username">@username</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="no-followers">No followers yet</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {/* **** following popover ********* */}
+                {followingPopover && (
+                  <div id="following-popover" className="followers-popover following-popover">
+                    <div className="followers-header">
+                      <h3>Following</h3>
+                      <button className="close-popover" onClick={followingsHandler}>
+                        <FontAwesomeIcon icon={faTimes} />
+                      </button>
+                    </div>
+                    <div className="followers-list">
+                      {userdata?.following > 0 ? (
+                        <div className="follower-item">
+                          <div className="follower-avatar">
+                            <img src="/default-img.jpg" alt="Following" />
+                          </div>
+                          <div className="follower-info">
+                            <span className="follower-name">Account Name</span>
+                            <span className="follower-username">@accountname</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="no-followers">Not following anyone yet</div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
         <div className="profile-content">
           <div className="content-section">
