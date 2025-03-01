@@ -143,6 +143,9 @@ export default function Profile({ params }) {
                       ? "Unfollow"
                       : "Follow")}
               </button>
+              <button className="edit-profile" onClick={handleFollow}>
+                accept
+              </button>
             </div>
           </div>
         </div>
