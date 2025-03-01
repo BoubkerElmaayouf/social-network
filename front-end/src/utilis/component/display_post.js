@@ -6,6 +6,7 @@ import {
     faComment,
     faClock,
     faPaperPlane,
+    faImage
 } from "@fortawesome/free-solid-svg-icons";
 import { fetchUserInfo } from "@/utilis/fetching_data.js";
 import { useEffect, useState,useRef, use } from "react";
@@ -56,6 +57,7 @@ export function Post({ post }) {
         setCommentData({
           postId: "",
           content: "",
+          img: "",
         });
       } else {
         console.log(response.status);
@@ -69,16 +71,10 @@ export function Post({ post }) {
       console.log(data);
       
       setComments([data, ...comments]);
-      // setNewComment("");  
-      // Mise à jour locale des commentaires
-      // setComments([comment, ...comments]);
-      // setNewComment("");
+
   } catch (error) {
       console.error("Error submitting comment:", error);
   }
-
-    // setComments([comment, ...comments]);
-    // setNewComment("");
   };
 
   const handleRect = async (Id, type) => {
@@ -198,8 +194,12 @@ export function Post({ post }) {
                 postId: post.id,
                 content: e.target.value
             })}
-            
             />
+            {/* oriax */}
+            <input className="comment-input-file" type="file" id="postImage" accept="image/*" />
+            <label htmlFor="postImage" className="comment-input-file-label">
+                <FontAwesomeIcon icon={faImage} />
+            </label>
             <button
               type="submit"
               className="comment-submit"
@@ -397,9 +397,8 @@ export function PostContainer() {
 
     const fetchFriendshandler = async () => {
       try {
-        const response = await fetchUserInfo(`api/users/userfollowing?profileId=0`)
+        const response = await fetchUserInfo(`api/users/userfollowers?profileId=0`)
         setTargetedFriends(response);
-        console.log("**********55555555555555555555555555",targetedFriends);
       } catch (error) {
         console.error("Error fetching friends:", error);
       }

@@ -610,6 +610,30 @@
     transition: all 0.3s ease;
 }
 
+.comment-input-file {
+    display: none;
+}
+
+.comment-input-file-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: rgba(79, 248, 104, 0.5);
+    font-size: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(79, 248, 104, 0.2);
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.comment-input-file-label:hover {
+    background-color: rgba(79, 248, 104, 0.2);
+    color: rgba(79, 248, 104, 0.8);
+}
+
 .comment-input:focus {
     outline: none;
     border-color: rgba(79, 248, 104, 0.4);
