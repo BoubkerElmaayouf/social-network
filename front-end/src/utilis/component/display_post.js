@@ -11,7 +11,7 @@ import {
 import { fetchUserInfo } from "@/utilis/fetching_data.js";
 import { useEffect, useState, useRef, use } from "react";
 import "./css/display_post.css";
-import Image from "next/image";
+import Link from "next/link";
 
 //****************** Create Post Component: a function that displays a single post ***********************/
 
@@ -120,6 +120,7 @@ export function Post({ post }) {
     <article className="post">
       <div className="post-header">
         <div className="post-user-info">
+        <Link href={`/profile/${post.creator?.id}`}>
           <div className="user-avatar">
             <img
               src={
@@ -133,10 +134,14 @@ export function Post({ post }) {
               className="avatar-image"
             />
           </div>
+          </Link>
           <div className="user-details">
+            <Link href={`/profile/${post.creator?.id}`}>
             <h3 className="user-name">
               {post.creator?.first_name + " " + post.creator?.last_name}
             </h3>
+            </Link>
+            
             <span className="post-timestamp">
               <FontAwesomeIcon icon={faClock} />
               <time>{post?.created_at}</time>
