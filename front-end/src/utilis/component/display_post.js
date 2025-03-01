@@ -253,7 +253,19 @@ export function Post({ post }) {
                     </span>
                   </div>
                 </div>
+                <div className="comment-divider">
                 <p className="comment-content">{comment?.content}</p>
+                {comment?.pathimg && (
+                  <div className="comment-image">
+                    <img
+                      src={`http://localhost:8080/images?path=${comment.pathimg}`}
+                      alt="Comment image"
+                      className="comment-image01"
+                    />
+                  </div>
+                )}
+
+                </div>
                 <div className="comment-actions">
                   <button className="action-button">
                     <FontAwesomeIcon icon={faThumbsUp} />
