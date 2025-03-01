@@ -49,7 +49,12 @@ export default function Group({ params }) {
                 if (response.status === 400 || response.status === 404) {
                     router.push("/notfound");
                 }
-                setGroupdata(response || []);                
+
+                setGroupdata(response || []);
+
+                console.log(groupdata)
+
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -61,12 +66,12 @@ export default function Group({ params }) {
     useEffect(() => {
         async function getUserData() {
             const userdata = await fetchUserInfo("api/users/info");
-            setUserdata(userdata);
+            setUserdata(userdata); // Store the user data in state
         }
         getUserData();
     }, []);
 
-    
+
     return (
         <div className="group-hero">
             <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
@@ -96,28 +101,18 @@ export default function Group({ params }) {
                                 {groupdata?.Descreption}
                             </p>
                             <div className="group-actions">
-                                <button className="join-group">
-                                    Join Group
-                                    <FontAwesomeIcon icon={faArrowRight} size="sm" />
-                                </button>
-                                {/* <button onClick={setShowOptionsPopup} className='invite-members join-group'> invite-members</button> */}
-                                <button 
-                                    onClick={() => setShowInvitePopup(true)} 
-                                    className='invite-members join-group'
-                                >
-                                    Invite Members
-                                </button>
+
+                                <Memberstatus status={groupdata?.memberstatus?.status} />
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <CreateGroupPost userdata={userdata}/>
-                <InvitePopup 
+                <CreateGroupPost userdata={userdata} status={groupdata?.memberstatus?.status} />
+                <InvitePopup
                     groupId={groupId}
                     isOpen={showInvitePopup}
-                    onClose={() => {
-                        setSelectedUsers([]);
-                        setShowInvitePopup(false)}}
+                    onClose={() => setShowInvitePopup(false)}
                 />
             </div>
         </div>
@@ -125,7 +120,29 @@ export default function Group({ params }) {
     );
 }
 
+function Memberstatus({ status }) {
 
+
+    switch (true) {
+        case status === "you are not a member":
+            return <>
+                <button className="join-group">
+                    Join Group
+                    <FontAwesomeIcon icon={faArrowRight} size="sm" />
+                </button>
+            </>
+        case status === "creator" || status === "member":
+            return <button onClick={() => setShowInvitePopup(true)} className='invite-members join-group'>invite members</button>
+
+
+        default:
+            return <button className="join-group">
+                Join Group
+                <FontAwesomeIcon icon={faArrowRight} size="sm" />
+            </button>
+    }
+
+}
 
 export function InvitePopup({ groupId, isOpen, onClose }) {
     const [users, setUsers] = useState([]);
@@ -143,17 +160,28 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const data = await fetchUserInfo("api/users/followers"); // Fixed typo
-            setUsers(data);
-            console.log("77777777777777777777",data);
-            
+            const data = await fetchUserInfo("api/users/info"); // Use fetchUserInfo for consistency
+            console.log(data)
+            if (data && data.status !== 401) {
+                console.log("00000000000", data)
+                // Map API response to match expected format
+                const formattedUsers = data.map(user => ({
+                    id: user.id,
+                    name: user.nickName || `${user.firstName} ${user.lastName}`, // Prefer nickName, fallback to full name
+                    avatar: user.avatar,
+                    email: user.email || "", // Email might not be present in response
+                }));
+                setUsers(formattedUsers);
+            } else {
+                console.error("Unauthorized or invalid response");
+            }
         } catch (error) {
             console.error("Error fetching users:", error);
         } finally {
             setLoading(false);
         }
     };
-    
+
     const handleUserSelect = (userId) => {
         setSelectedUsers(prev => {
             if (prev.includes(userId)) {
@@ -162,21 +190,18 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                 return [...prev, userId];
             }
         });
-        console.log("selectedUsers", selectedUsers);
-
     };
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
-    console.log("users-6666666666------", users);
+    console.log("users--------", users);
 
-    const filteredUsers = users.filter(user => 
-        
-        user.LastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.FirstName?.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredUsers = users.filter(user =>
+
+        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.username?.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    console.log("------------5555", filteredUsers);
 
     const handleInvite = async () => {
         if (selectedUsers.length === 0) {
@@ -204,10 +229,10 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                     message: 'Invitations sent successfully!',
                     isError: false
                 });
-                
+
                 // Reset selections
                 setSelectedUsers([]);
-                
+
                 // Auto close after success (optional)
                 setTimeout(() => {
                     onClose();
@@ -225,25 +250,21 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
             });
         }
     };
-    useEffect(() => {
-        console.log("selectedUsers", selectedUsers);
-    })
-    
 
     if (!isOpen) return null;
 
     return (
         <div className="invite-popup-overlay">
             <div className="invite-popup-content">
-                <button className="invite-close-button" onClick={onClose} >
+                <button className="invite-close-button" onClick={onClose}>
                     <FontAwesomeIcon icon={faTimes} />
                 </button>
-                
+
                 <h2 className="invite-popup-title">
                     <FontAwesomeIcon icon={faUserPlus} />
                     Invite Members
                 </h2>
-                
+
                 <div className="invite-search-container">
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                     <input
@@ -254,13 +275,13 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                         className="invite-search-input"
                     />
                 </div>
-                
+
                 {inviteStatus.show && (
                     <div className={`invite-status-message ${inviteStatus.isError ? 'error' : 'success'}`}>
                         {inviteStatus.message}
                     </div>
                 )}
-                
+
                 <div className="invite-users-container">
                     {loading ? (
                         <div className="invite-loading">Loading users...</div>
@@ -270,24 +291,23 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                                 <div className="invite-user-checkbox-container">
                                     <input
                                         type="checkbox"
-                                        // checked={selectedUsers.includes(user.id)}
-                                        onChange={() => handleUserSelect(user.Id)} 
+                                        checked={selectedUsers.includes(user.id)}
+                                        onChange={() => handleUserSelect(user.id)}
                                         className="invite-user-checkbox"
-                                        name= {user.id}
                                     />
                                     <span className="custom-checkbox"></span>
                                 </div>
-                                
-                                {/* <div className="invite-user-avatar">
-                                    <img 
+
+                                <div className="invite-user-avatar">
+                                    <img
                                         src={user.avatar ? `http://localhost:8080/images?path=${user.avatar}` : "/default-user.jpg"}
                                         alt={user.name || user.username}
                                     />
                                 </div>
-                                 */}
+
                                 <div className="invite-user-info">
-                                    <span className="invite-user-name">{user?.LastName} </span>
-                                    {user.FirstName && <span className="invite-user-email">{user.LastName + " " + user.FirstName}</span>}
+                                    <span className="invite-user-name">{user.name || user.username}</span>
+                                    {user.email && <span className="invite-user-email">{user.email}</span>}
                                 </div>
                             </label>
                         ))
@@ -295,12 +315,12 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                         <div className="invite-no-results">No users found matching "{searchQuery}"</div>
                     )}
                 </div>
-                
+
                 <div className="invite-actions">
                     <span className="invite-selected-count">
                         {selectedUsers.length} {selectedUsers.length === 1 ? 'user' : 'users'} selected
                     </span>
-                    <button 
+                    <button
                         className="invite-submit-button"
                         onClick={handleInvite}
                         disabled={selectedUsers.length === 0}
