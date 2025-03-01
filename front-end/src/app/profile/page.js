@@ -12,8 +12,9 @@ import {
 import { ChatApplication } from "@/utilis/component/ChatApplication";
 import { Leftsidebar } from "@/utilis/component/leftsidebar";
 import { Navbar } from "@/utilis/component/navbar";
-import { fetchUserInfo } from "@/utilis/fetching_data.js"; 
+import { fetchUserInfo } from "@/utilis/fetching_data.js";
 import { Post } from "@/utilis/component/display_post";
+import Link from "next/link";
 
 export default function Profile() {
   const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function Profile() {
         setFollowers(userfollowers || []);
         setFollowing(userfollowing || []);
         console.log("Following data:", following);
-      } catch (error) {   
+      } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
@@ -53,44 +54,44 @@ export default function Profile() {
     fetchData();
   }, []);
 
-    const followersHandler = () => {
-      setFollowPopover(!followPopover);
-      if (followingPopover) setFollowingPopover(false); // Close following popover if open
-    }
-  
-    const followingsHandler = () => {
-      setFollowingPopover(!followingPopover);
-      if (followPopover) setFollowPopover(false); // Close followers popover if open
-    }
-  
-    // Close popovers when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        const followersPopover = document.getElementById('followers-popover');
-        const followingPopover = document.getElementById('following-popover');
-        
-        if (followPopover && followersPopover && !followersPopover.contains(event.target) && 
-            !event.target.closest('.stat-card[data-type="followers"]')) {
-          setFollowPopover(false);
-        }
-        
-        if (followingPopover && followingPopover && !followingPopover.contains(event.target) && 
-            !event.target.closest('.stat-card[data-type="following"]')) {
-          setFollowingPopover(false);
-        }
-      };
-  
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, [followPopover, followingPopover]);
-  
+  const followersHandler = () => {
+    setFollowPopover(!followPopover);
+    if (followingPopover) setFollowingPopover(false); // Close following popover if open
+  }
+
+  const followingsHandler = () => {
+    setFollowingPopover(!followingPopover);
+    if (followPopover) setFollowPopover(false); // Close followers popover if open
+  }
+
+  // Close popovers when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const followersPopover = document.getElementById('followers-popover');
+      const followingPopover = document.getElementById('following-popover');
+
+      if (followPopover && followersPopover && !followersPopover.contains(event.target) &&
+        !event.target.closest('.stat-card[data-type="followers"]')) {
+        setFollowPopover(false);
+      }
+
+      if (followingPopover && followingPopover && !followingPopover.contains(event.target) &&
+        !event.target.closest('.stat-card[data-type="following"]')) {
+        setFollowingPopover(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [followPopover, followingPopover]);
+
   return (
     <div className="profile-hero">
       <Navbar setIsMobileRightSidebarOpen={setIsMobileRightSidebarOpen} />
       <Leftsidebar />
-      <ChatApplication/>
+      <ChatApplication />
       <div className="profile-container">
         <div className="profile-header">
           <div className="profile-cover"></div>
@@ -102,7 +103,7 @@ export default function Profile() {
               <div className="profile-name-section">
                 <h1 className="profile-name">{userdata?.firstName + " " + userdata?.lastName || "loading..."}</h1>
                 <span className="profile-badge">{userdata?.nickName || ""}</span>
-              
+
               </div>
               <p className="profile-bio">{userdata?.aboutme || ""}</p>
               <p className="profile-bio">birthday: {userdata?.datebirth ? formatDate(userdata.datebirth) : "loading..."}</p>
@@ -133,7 +134,7 @@ export default function Profile() {
             <span className="stat-label">followers</span>
           </div>
           <div className="stat-card" data-type="following" onClick={followingsHandler}>
-            <span className="stat-value">{following?.length || 0 }</span>
+            <span className="stat-value">{following?.length || 0}</span>
             <span className="stat-label">following</span>
           </div>
           <div className="stat-card">
@@ -142,8 +143,8 @@ export default function Profile() {
           </div>
         </div>
 
-          {/* *********** followers popover ********* */}
-          {followPopover && (
+        {/* *********** followers popover ********* */}
+        {followPopover && (
           <div id="followers-popover" className="followers-popover">
             <div className="followers-header">
               <h3>Followers</h3>
@@ -155,12 +156,12 @@ export default function Profile() {
               {followers?.length > 0 ? (
                 followers.map((follower, index) => (
                   <div key={index} className="follower-item">
-                    {/* <Link href={`/profile/${follower.Id}`}> */}
-                    <div className="follower-info">
-                      <span className="follower-name">{follower.FirstName}</span>
-                      <span className="follower-username">{follower.LastName}</span>
-                    </div>
-                    {/* </Link>   */}
+                    <Link href={`/profile/${follower.Id}`}>
+                      <div className="follower-info">
+                        <span className="follower-name">{follower.FirstName}</span>
+                        <span className="follower-username">{follower.LastName}</span>
+                      </div>
+                    </Link>
                   </div>
                 ))
               ) : (
@@ -183,13 +184,13 @@ export default function Profile() {
               {following?.length > 0 ? (
                 following.map((following, index) => (
                   <div key={index} className="follower-item">
-  
-                    {/* <Link href={`/profile/${following.Id}`}> */}
-                    <div className="follower-info">
-                      <span className="follower-name">{following.FirstName}</span>
-                      <span className="follower-username">{following.LastName}</span>
-                    </div>
-                    {/* </Link>  */}
+
+                    <Link href={`/profile/${following.Id}`}>
+                      <div className="follower-info">
+                        <span className="follower-name">{following.FirstName}</span>
+                        <span className="follower-username">{following.LastName}</span>
+                      </div>
+                    </Link>
                   </div>
                 ))
               ) : (
