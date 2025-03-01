@@ -445,7 +445,7 @@
 }
 
 .followers-list {
-  overflow-y: auto;
+  overflow-y: scroll;
   max-height: 380px;
   padding: 10px 0;
 }

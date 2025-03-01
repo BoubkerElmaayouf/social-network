@@ -293,6 +293,10 @@ export function PostContainer() {
     const [imagePreview, setImagePreview] = useState(null);
     const modalRef = useRef(null);
     const fileInputRef = useRef(null);
+
+    const [targetedFriends, setTargetedFriends] = useState(null);
+
+
   
     // Add these state variables at the top of your PostContainer component
     const [showFriendsModal, setShowFriendsModal] = useState(false);
@@ -390,6 +394,21 @@ export function PostContainer() {
         console.error("Error during login:", error);
       }
     };
+
+    const fetchFriendshandler = async () => {
+      try {
+        const response = await fetchUserInfo(`api/users/userfollowing?profileId=0`)
+        setTargetedFriends(response);
+        console.log("**********55555555555555555555555555",targetedFriends);
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    }
+
+    useEffect(() => {
+      fetchFriendshandler();
+    }, []);
+   
   
     return (
       <div className="content-container">
@@ -413,7 +432,7 @@ export function PostContainer() {
   
               <form onSubmit={handleSubmit} className="post-form">
                 <div className="form-group">
-                  <div className="image-upload-container">
+                  <div className="image-upload-containers">
                     <input
                       type="file"
                       accept="image/*"
@@ -422,7 +441,7 @@ export function PostContainer() {
                       ref={fileInputRef}
                       id="image-upload"
                     />
-                    <label htmlFor="image-upload" className="upload-label">
+                    <label htmlFor="image-upload" className="upload-labels">
                       <svg
                         width="24"
                         height="24"
@@ -526,13 +545,16 @@ export function PostContainer() {
                   </label>
                 </div>
                 <div className="target-friends-section">
-                  <button
-                    type="button"
-                    className="target-friends-button"
-                    onClick={() => setShowFriendsModal(true)}
-                  >
-                    Target Friends
-                  </button>
+                <button
+                  type="button"
+                  className="target-friends-button"
+                  onClick={() => {
+                    fetchFriendshandler();
+                    setShowFriendsModal(true);
+                  }}
+                >
+                  Target Friends
+                </button>
                 </div>
                 {showFriendsModal && (
                   <div className="friends-modal-overlay">
@@ -549,17 +571,17 @@ export function PostContainer() {
                       </div>
   
                       <div className="friends-list">
-                        {friends.map((friend) => (
-                          <label key={friend.id} className="friend-item">
+                        {targetedFriends.map((friend) => (
+                          <label key={friend.Id} className="friend-item">
                             <input
                               type="checkbox"
-                              checked={selectedFriends.includes(friend.id)}
-                              onChange={() => handleFriendSelection(friend.id)}
+                              checked={selectedFriends.includes(friend.Id)}
+                              onChange={() => handleFriendSelection(friend.Id)}
                             />
-                            <div className="friend-avatar">
-                              <img src={friend.avatar} alt={friend.name} />
-                            </div>
-                            <span className="friend-name">{friend.name}</span>
+                            {/* <div className="friend-avatar">
+                              <img src={friend.avatar} alt={friend.FirstName} />
+                            </div> */}
+                            <span className="friend-name">{friend.FirstName +" " + friend.LastName }</span>
                           </label>
                         ))}
                       </div>
