@@ -27,22 +27,22 @@ export default function Profile({ params }) {
   const resolvedParams = use(params);
   const userId = resolvedParams.id;
   const router = useRouter();
-  
+
 
   useEffect(() => {
-    
+
     const fetchData = async () => {
       try {
         const [userResponse, postResponse, followResponse, following] = await Promise.all([
           fetchUserInfo(`api/users/profile?profileId=${userId}`),
           fetchUserInfo(`api/post/getuserpost?targetId=${userId}`),
           fetchUserInfo(`api/users/followers?profileId=${userId}`),
-          fetchUserInfo(`api/users/following?profileId=${userId}`),
+          fetchUserInfo(`api/users/following?profileId=${userId}`)
         ]);
         if (userResponse.status === 303) {
           router.push("/profile");
         }
-        if (userResponse.status === 404) {
+        if (userResponse.status === 404 || userResponse.status === 500) {
           router.push("/notfound");
         }
         // if (postResponse.status === 404) {
@@ -89,14 +89,14 @@ export default function Profile({ params }) {
     const handleClickOutside = (event) => {
       const followersPopover = document.getElementById('followers-popover');
       const followingPopover = document.getElementById('following-popover');
-      
-      if (followPopover && followersPopover && !followersPopover.contains(event.target) && 
-          !event.target.closest('.stat-card[data-type="followers"]')) {
+
+      if (followPopover && followersPopover && !followersPopover.contains(event.target) &&
+        !event.target.closest('.stat-card[data-type="followers"]')) {
         setFollowPopover(false);
       }
-      
-      if (followingPopover && followingPopover && !followingPopover.contains(event.target) && 
-          !event.target.closest('.stat-card[data-type="following"]')) {
+
+      if (followingPopover && followingPopover && !followingPopover.contains(event.target) &&
+        !event.target.closest('.stat-card[data-type="following"]')) {
         setFollowingPopover(false);
       }
     };
@@ -109,9 +109,9 @@ export default function Profile({ params }) {
 
   return (
     <div className="profile-hero">
-      <Navbar/>
+      <Navbar />
       <Leftsidebar />
-      <ChatApplication/>
+      <ChatApplication />
       <div className="profile-container">
         <div className="profile-header">
           <div className="profile-cover"></div>
@@ -129,7 +129,13 @@ export default function Profile({ params }) {
             </div>
             <div className="profile-actions">
               <button className="edit-profile" onClick={handleFollow}>
-                <FontAwesomeIcon icon={faUserPlus} size="sm" /> Follow
+                <FontAwesomeIcon icon={faUserPlus} size="sm" />
+                {userdata && userdata.isfollowing !== undefined &&
+                  (userdata.isfollowing === false
+                    ? "Pending"
+                    : userdata.isfollowing === true
+                      ? "Unfollow"
+                      : "Follow")}
               </button>
             </div>
           </div>
