@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faThumbsUp,
@@ -6,13 +6,12 @@ import {
   faComment,
   faClock,
   faPaperPlane,
-  faImage
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { fetchUserInfo } from "@/utilis/fetching_data.js";
 import { useEffect, useState, useRef, use } from "react";
-import "./css/display_post.css"
+import "./css/display_post.css";
 import Image from "next/image";
-
 
 //****************** Create Post Component: a function that displays a single post ***********************/
 
@@ -21,6 +20,16 @@ export function Post({ post }) {
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState(post.likes);
   const [dislikes, setDislikes] = useState(post.dislikes);
+  const [image, setImage] = useState(null);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      // setPreview(URL.createObjectURL(file));
+    }
+  };
+
+
   // const [comment, setNewComment] = useState("");
 
   const [formComments, setCommentData] = useState({
@@ -37,13 +46,13 @@ export function Post({ post }) {
     getUserData();
   }, []);
 
-
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!formComments.content.trim()) return;
     const newCommentForm = new FormData();
     newCommentForm.append("post_id", formComments.postId);
     newCommentForm.append("content", formComments.content);
+    if (image) newCommentForm.append("image", image);
     try {
       const response = await fetch("http://localhost:8080/api/comment/add", {
         method: "POST",
@@ -57,8 +66,8 @@ export function Post({ post }) {
         setCommentData({
           postId: "",
           content: "",
-          img: "",
         });
+        setImage(null);
       } else {
         console.log(response.status);
       }
@@ -71,7 +80,6 @@ export function Post({ post }) {
       console.log(data);
 
       setComments([data, ...comments]);
-
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
@@ -106,8 +114,7 @@ export function Post({ post }) {
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
-  }
-
+  };
 
   return (
     <article className="post">
@@ -153,11 +160,17 @@ export function Post({ post }) {
       </div>
 
       <div className="post-actions">
-        <button onClick={() => handleRect(post.id, "LIKE")} className="action-button">
+        <button
+          onClick={() => handleRect(post.id, "LIKE")}
+          className="action-button"
+        >
           <FontAwesomeIcon icon={faThumbsUp} />
           <span>{likes}</span>
         </button>
-        <button onClick={() => handleRect(post.id, "DISLIKE")} className="action-button">
+        <button
+          onClick={() => handleRect(post.id, "DISLIKE")}
+          className="action-button"
+        >
           <FontAwesomeIcon icon={faThumbsDown} />
           <span>{dislikes}</span>
         </button>
@@ -169,7 +182,7 @@ export function Post({ post }) {
           }}
         >
           <FontAwesomeIcon icon={faComment} />
-          <span>{comments.length != 0 ? comments.length : ''}</span>
+          <span>{comments.length != 0 ? comments.length : ""}</span>
         </button>
       </div>
 
@@ -190,13 +203,21 @@ export function Post({ post }) {
               className="comment-input"
               placeholder="Write a comment..."
               value={formComments.content}
-              onChange={(e) => setCommentData({
-                postId: post.id,
-                content: e.target.value
-              })}
+              onChange={(e) =>
+                setCommentData({
+                  postId: post.id,
+                  content: e.target.value,
+                })
+              }
             />
             {/* oriax */}
-            <input className="comment-input-file" type="file" id="postImage" accept="image/*" />
+            <input
+              className="comment-input-file"
+              type="file"
+              id="postImage"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
             <label htmlFor="postImage" className="comment-input-file-label">
               <FontAwesomeIcon icon={faImage} />
             </label>
@@ -223,7 +244,9 @@ export function Post({ post }) {
                     />
                   </div>
                   <div className="comment-details">
-                    <span className="comment-author">{comment.user?.first_name + " " + comment.user?.last_name}</span>
+                    <span className="comment-author">
+                      {comment.user?.first_name + " " + comment.user?.last_name}
+                    </span>
                     <span className="comment-timestamp">
                       <FontAwesomeIcon icon={faClock} />
                       <time>{comment.created_at}</time>
@@ -274,17 +297,17 @@ export function PostList() {
 
   return (
     <div className="post-list">
-      {posts.length > 0 ? (
-        posts.map((post) => <Post key={post.id} post={post} />)
-      ) : (
-        <p>No posts available.</p>
-      )}
-    </div>
+    {posts.length > 0 ? (
+      posts.map((post) => <Post key={post.id} post={post} />)
+    ) : (
+      <p>No posts available.</p>
+    )}
+  </div>
 
-  );
+);
 }
 
-// ******** Post container: a function that displays a form to create a new post **********// 
+// ******** Post container: a function that displays a form to create a new post **********//
 export function PostContainer() {
   const [imageFile, setImageFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -298,8 +321,6 @@ export function PostContainer() {
   const fileInputRef = useRef(null);
 
   const [targetedFriends, setTargetedFriends] = useState(null);
-
-
 
   // Add these state variables at the top of your PostContainer component
   const [showFriendsModal, setShowFriendsModal] = useState(false);
@@ -400,17 +421,18 @@ export function PostContainer() {
 
   const fetchFriendshandler = async () => {
     try {
-      const response = await fetchUserInfo(`api/users/userfollowers?profileId=0`)
+      const response = await fetchUserInfo(
+        `api/users/userfollowers?profileId=0`
+      );
       setTargetedFriends(response);
     } catch (error) {
       console.error("Error fetching friends:", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchFriendshandler();
   }, []);
-
 
   return (
     <div className="content-container">
@@ -583,7 +605,9 @@ export function PostContainer() {
                           {/* <div className="friend-avatar">
                               <img src={friend.avatar} alt={friend.FirstName} />
                             </div> */}
-                          <span className="friend-name">{friend.FirstName + " " + friend.LastName}</span>
+                          <span className="friend-name">
+                            {friend.FirstName + " " + friend.LastName}
+                          </span>
                         </label>
                       ))}
                     </div>
