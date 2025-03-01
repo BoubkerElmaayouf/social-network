@@ -11,7 +11,7 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(8, 11, 17, 0);
+    background: rgba(8, 11, 17, 0.2);
     backdrop-filter: blur(100px);
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 12px;
@@ -41,7 +41,8 @@
 .trigger-input {
     flex: 1;
     padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(8, 11, 17, 0.1);
+
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.5);
@@ -488,7 +489,7 @@
 
 /******************  the post section **********************/
 .post {
-    background: rgba(8, 11, 17, 0);
+    background: rgba(8, 11, 17, 0.2);
     backdrop-filter: blur(100px);
     border: 1px solid rgba(79, 248, 104, 0.1);
     border-radius: 12px;

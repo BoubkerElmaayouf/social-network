@@ -187,12 +187,13 @@
 }
 .created-Posts {
   margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  /* grid-template-columns: repeat(2, 1fr); */
   justify-content: center;
   align-items: center;
   gap: 20px;
-  /* background-color: aqua; */
 }
 
 
