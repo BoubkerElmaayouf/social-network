@@ -195,11 +195,11 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
         setSearchQuery(e.target.value);
     };
 
-    // const filteredUsers = users.filter(user =>
+    const filteredUsers = users.filter(user =>
 
-    //     user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //     user.username?.toLowerCase().includes(searchQuery.toLowerCase())
-    // );
+        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.username?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const handleInvite = async () => {
         if (selectedUsers.length === 0) {
@@ -283,8 +283,8 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                 <div className="invite-users-container">
                     {loading ? (
                         <div className="invite-loading">Loading users...</div>
-                    ) : users.length > 0 ? (
-                        users.map(user => (
+                    ) : filteredUsers.length > 0 ? (
+                        filteredUsers.map(user => (
                             <label key={user.id} className="invite-user-item">
                                 <div className="invite-user-checkbox-container">
                                     <input
