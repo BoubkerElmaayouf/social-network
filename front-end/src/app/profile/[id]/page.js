@@ -39,11 +39,15 @@ export default function Profile({ params }) {
           fetchUserInfo(`api/users/followers?profileId=${userId}`),
           fetchUserInfo(`api/users/following?profileId=${userId}`),
         ]);
-        if (userResponse.status === 400 || userResponse.status === 404 || 
-         userResponse.status === 303 || userResponse.status === 500 || postResponse.status === 400 
-         || postResponse.status === 404 || postResponse.status === 303 || postResponse.status === 500) {
+        if (userResponse.status === 303) {
+          router.push("/profile");
+        }
+        if (userResponse.status === 404) {
           router.push("/notfound");
         }
+        // if (postResponse.status === 404) {
+        //   router.push("/notfound");
+        // }
         setUserdata(userResponse || []);
         setPostdata(postResponse || []);
       } catch (error) {
