@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
   faUserPlus,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { fetchUserInfo } from "@/utilis/fetching_data";
@@ -17,12 +18,12 @@ import { fetchUserInfo } from "@/utilis/fetching_data";
 import { Post } from "@/utilis/component/display_post";
 import { useRouter } from "next/navigation";
 
-
-
 export default function Profile({ params }) {
 
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
+  const [followPopover, setFollowPopover] = useState(false);
+  const [followingPopover, setFollowingPopover] = useState(false);
   const resolvedParams = use(params);
   const userId = resolvedParams.id;
   const router = useRouter();
@@ -32,17 +33,15 @@ export default function Profile({ params }) {
     
     const fetchData = async () => {
       try {
-        const [userResponse, postResponse] = await Promise.all([
+        const [userResponse, postResponse, followResponse, following] = await Promise.all([
           fetchUserInfo(`api/users/profile?profileId=${userId}`),
-          fetchUserInfo(`api/post/getuserpost?targetId=${userId}`)
+          fetchUserInfo(`api/post/getuserpost?targetId=${userId}`),
+          fetchUserInfo(`api/users/followers?profileId=${userId}`),
+          fetchUserInfo(`api/users/following?profileId=${userId}`),
         ]);
-        if (userResponse.status === 303) {
-          router.push("/profile");
-        }
-        if (userResponse.status === 404) {
-          router.push("/notfound");
-        }
-        if (postResponse.status === 404) {
+        if (userResponse.status === 400 || userResponse.status === 404 || 
+         userResponse.status === 303 || userResponse.status === 500 || postResponse.status === 400 
+         || postResponse.status === 404 || postResponse.status === 303 || postResponse.status === 500) {
           router.push("/notfound");
         }
         setUserdata(userResponse || []);
@@ -53,6 +52,7 @@ export default function Profile({ params }) {
     }
     fetchData();
   }, [userId]);
+
   const handleFollow = async (e) => {
     e.preventDefault();
     try {
@@ -60,6 +60,7 @@ export default function Profile({ params }) {
         method: "GET",
         credentials: "include",
       });
+      console.log("Response:********", response);
       if (response.status === 200) {
         alert("User followed successfully");
       }
@@ -68,6 +69,40 @@ export default function Profile({ params }) {
       console.error("Error following user");
     }
   }
+
+  const followersHandler = () => {
+    setFollowPopover(!followPopover);
+    if (followingPopover) setFollowingPopover(false); // Close following popover if open
+  }
+
+  const followingsHandler = () => {
+    setFollowingPopover(!followingPopover);
+    if (followPopover) setFollowPopover(false); // Close followers popover if open
+  }
+
+  // Close popovers when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const followersPopover = document.getElementById('followers-popover');
+      const followingPopover = document.getElementById('following-popover');
+      
+      if (followPopover && followersPopover && !followersPopover.contains(event.target) && 
+          !event.target.closest('.stat-card[data-type="followers"]')) {
+        setFollowPopover(false);
+      }
+      
+      if (followingPopover && followingPopover && !followingPopover.contains(event.target) && 
+          !event.target.closest('.stat-card[data-type="following"]')) {
+        setFollowingPopover(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [followPopover, followingPopover]);
+
   return (
     <div className="profile-hero">
       <Navbar/>
@@ -86,12 +121,12 @@ export default function Profile({ params }) {
                 <span className="profile-badge">{userdata?.nickName || ""}</span>
               </div>
               <p className="profile-bio">{userdata?.aboutme || ""}</p>
+              <p className="profile-bio">birthday: {userdata?.datebirth ? formatDate(userdata.datebirth) : "loading..."}</p>
             </div>
             <div className="profile-actions">
               <button className="edit-profile" onClick={handleFollow}>
                 <FontAwesomeIcon icon={faUserPlus} size="sm" /> Follow
               </button>
-
             </div>
           </div>
         </div>
@@ -101,22 +136,72 @@ export default function Profile({ params }) {
             <span className="stat-value">{userdata?.nbrPosts}</span>
             <span className="stat-label">posts</span>
           </div>
-          <div className="stat-card">
+          <div className="stat-card" data-type="followers" onClick={followersHandler}>
             <span className="stat-value">{userdata?.followers}</span>
             <span className="stat-label">followers</span>
           </div>
-          <div className="stat-card">
-            <span className="stat-value">
-              {userdata?.datebirth ? formatDate(userdata.datebirth) : "loading..."}
-            </span>
-
-            <span className="stat-label">birth date</span>
+          <div className="stat-card" data-type="following" onClick={followingsHandler}>
+            <span className="stat-value">{userdata?.following}</span>
+            <span className="stat-label">following</span>
           </div>
           <div className="stat-card">
             <span className="stat-value">{userdata?.type === true ? "Private" : "Public"}</span>
             <span className="stat-label">account</span>
           </div>
         </div>
+
+        {/* *********** followers popover ********* */}
+        {followPopover && (
+          <div id="followers-popover" className="followers-popover">
+            <div className="followers-header">
+              <h3>Followers</h3>
+              <button className="close-popover" onClick={followersHandler}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+            <div className="followers-list">
+              {userdata?.followers > 0 ? (
+                <div className="follower-item">
+                  <div className="follower-avatar">
+                    <img src="/default-img.jpg" alt="Follower" />
+                  </div>
+                  <div className="follower-info">
+                    <span className="follower-name">Follower Name</span>
+                    <span className="follower-username">@username</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="no-followers">No followers yet</div>
+              )}
+            </div>
+          </div>
+        )}
+        {/* **** following popover ********* */}
+        {followingPopover && (
+          <div id="following-popover" className="followers-popover following-popover">
+            <div className="followers-header">
+              <h3>Following</h3>
+              <button className="close-popover" onClick={followingsHandler}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+            <div className="followers-list">
+              {userdata?.following > 0 ? (
+                <div className="follower-item">
+                  <div className="follower-avatar">
+                    <img src="/default-img.jpg" alt="Following" />
+                  </div>
+                  <div className="follower-info">
+                    <span className="follower-name">Account Name</span>
+                    <span className="follower-username">@accountname</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="no-followers">Not following anyone yet</div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="profile-content">
           <div className="content-section">
@@ -125,7 +210,7 @@ export default function Profile({ params }) {
               {postdata && postdata.length > 0 ? (
                 postdata.map((post) => <Post key={post.id} post={post} />)
               ) : (
-                <p>No posts available</p> // Ou un spinner de chargement
+                <p>No posts available</p>
               )}
             </div>
           </div>
@@ -134,7 +219,6 @@ export default function Profile({ params }) {
     </div>
   );
 }
-
 
 
 function formatDate(isoDate) {

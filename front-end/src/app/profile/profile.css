@@ -391,3 +391,163 @@
     padding: 15px;
   }
 }
+
+/* ******** followers pop over ****************/
+/* Followers & Following Popover Styles */
+.followers-popover, .following-popover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  max-height: 450px;
+  background: #1a2235;
+  border-radius: 12px;
+  border: 1px solid rgba(79, 248, 104, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow: hidden;
+  color: white;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -48%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.followers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(79, 248, 104, 0.1);
+}
+
+.followers-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #4FF868;
+}
+
+.close-popover {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-popover:hover {
+  color: #4FF868;
+}
+
+.followers-list {
+  overflow-y: auto;
+  max-height: 380px;
+  padding: 10px 0;
+}
+
+.followers-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.followers-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.followers-list::-webkit-scrollbar-thumb {
+  background: rgba(79, 248, 104, 0.3);
+  border-radius: 3px;
+}
+
+.follower-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.follower-item:hover {
+  background-color: rgba(79, 248, 104, 0.05);
+}
+
+.follower-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
+  border: 2px solid rgba(79, 248, 104, 0.2);
+}
+
+.follower-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.follower-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.follower-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 3px;
+}
+
+.follower-username {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.no-followers {
+  padding: 20px;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Make stat cards clickable */
+.stat-card[data-type="followers"],
+.stat-card[data-type="following"] {
+  cursor: pointer;
+  position: relative;
+}
+
+.stat-card[data-type="followers"]:hover,
+.stat-card[data-type="following"]:hover {
+  background: rgba(79, 248, 104, 0.05);
+}
+
+.stat-card[data-type="followers"]::after,
+.stat-card[data-type="following"]::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: #4FF868;
+  transition: width 0.3s ease;
+}
+
+.stat-card[data-type="followers"]:hover::after,
+.stat-card[data-type="following"]:hover::after {
+  width: 50%;
+}
+
+/* Overlay for when popover is active */
+.profile-hero.popover-active::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 900;
+}
