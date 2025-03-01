@@ -102,7 +102,7 @@ export default function Group({ params }) {
                             </p>
                             <div className="group-actions">
 
-                                <Memberstatus status={groupdata?.memberstatus?.status} />
+                                <Memberstatus status={groupdata?.memberstatus?.status} pop={() => setShowInvitePopup(true)} />
 
                             </div>
                         </div>
@@ -120,7 +120,7 @@ export default function Group({ params }) {
     );
 }
 
-function Memberstatus({ status }) {
+function Memberstatus({ status, pop }) {
 
 
     switch (true) {
@@ -132,7 +132,7 @@ function Memberstatus({ status }) {
                 </button>
             </>
         case status === "creator" || status === "member":
-            return <button onClick={() => setShowInvitePopup(true)} className='invite-members join-group'>invite members</button>
+            return <button onClick={pop} className='invite-members join-group'>invite members</button>
 
 
         default:
@@ -160,16 +160,15 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const data = await fetchUserInfo("api/users/info"); // Use fetchUserInfo for consistency
+            const data = await fetchUserInfo("/api/users/followers"); // Use fetchUserInfo for consistency
             console.log(data)
             if (data && data.status !== 401) {
                 console.log("00000000000", data)
                 // Map API response to match expected format
                 const formattedUsers = data.map(user => ({
-                    id: user.id,
-                    name: user.nickName || `${user.firstName} ${user.lastName}`, // Prefer nickName, fallback to full name
-                    avatar: user.avatar,
-                    email: user.email || "", // Email might not be present in response
+                    id: user.Id,
+                    avatar: user.Avatar,
+                    name: `${user.FirstName} ${user.LastName}`, // Prefer nickName, fallback to full name
                 }));
                 setUsers(formattedUsers);
             } else {
@@ -195,13 +194,12 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
-    console.log("users--------", users);
 
-    const filteredUsers = users.filter(user =>
+    // const filteredUsers = users.filter(user =>
 
-        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.username?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    //     user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //     user.username?.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
 
     const handleInvite = async () => {
         if (selectedUsers.length === 0) {
@@ -285,8 +283,8 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                 <div className="invite-users-container">
                     {loading ? (
                         <div className="invite-loading">Loading users...</div>
-                    ) : filteredUsers.length > 0 ? (
-                        filteredUsers.map(user => (
+                    ) : users.length > 0 ? (
+                        users.map(user => (
                             <label key={user.id} className="invite-user-item">
                                 <div className="invite-user-checkbox-container">
                                     <input

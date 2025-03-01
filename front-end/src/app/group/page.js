@@ -26,7 +26,13 @@ export default function Group() {
     )
 }
 
-export function CreateGroupPost({ userdata }) {
+export function CreateGroupPost({ userdata , status}) {
+    if (status !== "creator" && status !== "member" ) {
+        return <></>
+    }
+
+
+
     const [showOptionsPopup, setShowOptionsPopup] = useState(false);
     const [showEventForm, setShowEventForm] = useState(false);
     const [showPostForm, setShowPostForm] = useState(false);
