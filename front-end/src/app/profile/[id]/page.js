@@ -17,11 +17,15 @@ import { fetchUserInfo } from "@/utilis/fetching_data";
 
 import { Post } from "@/utilis/component/display_post";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Profile({ params }) {
 
   const [userdata, setUserdata] = useState(null);
   const [postdata, setPostdata] = useState(null);
+  const [followers, setFollowers] = useState(null);
+  const [following, setFollowing] = useState(null);
+
   const [followPopover, setFollowPopover] = useState(false);
   const [followingPopover, setFollowingPopover] = useState(false);
   const resolvedParams = use(params);
@@ -33,11 +37,11 @@ export default function Profile({ params }) {
 
     const fetchData = async () => {
       try {
-        const [userResponse, postResponse, followResponse, following] = await Promise.all([
+        const [userResponse, postResponse, userfollowers, userfollowing] = await Promise.all([
           fetchUserInfo(`api/users/profile?profileId=${userId}`),
           fetchUserInfo(`api/post/getuserpost?targetId=${userId}`),
-          fetchUserInfo(`api/users/followers?profileId=${userId}`),
-          fetchUserInfo(`api/users/following?profileId=${userId}`)
+          fetchUserInfo(`api/users/userfollowers?profileId=${userId}`),
+          fetchUserInfo(`api/users/userfollowing?profileId=${userId}`)
         ]);
         if (userResponse.status === 303) {
           router.push("/profile");
@@ -50,6 +54,8 @@ export default function Profile({ params }) {
         // }
         setUserdata(userResponse || []);
         setPostdata(postResponse || []);
+        setFollowers(userfollowers || []); // Set following before setFollowers
+        setFollowing(userfollowing || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -147,11 +153,11 @@ export default function Profile({ params }) {
             <span className="stat-label">posts</span>
           </div>
           <div className="stat-card" data-type="followers" onClick={followersHandler}>
-            <span className="stat-value">{userdata?.followers}</span>
+            <span className="stat-value">{followers?.length || 0}</span>
             <span className="stat-label">followers</span>
           </div>
           <div className="stat-card" data-type="following" onClick={followingsHandler}>
-            <span className="stat-value">{userdata?.following}</span>
+            <span className="stat-value">{following?.length || 0 }</span>
             <span className="stat-label">following</span>
           </div>
           <div className="stat-card">
@@ -170,25 +176,27 @@ export default function Profile({ params }) {
               </button>
             </div>
             <div className="followers-list">
-              {userdata?.followers > 0 ? (
-                <div className="follower-item">
-                  <div className="follower-avatar">
-                    <img src="/default-img.jpg" alt="Follower" />
+              {followers?.length > 0 ? (
+                followers.map((follower, index) => (
+                  <div key={index} className="follower-item">
+                    <Link href={`/profile/${follower.Id}`}>
+                    <div className="follower-info">
+                      <span className="follower-name">{follower.FirstName}</span>
+                      <span className="follower-username">{follower.LastName}</span>
+                    </div>
+                    </Link>  
                   </div>
-                  <div className="follower-info">
-                    <span className="follower-name">Follower Name</span>
-                    <span className="follower-username">@username</span>
-                  </div>
-                </div>
+                ))
               ) : (
                 <div className="no-followers">No followers yet</div>
               )}
             </div>
           </div>
         )}
+
         {/* **** following popover ********* */}
         {followingPopover && (
-          <div id="following-popover" className="followers-popover following-popover">
+          <div id="followers-popover" className="followers-popover">
             <div className="followers-header">
               <h3>Following</h3>
               <button className="close-popover" onClick={followingsHandler}>
@@ -196,18 +204,20 @@ export default function Profile({ params }) {
               </button>
             </div>
             <div className="followers-list">
-              {userdata?.following > 0 ? (
-                <div className="follower-item">
-                  <div className="follower-avatar">
-                    <img src="/default-img.jpg" alt="Following" />
+              {following?.length > 0 ? (
+                following.map((following, index) => (
+                  <div key={index} className="follower-item">
+  
+                    <Link href={`/profile/${following.Id}`}>
+                    <div className="follower-info">
+                      <span className="follower-name">{following.FirstName}</span>
+                      <span className="follower-username">{following.LastName}</span>
+                    </div>
+                    </Link> 
                   </div>
-                  <div className="follower-info">
-                    <span className="follower-name">Account Name</span>
-                    <span className="follower-username">@accountname</span>
-                  </div>
-                </div>
+                ))
               ) : (
-                <div className="no-followers">Not following anyone yet</div>
+                <div className="no-followers">No following yet</div>
               )}
             </div>
           </div>
