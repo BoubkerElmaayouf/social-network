@@ -25,6 +25,7 @@ export default function Profile({ params }) {
   const [postdata, setPostdata] = useState(null);
   const [followers, setFollowers] = useState(null);
   const [following, setFollowing] = useState(null);
+  const [status, accepetOrNot] = useState(null);
 
   const [followPopover, setFollowPopover] = useState(false);
   const [followingPopover, setFollowingPopover] = useState(false);
@@ -37,11 +38,12 @@ export default function Profile({ params }) {
 
     const fetchData = async () => {
       try {
-        const [userResponse, postResponse, userfollowers, userfollowing] = await Promise.all([
+        const [userResponse, postResponse, userfollowers, userfollowing, nowRequest] = await Promise.all([
           fetchUserInfo(`api/users/profile?profileId=${userId}`),
           fetchUserInfo(`api/post/getuserpost?targetId=${userId}`),
           fetchUserInfo(`api/users/userfollowers?profileId=${userId}`),
-          fetchUserInfo(`api/users/userfollowing?profileId=${userId}`)
+          fetchUserInfo(`api/users/userfollowing?profileId=${userId}`),
+          fetchUserInfo(`api/users/nowRequest?profileId=${userId}`)
         ]);
         if (userResponse.status === 303) {
           router.push("/profile");
@@ -56,6 +58,8 @@ export default function Profile({ params }) {
         setPostdata(postResponse || []);
         setFollowers(userfollowers || []); // Set following before setFollowers
         setFollowing(userfollowing || []);
+        accepetOrNot(nowRequest.is )        
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -70,7 +74,6 @@ export default function Profile({ params }) {
         method: "GET",
         credentials: "include",
       });
-      console.log("Response:********", response);
       if (response.status === 200) {
         alert("User followed successfully");
       }
@@ -79,6 +82,24 @@ export default function Profile({ params }) {
       console.error("Error following user");
     }
   }
+
+  const handleFollowRequest = async (e, state) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/handlerequest?profileId=${userId}&state=${state}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.status === 200) {
+        alert("User followed successfully");
+        accepetOrNot(false)
+      }
+
+    } catch {
+      console.error("Error following user");
+    }
+  }
+
 
   const followersHandler = () => {
     setFollowPopover(!followPopover);
@@ -143,9 +164,18 @@ export default function Profile({ params }) {
                       ? "Unfollow"
                       : "Follow")}
               </button>
-              <button className="edit-profile" onClick={handleFollow}>
-                accept
-              </button>
+              {status  && (
+                <>
+                  <button className="edit-profile" onClick={(e) => handleFollowRequest(e,"accepted")}>
+                    Accept
+                  </button>
+                  <button className="edit-profile" onClick={(e) => handleFollowRequest(e,"rejected")}>
+                    Reject
+                  </button>
+                </>
+              )}
+
+
             </div>
           </div>
         </div>
@@ -160,7 +190,7 @@ export default function Profile({ params }) {
             <span className="stat-label">followers</span>
           </div>
           <div className="stat-card" data-type="following" onClick={followingsHandler}>
-            <span className="stat-value">{following?.length || 0 }</span>
+            <span className="stat-value">{following?.length || 0}</span>
             <span className="stat-label">following</span>
           </div>
           <div className="stat-card">
@@ -183,11 +213,11 @@ export default function Profile({ params }) {
                 followers.map((follower, index) => (
                   <div key={index} className="follower-item">
                     <Link href={`/profile/${follower.Id}`}>
-                    <div className="follower-info">
-                      <span className="follower-name">{follower.FirstName}</span>
-                      <span className="follower-username">{follower.LastName}</span>
-                    </div>
-                    </Link>  
+                      <div className="follower-info">
+                        <span className="follower-name">{follower.FirstName}</span>
+                        <span className="follower-username">{follower.LastName}</span>
+                      </div>
+                    </Link>
                   </div>
                 ))
               ) : (
@@ -210,13 +240,13 @@ export default function Profile({ params }) {
               {following?.length > 0 ? (
                 following.map((following, index) => (
                   <div key={index} className="follower-item">
-  
+
                     <Link href={`/profile/${following.Id}`}>
-                    <div className="follower-info">
-                      <span className="follower-name">{following.FirstName}</span>
-                      <span className="follower-username">{following.LastName}</span>
-                    </div>
-                    </Link> 
+                      <div className="follower-info">
+                        <span className="follower-name">{following.FirstName}</span>
+                        <span className="follower-username">{following.LastName}</span>
+                      </div>
+                    </Link>
                   </div>
                 ))
               ) : (
