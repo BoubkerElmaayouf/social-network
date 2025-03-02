@@ -27,32 +27,27 @@ export default function Group() {
 }
 
 export function CreateGroupPost({ userdata , status}) {
-    if (status !== "creator" && status !== "member" ) {
-        return <></>
+    if (status !== "creator" && status !== "member") {
+        return <></>;
     }
-
-
 
     const [showOptionsPopup, setShowOptionsPopup] = useState(false);
     const [showEventForm, setShowEventForm] = useState(false);
     const [showPostForm, setShowPostForm] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [image, setImage] = useState(null);           // For storing the image blob
+    const [image, setImage] = useState(null); // For storing the image blob
 
-
-    const [PostForm , setPostForm] = useState( {
+    const [PostForm, setPostForm] = useState({
         title: "",
         content: "",
-        
-})
-
+        privacy: "group",
+    });
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedImage(URL.createObjectURL(file));
             setImage(file);
-
         }
     };
 
@@ -61,35 +56,52 @@ export function CreateGroupPost({ userdata , status}) {
         setShowEventForm(false);
         setShowPostForm(false);
     };
+
     const removeImage = () => {
         setSelectedImage(null);
-        setImage(null)
+        setImage(null);
         // Reset the file input
-        const fileInput = document.getElementById('postImage');
-        if (fileInput) fileInput.value = '';
+        const fileInput = document.getElementById("postImage");
+        if (fileInput) fileInput.value = "";
     };
 
     const handlePostGrp = async (e) => {
-        e.preventDefault();  
-    
+        e.preventDefault();
+
         const formData = new FormData();
-    
-        formData.append('title', PostForm.title);
-        formData.append('content', PostForm.content);
-        if (image) formData.append('image' , image)
+        formData.append("title", PostForm.title);
+        formData.append("privacy", "group");
+        formData.append("content", PostForm.content);
+        const targetGroupId = window.location.pathname.split("/").pop();
+        console.log(targetGroupId);
+        
+        formData.append("groupId", targetGroupId); // Fixed typo "gruopId" -> "groupId"
+
+        if (image) formData.append("image", image);
+
+        try {
             const response = await fetch("http://localhost:8080/api/post/add", {
                 method: "POST",
-                headers: {
-                  // "Content-Type": "application/json",
-                },
-                body: formData,
+                body: formData, // No need for Content-Type when using FormData
                 credentials: "include",
-              });
+            });
 
-    
-
+            if (response.status === 201) {
+                console.log("Post created successfully");
+                setShowPostForm(false);
+                setPostForm({
+                    title: "",
+                    content: "",
+                    privacy: "group", // Ensure it resets properly
+                });
+                removeImage();
+            } else {
+                console.log("Error response status:", response.status);
+            }
+        } catch (error) {
+            console.error("Error during post creation:", error);
+        }
     };
-    
 
 
     return (
