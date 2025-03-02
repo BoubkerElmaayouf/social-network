@@ -37,6 +37,12 @@ export function CreateGroupPost({ userdata , status}) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [image, setImage] = useState(null); // For storing the image blob
 
+    const [eventForm, setEventForm] = useState({
+        title: "",
+        description: "",
+        date: "",
+    });
+    
     const [PostForm, setPostForm] = useState({
         title: "",
         content: "",
@@ -75,7 +81,7 @@ export function CreateGroupPost({ userdata , status}) {
         const targetGroupId = window.location.pathname.split("/").pop();
         console.log(targetGroupId);
         
-        formData.append("groupId", targetGroupId); // Fixed typo "gruopId" -> "groupId"
+        formData.append("groupId", targetGroupId);
 
         if (image) formData.append("image", image);
 
@@ -101,6 +107,42 @@ export function CreateGroupPost({ userdata , status}) {
         } catch (error) {
             console.error("Error during post creation:", error);
         }
+    };
+
+    const handleEventSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("title", eventForm.title);
+        formData.append("description", eventForm.description);
+        formData.append("date", eventForm.date);
+        const targetGroupId = window.location.pathname.split("/").pop();
+        formData.append("groupId", targetGroupId);
+        console.log(formData);
+        
+
+        try {
+            const response = await fetch("http://localhost:8080/api/groups/addevent", {
+                method: "POST",
+                body: formData, // No need for Content-Type when using FormData
+                credentials: "include",
+            });
+
+            if (response.status === 201) {
+                console.log("Event created successfully");
+                setShowEventForm(false);
+                setEventForm({
+                    title: "",
+                    description: "",
+                    date: "",
+                });
+            } else {
+                console.log("Error response status:", response.status);
+            }
+        } catch (error) {
+            console.error("Error during event creation:", error);
+        }
+        // Handle event creation logic here
     };
 
 
@@ -158,30 +200,43 @@ export function CreateGroupPost({ userdata , status}) {
 
             {/* Event Form Popup */}
             {showEventForm && (
-                <div className='popup-overlay' onClick={closeAllPopups}>
-                    <div className='popup-content form-popup' onClick={e => e.stopPropagation()}>
-                        <button className='close-button' onClick={closeAllPopups}>
+                <div className="popup-overlay" onClick={closeAllPopups}>
+                    <div className="popup-content form-popup" onClick={(e) => e.stopPropagation()}>
+                        <button className="close-button" onClick={closeAllPopups}>
                             <FontAwesomeIcon icon={faTimes} />
                         </button>
                         <h2>Create Event</h2>
-                        <form className='event-form'>
-                            <div className='form-group'>
+                        <form className="event-form" onSubmit={handleEventSubmit}>
+                            <div className="form-group">
                                 <label htmlFor="eventTitle">Event Title</label>
-                                <input type="text" id="eventTitle" placeholder="Enter event title" />
+                                <input
+                                    type="text"
+                                    id="eventTitle"
+                                    name="title"
+                                    placeholder="Enter event title"
+                                    value={PostForm.title} onChange={(e)=>setPostForm(prev => ({ ...prev, title: e.target.value }))}
+                                />
                             </div>
-                            <div className='form-group'>
+                            <div className="form-group">
                                 <label htmlFor="eventDescription">Event Description</label>
                                 <textarea
                                     id="eventDescription"
+                                    name="description"
                                     placeholder="Describe your event..."
                                     rows="4"
+                                    value={PostForm.description} onChange={(e)=>setPostForm(prev => ({ ...prev, description: e.target.value }))}
                                 ></textarea>
                             </div>
-                            <div className='form-group'>
+                            <div className="form-group">
                                 <label htmlFor="eventDate">Event Date</label>
-                                <input type="datetime-local" id="eventDate" />
+                                <input
+                                    type="datetime-local"
+                                    id="eventDate"
+                                    name="date"
+                                    value={PostForm.date} onChange={(e)=>setPostForm(prev => ({ ...prev, date: e.target.value }))}
+                                />
                             </div>
-                            <button type="submit" className='submit-button'>
+                            <button type="submit" className="submit-button">
                                 Create Event
                                 <FontAwesomeIcon icon={faArrowRight} />
                             </button>
@@ -189,6 +244,7 @@ export function CreateGroupPost({ userdata , status}) {
                     </div>
                 </div>
             )}
+
 
             {/* Post Form Popup */}
             {showPostForm && (
