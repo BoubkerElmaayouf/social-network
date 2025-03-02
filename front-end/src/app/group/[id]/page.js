@@ -71,7 +71,7 @@ export default function Group({ params }) {
         getUserData();
     }, []);
 
-   
+
 
 
     return (
@@ -122,18 +122,18 @@ export default function Group({ params }) {
     );
 }
 
-function Memberstatus({ status, pop, group }) {    
+function Memberstatus({ status, pop, group }) {
     const handleJoinGrp = async (e) => {
         e.preventDefault();
         try {
             const response = await fetch(`http://localhost:8080/api/groups/request?groupId=${group}`, {
-                method: 'POST', 
+                method: 'POST',
                 credentials: "include",
             });
             if (!response.ok) {
                 throw new Error(`Erreur: ${response.status}`);
             }
-    
+
             alert('Bienvenue');
         } catch {
             console.error("Error Join Group");
@@ -153,7 +153,7 @@ function Memberstatus({ status, pop, group }) {
 
 
         default:
-            return  <button className="join-group" onClick={handleJoinGrp}>
+            return <button className="join-group" onClick={handleJoinGrp}>
                 Join Group
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </button>
@@ -218,7 +218,8 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
         user.username?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleInvite = async () => {
+    const handleInvite = async (e) => {
+        e.preventDefault();
         if (selectedUsers.length === 0) {
             setInviteStatus({
                 show: true,
@@ -228,17 +229,18 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
             return;
         }
 
+        const data = new FormData();
+        data.append("users", selectedUsers);      
+        data.append("group", groupId);
+
         try {
-            // Replace with your actual API endpoint
-            const response = await fetch(`http://localhost:8080/api/groups/${groupId}/invite`, {
+            const response = await fetch(`http://localhost:8080/api/groups/invitetogroup`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ users: selectedUsers })
+                credentials: "include",
+                body: data
             });
 
-            if (response.ok) {
+            if (response.ok) {                
                 setInviteStatus({
                     show: true,
                     message: 'Invitations sent successfully!',

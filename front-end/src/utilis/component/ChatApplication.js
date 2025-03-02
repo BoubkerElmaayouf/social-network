@@ -125,7 +125,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
           <div className="right-sidebar-section">
             <h3 className="section-title">Friends</h3>
             <div className="friends-container scrollable-container">
-              {friends.map((friend) => (
+              { friends && friends.map((friend) => (
                 <div 
                   key={friend.Id} 
                   className="sidebar-item" 
@@ -155,7 +155,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
           <div className="right-sidebar-section">
             <h3 className="section-title">Groups</h3>
             <div className="groups-container scrollable-container">
-              {groups.map((group) => (
+              {groups && groups.map((group) => (
                 <div 
                   key={group.Id} 
                   className="sidebar-item"
