@@ -71,6 +71,8 @@ export default function Group({ params }) {
         getUserData();
     }, []);
 
+   
+
 
     return (
         <div className="group-hero">
@@ -102,7 +104,7 @@ export default function Group({ params }) {
                             </p>
                             <div className="group-actions">
 
-                                <Memberstatus status={groupdata?.memberstatus?.status} pop={() => setShowInvitePopup(true)} />
+                                <Memberstatus status={groupdata?.memberstatus?.status} pop={() => setShowInvitePopup(true)} group={groupId} />
 
                             </div>
                         </div>
@@ -120,13 +122,28 @@ export default function Group({ params }) {
     );
 }
 
-function Memberstatus({ status, pop }) {
-
+function Memberstatus({ status, pop, group }) {    
+    const handleJoinGrp = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:8080/api/groups/request?groupId=${group}`, {
+                method: 'POST', 
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error(`Erreur: ${response.status}`);
+            }
+    
+            alert('Bienvenue');
+        } catch {
+            console.error("Error Join Group");
+        }
+    }
 
     switch (true) {
         case status === "you are not a member":
             return <>
-                <button className="join-group">
+                <button className="join-group" onClick={handleJoinGrp}>
                     Join Group
                     <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </button>
@@ -136,7 +153,7 @@ function Memberstatus({ status, pop }) {
 
 
         default:
-            return <button className="join-group">
+            return  <button className="join-group" onClick={handleJoinGrp}>
                 Join Group
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </button>
