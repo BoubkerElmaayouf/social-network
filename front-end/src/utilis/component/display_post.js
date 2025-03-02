@@ -344,12 +344,7 @@ export function PostContainer() {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const friendsModalRef = useRef(null);
 
-  // Add this mock data (replace with your actual friends data)
-  const friends = [
-    { id: 1, name: "simo fadil", avatar: "/default-avatar.png" },
-    { id: 2, name: "belmaayo the king", avatar: "/default-avatar.png" },
-    { id: 3, name: "oriaxnxx", avatar: "/default-avatar.png" },
-  ];
+
 
   // Add this function to handle friend selection
   const handleFriendSelection = (friendId) => {
@@ -408,6 +403,10 @@ export function PostContainer() {
       newPostForm.append("content", formData.content);
       newPostForm.append("privacy", formData.privacy);
       if (imageFile) newPostForm.append("image", imageFile);
+      if (selectedFriends.length > 0) {
+        newPostForm.append("targetedFriends", selectedFriends);
+        newPostForm.set("privacy", "semi-private"); 
+      }
 
       const response = await fetch("http://localhost:8080/api/post/add", {
         method: "POST",
@@ -427,6 +426,7 @@ export function PostContainer() {
           privacy: "public",
         });
         setImagePreview(null);
+        setSelectedFriends([]);
         // router.push("/content");
       } else {
         console.log(response.status);
