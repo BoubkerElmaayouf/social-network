@@ -1,98 +1,123 @@
 import { Navbar } from "./navbar";
 import { useState, useEffect, useRef } from "react";
 import "./css/ChatApplication.css"
+import { fetchUserInfo } from "../fetching_data";
 
 // ***************** this func is for rendering the right side-bar **************//
 export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
-    const friends = [
-      {
-        id: 1,
-        name: "the dude 777",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "online",
-      },
-      {
-        id: 2,
-        name: "kamal dada",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "offline",
-      },
-      {
-        id: 3,
-        name: "take controle",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "offline",
-      },
-      {
-        id: 4,
-        name: "hohouz mohamed",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "online",
-      },
-      {
-        id: 5,
-        name: "ahmed",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "online",
-      },
-      {
-        id: 6,
-        name: "banan",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "online",
-      },
-      {
-        id: 7,
-        name: "l7mar",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        status: "offline",
-      },
-    ];
+    const [friends, setFriends] = useState([]);
+    const [groups, setGroups] = useState([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [friendsResponse, groupsResponse] = await Promise.all([
+            fetchUserInfo(`api/users/userfollowers?profileId=0`),
+            fetchUserInfo(`api/groups/getall`)
+          ]);
+    
+          setFriends(friendsResponse);
+          setGroups(groupsResponse);
+    
+          console.log("Friends:", friendsResponse);
+          console.log("Groups:", groupsResponse);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+    
+      fetchData();
+    }, []);
   
-    const groups = [
-      {
-        id: 1,
-        name: "zone01 anounce",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        memberCount: 8,
-      },
-      {
-        id: 2,
-        name: "tach tach",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        memberCount: 5,
-      },
-      {
-        id: 3,
-        name: "tach tachh666",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        memberCount: 12,
-      },
-      {
-        id: 4,
-        name: "tatatatat",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        memberCount: 6,
-      },
-      {
-        id: 5,
-        name: "takakakaka",
-        avatar:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
-        memberCount: 9,
-      },
-    ];
+    // const friendss = [
+    //   {
+    //     id: 1,
+    //     name: "the dude 777",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "online",
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "kamal dada",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "offline",
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "take controle",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "offline",
+    //   },
+    //   {
+    //     id: 4,
+    //     name: "hohouz mohamed",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "online",
+    //   },
+    //   {
+    //     id: 5,
+    //     name: "ahmed",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "online",
+    //   },
+    //   {
+    //     id: 6,
+    //     name: "banan",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "online",
+    //   },
+    //   {
+    //     id: 7,
+    //     name: "l7mar",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     status: "offline",
+    //   },
+    // ];
+  
+    // const groups = [
+    //   {
+    //     id: 1,
+    //     name: "zone01 anounce",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     memberCount: 8,
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "tach tach",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     memberCount: 5,
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "tach tachh666",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     memberCount: 12,
+    //   },
+    //   {
+    //     id: 4,
+    //     name: "tatatatat",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     memberCount: 6,
+    //   },
+    //   {
+    //     id: 5,
+    //     name: "takakakaka",
+    //     avatar:
+    //       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop",
+    //     memberCount: 9,
+    //   },
+    // ];
   
     return (
       <aside className={`right-sidebar ${isMobileOpen ? "mobile-open" : ""}`}>
@@ -104,21 +129,23 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                 <div 
                   key={friend.id} 
                   className="sidebar-item" 
-                  onClick={() => onFriendClick(friend.name)}
+                  onClick={() => onFriendClick(friend.FirstName, friend.Id)}
                 >
                   <div className="avatar-container">
                     <img
-                      src={friend.avatar}
-                      alt={`${friend.name}'s avatar`}
+                      src={ friend?.Avatar
+                        ? `http://localhost:8080/images?path=${friend.Avatar}`
+                        : "/default-avatar.svg"}
+                      alt={`${friend.FirstName}'s avatar`}
                       className="avatar"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/avatars/default.jpg";
+                        e.target.src = "/default-img.jpg";
                       }}
                     />
-                    <span className={`status-indicator ${friend.status}`}></span>
+                    {/* <span className={`status-indicator ${friend.status}`}></span> */}
                   </div>
-                  <span className="item-name">{friend.name}</span>
+                  <span className="item-name">{friend.FirstName + " " + friend.LastName}</span>
                 </div>
               ))}
             </div>
@@ -131,12 +158,14 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                 <div 
                   key={group.id} 
                   className="sidebar-item"
-                  onClick={() => onGroupClick(group.name)}
+                  onClick={() => onGroupClick(group.Title, group.Id)}
                 >
                   <div className="avatar-container">
                     <img
-                      src={group.avatar}
-                      alt={`${group.name} group avatar`}
+                      src={group?.Path
+                        ? `http://localhost:8080/images?path=${group.Path}`
+                        : "/default-avatar.svg"}
+                      alt={`${group.Title} group avatar`}
                       className="avatar group-avatar"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -145,8 +174,8 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                     />
                   </div>
                   <div className="item-details">
-                    <span className="item-name">{group.name}</span>
-                    <span className="item-meta">{group.memberCount} members</span>
+                    <span className="item-name">{group.Title}</span>
+                    <span className="item-meta">{group.MemberCount} members</span>
                   </div>
                 </div>
               ))}

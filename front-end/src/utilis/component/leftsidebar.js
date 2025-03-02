@@ -17,7 +17,6 @@ import "./css/leftsidebar.css"
 //* displays in both sides leftside for large devices and in the bottom for small devices  *******/
 
 
-
 export function Leftsidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [notificationActive, setNotificationActive] = useState(false);
@@ -119,7 +118,7 @@ export function Leftsidebar() {
             className={`notification-tab ${activeTab === 'group-invitation' ? 'active' : ''}`} 
             onClick={() => handleTabClick('group-invitation')}
           >
-            Group Invitation
+            Groups Notifications
           </button>
           <button 
             className={`notification-tab ${activeTab === 'follow-requests' ? 'active' : ''}`} 
@@ -139,12 +138,15 @@ export function Leftsidebar() {
             <div className='notification-divider'>
             <div className="group-invitation">
               <p className="group-invitation-message">The group is inviting you! Please check it out.</p>
-              <a href="#" className="group-invitation-link">View Invitation</a>
+              <Link href="#" className="group-invitation-link">View Invitation</Link>
             </div>
 
             <div className="group-invitation">
-              <p className="group-invitation-message">The group is inviting you! Please check it out.</p>
-              <a href="#" className="group-invitation-link">View Invitation</a>
+              <p className="group-invitation-message">This profile want to join your group</p>
+              <div className="notification-group-actions">
+                  <button className="group-action-btn attend-btn">Attend</button>
+                  <button className="group-action-btn ignore-btn">Ignore</button>
+              </div>
             </div>
             </div>
  
@@ -203,52 +205,3 @@ export function Leftsidebar() {
     </>
   );
 }
-
-// export function Leftsidebar() {
-//   const [isCollapsed, setIsCollapsed] = useState(true);
-
-//   const menuItems = [
-//     { icon: faHouse, id: "home-btn", label: "Home", href: "/content" },
-//     { icon: faComments, id: "chat-btn", label: "Chat", href: "/chat" },
-//     { icon: faBell,  id: "notification-btn",label: "Notification", href: "/notification" },
-//     { icon: faUserFriends ,id: "group-btn" , label: "Groups", href: "/groups" },
-//   ];
-
-//   return (
-//     <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-//       <div className="sidebar-content">
-//         <button
-//           className="collapse-button"
-//           onClick={() => setIsCollapsed(!isCollapsed)}
-//           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-//         >
-//           <svg
-//             width="20"
-//             height="20"
-//             viewBox="0 0 20 20"
-//             fill="none"
-//             className={`collapse-icon ${isCollapsed ? "rotated" : ""}`}
-//           >
-//             <path
-//               d="M15 7L10 12L5 7"
-//               stroke="currentColor"
-//               strokeWidth="2"
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//             />
-//           </svg>
-//         </button>
-
-//         <nav className="sidebar-nav">
-//           {menuItems.map((item, index) => (
-//             <Link key={index} href={item.href} className="nav-item">
-//               <FontAwesomeIcon icon={item.icon} className="nav-icon" />
-//               <span id={item.id} className="nav-label">{item.label}</span>
-//               <div className="nav-glow"></div>
-//             </Link>
-//           ))}
-//         </nav>
-//       </div>
-//     </aside>
-//   );
-// }
