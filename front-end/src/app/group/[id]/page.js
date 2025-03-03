@@ -136,16 +136,32 @@ function Memberstatus({ status, pop, group }) {
             console.error("Error Join Group");
         }
     }
-    console.log(status);
+
+    const handleAccORejGrp = async (e, str) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:8080/api/groups/${str}?groupId=${group}`, {
+                method: 'POST',
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error(`Erreur: ${response.status}`);
+            }
+
+            alert('Bienvenue');
+        } catch {
+            console.error("Error Join Group");
+        }
+    }
 
     switch (true) {
         case status === "pending" :
             return <>
-            <button className="join-group" >
+            <button className="join-group"  onClick={(e) => handleAccORejGrp(e, "acceptinvitation")}>
                accepte
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </button>
-            <button className="join-group" >
+            <button className="join-group" onClick={(e) => handleAccORejGrp(e, "rejectrequest")} >
                reject
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </button>
