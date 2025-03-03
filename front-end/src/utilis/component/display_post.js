@@ -612,7 +612,7 @@ export function PostContainer() {
                     </div>
 
                     <div className="friends-list">
-                      {targetedFriends.map((friend) => (
+                      {targetedFriends && targetedFriends.map((friend) => (
                         <label key={friend.Id} className="friend-item">
                           <input
                             type="checkbox"
