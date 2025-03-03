@@ -52,9 +52,6 @@ export default function Group({ params }) {
 
                 setGroupdata(response || []);
 
-                console.log(groupdata)
-
-
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -139,9 +136,28 @@ function Memberstatus({ status, pop, group }) {
             console.error("Error Join Group");
         }
     }
+    console.log(status);
 
     switch (true) {
-        case status === "you are not a member":
+        case status === "pending" :
+            return <>
+            <button className="join-group" >
+               accepte
+                <FontAwesomeIcon icon={faArrowRight} size="sm" />
+            </button>
+            <button className="join-group" >
+               reject
+                <FontAwesomeIcon icon={faArrowRight} size="sm" />
+            </button>
+        </>
+        case status === "joinRequest" :
+            return <>
+                <button className="join-group" >
+                    Pending
+                    <FontAwesomeIcon icon={faArrowRight} size="sm" />
+                </button>
+            </>
+        case status === "can't find request":
             return <>
                 <button className="join-group" onClick={handleJoinGrp}>
                     Join Group
@@ -230,7 +246,7 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
         }
 
         const data = new FormData();
-        data.append("users", selectedUsers);      
+        data.append("users", selectedUsers);
         data.append("group", groupId);
 
         try {
@@ -240,7 +256,7 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
                 body: data
             });
 
-            if (response.ok) {                
+            if (response.ok) {
                 setInviteStatus({
                     show: true,
                     message: 'Invitations sent successfully!',
