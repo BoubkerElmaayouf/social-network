@@ -142,7 +142,6 @@ export function CreateGroupPost({ userdata , status}) {
         } catch (error) {
             console.error("Error during event creation:", error);
         }
-        // Handle event creation logic here
     };
 
 
@@ -214,7 +213,7 @@ export function CreateGroupPost({ userdata , status}) {
                                     id="eventTitle"
                                     name="title"
                                     placeholder="Enter event title"
-                                    value={PostForm.title} onChange={(e)=>setPostForm(prev => ({ ...prev, title: e.target.value }))}
+                                    value={eventForm.title} onChange={(e)=>setEventForm(prev => ({ ...prev, title: e.target.value }))}
                                 />
                             </div>
                             <div className="form-group">
@@ -224,7 +223,7 @@ export function CreateGroupPost({ userdata , status}) {
                                     name="description"
                                     placeholder="Describe your event..."
                                     rows="4"
-                                    value={PostForm.description} onChange={(e)=>setPostForm(prev => ({ ...prev, description: e.target.value }))}
+                                    value={eventForm.description} onChange={(e)=>setEventForm(prev => ({ ...prev, description: e.target.value }))}
                                 ></textarea>
                             </div>
                             <div className="form-group">
@@ -233,7 +232,7 @@ export function CreateGroupPost({ userdata , status}) {
                                     type="datetime-local"
                                     id="eventDate"
                                     name="date"
-                                    value={PostForm.date} onChange={(e)=>setPostForm(prev => ({ ...prev, date: e.target.value }))}
+                                    value={eventForm.date} onChange={(e)=>setEventForm(prev => ({ ...prev, date: e.target.value }))}
                                 />
                             </div>
                             <button type="submit" className="submit-button">

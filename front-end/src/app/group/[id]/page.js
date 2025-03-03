@@ -6,10 +6,10 @@ import {
     faTimes,
     faUserPlus,
     faSearch,
-    faCalendar,
-    faCalendarPlus,
-    faPencilAlt,
-    faImage
+    faNewspaper,
+    faCalendarAlt,
+    faThumbsUp,
+    faThumbsDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { CreateGroupPost } from "../page.js"
 import { ChatApplication } from "@/utilis/component/ChatApplication";
@@ -21,13 +21,6 @@ import { useEffect } from "react";
 import { fetchUserInfo } from "@/utilis/fetching_data";
 import { Post } from "@/utilis/component/display_post";
 import { useRouter } from "next/navigation";
-// import Head from "next/head";
-
-
-// export const  metadata = {
-//     title: "Group",
-//     description: "this is Group that you can join or visit",
-//   };
 
 export default function Group({ params }) {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
@@ -35,6 +28,10 @@ export default function Group({ params }) {
     const router = useRouter();
     const [userdata, setUserdata] = useState(null);
     const [showInvitePopup, setShowInvitePopup] = useState(false);
+
+    const [eventdata, setEventdata] = useState(null);
+    const [activeTab, setActiveTab] = useState('posts');
+    const [postdata, setPostdata] = useState(null);
 
     const resolvedParams = use(params);
     const groupId = resolvedParams.id;
@@ -68,8 +65,28 @@ export default function Group({ params }) {
         getUserData();
     }, []);
 
+    useEffect(() => {
+        async function getPostData() {
+            const postdata = await fetchUserInfo(`api/post/get?groupId=${groupId}`);
+            console.log("Posts data:", postdata)
+            setPostdata(postdata);
+        }
+        getPostData();
+    }, [groupId]);
 
+    useEffect(() => {
+        async function getEventData() {
+            const eventdata = await fetchUserInfo(`api/groups/getevents?groupId=${groupId}`);
+            setEventdata(eventdata);
+            console.log("Event data:", eventdata)
+        }
+        getEventData();
+    }, [groupId]);
 
+    
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+    };
 
     return (
         <div className="group-hero">
@@ -113,6 +130,52 @@ export default function Group({ params }) {
                     isOpen={showInvitePopup}
                     onClose={() => setShowInvitePopup(false)}
                 />
+
+                 {/* Tabs Navigation */}
+                <div className="group-tabs">
+                    <div 
+                        className={`tab ${activeTab === 'posts' ? 'active' : ''}`} 
+                        onClick={() => handleTabChange('posts')}
+                    >
+                        <FontAwesomeIcon icon={faNewspaper} />
+                        <span>Posts</span>
+                    </div>
+                    <div 
+                        className={`tab ${activeTab === 'events' ? 'active' : ''}`} 
+                        onClick={() => handleTabChange('events')}
+                    >
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                        <span>Events</span>
+                    </div>
+                </div>
+
+                {/* Tab Content */}
+                <div className="group-content-layout">
+                    {/* Posts Tab Content */}
+                    <div className={`tab-content ${activeTab === 'posts' ? 'active' : ''}`}>
+                        {postdata && postdata.length > 0 ? (
+                            postdata.map((post) => <Post key={post.id} post={post} />)
+                        ) : (
+                            <div className="empty-state">
+                                <FontAwesomeIcon icon={faNewspaper} size="3x" />
+                                <p>No posts available in this group yet</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Events Tab Content */}
+                    <div className={`tab-content ${activeTab === 'events' ? 'active' : ''}`}>
+                        {eventdata && eventdata.length > 0 ? (
+                            eventdata.map((event) => <EventCard key={event.id} event={event} />)
+                        ) : (
+                            <div className="empty-state">
+                                <FontAwesomeIcon icon={faCalendarAlt} size="3x" />
+                                <p>No events scheduled in this group yet</p>
+                                <button className="create-content-btn">Create an event</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -212,7 +275,6 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
             const data = await fetchUserInfo("/api/users/followers"); // Use fetchUserInfo for consistency
             console.log(data)
             if (data && data.status !== 401) {
-                console.log("00000000000", data)
                 // Map API response to match expected format
                 const formattedUsers = data.map(user => ({
                     id: user.Id,
@@ -383,3 +445,68 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
     );
 }
 
+    const EventCard = ({ event }) => {
+        // Format the date for display
+        const formatDate = (dateString) => {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return new Date(dateString).toLocaleString(undefined, options);
+        };
+    
+        return (
+            <div className="event-card">
+                <div className="event-header">
+                    <div className="event-creator">
+                        <div className="event-creator-avatar">
+                            <img 
+                                src={event?.user?.path ? `http://localhost:8080/images?path=${event.user.path}` : "/default-avatar.jpg"} 
+                                alt="Creator" 
+                            />
+                        </div>
+                        <div className="event-creator-info">
+                            <span className="event-creator-name">
+                                {event?.user?.nickname || event?.user?.firstname || "Loading..."}
+                            </span>
+                            <span className="event-date">
+                                {event?.created_at ? formatDate(event.created_at) : "Recent"}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div className="event-content">
+                    <h3 className="event-title">{event?.title || "Loading..."}</h3>
+                    <p className="event-description">{event?.Descreption || "Loading..."}</p>
+                    
+                    <div className="event-meta">
+                        <div className="event-meta-item">
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                            <span>{event?.eventtime ? formatDate(event.eventtime) : "Date TBD"}</span>
+                        </div>
+                        
+                        <div className="event-meta-item">
+                            <FontAwesomeIcon icon={faUsers} />
+                            <span>{event?.attendees_count || 0} attending</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="event-actions">
+                    <button className="event-action-btn">
+                        <FontAwesomeIcon icon={faThumbsUp} />
+                        <span>Attend</span>
+                    </button>
+                    <button className="event-action-btn">
+                        <FontAwesomeIcon icon={faThumbsDown} />
+                        <span>Not Interested</span>
+                    </button>
+                </div>
+            </div>
+        );
+    };    
