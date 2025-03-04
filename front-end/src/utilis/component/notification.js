@@ -215,7 +215,7 @@ export function FollowRequest({ activeTab }) {
         if (activeTab === "follow-requests") {
             async function FetchData() {
                 try {
-                    const result = await FetchNotif("follow-requests");
+                    const result = await FetchNotif("requestuser");
                     addElement(result);
                 } catch (error) {
                     console.error("Error fetching follow requests:", error);
