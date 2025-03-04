@@ -105,13 +105,7 @@ export function Post({ post }) {
     }
   };
 
-  const handleCommentRect = async (Id, CommentId, type) => {
-    // const data.currentReact = commentReactions[CommentId];
-    // console.log(data.currentReact);
-
-    // if (data.currentReact === type) {
-    //   return;
-    // }
+  const handleCommentRect = async (Id, CommentId, type, current) => {
     try {
       const response = await fetch(`http://localhost:8080/api/reactComment/add`, {
         method: "post",
@@ -120,25 +114,30 @@ export function Post({ post }) {
       });
 
       if (response.status === 200) {
-        const data = await response.json();
-        console.log(data);
 
         const updatedComments = comments.map(comment => {
           if (comment.id === CommentId) {
             let updatedLikes = comment.likes;
             let updatedDislikes = comment.dislikes;
-        
+            console.log(current);
+            
             if (type === 'LIKE') {
-              if (data.currentReact == 'LIKE') {
+              if (current == '') {
                 updatedLikes += 1
-              } else if (updatedLikes > 0 && data.currentReact == '') {
+              } else if (updatedLikes > 0 && current == 'LIKE') {
                 updatedLikes -= 1
-              } 
-            } else if (type === 'DISLIKE')  {
-              if (data.currentReact == 'DISLIKE') {
-                updatedDislikes += 1
-              } else if (updatedDislikes > 0 && data.currentReact == '') {
+              } else  if (updatedDislikes > 0 && current == 'DISLIKE') {
+                updatedLikes += 1
                 updatedDislikes -= 1
+              }
+            } else if (type === 'DISLIKE')  {
+              if (current == '') {
+                updatedDislikes += 1
+              } else if (updatedDislikes > 0 && current == 'DISLIKE') {
+                updatedDislikes -= 1
+              } else if (updatedLikes > 0 && current == 'LIKE'){
+                updatedLikes -= 1
+                updatedDislikes += 1
               }
             }
          
@@ -151,7 +150,6 @@ export function Post({ post }) {
           }
           return comment;
         });
-        
         setComments(updatedComments);
       } else {
         console.log("Failed to like post");
@@ -160,6 +158,29 @@ export function Post({ post }) {
       console.error("Error liking post:", error);
     }
   };
+
+
+  const getCurrent = async (commentId, type) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/reactComment/getCurrent?commentId=${commentId}`, {
+        method: "post",
+        credentials: "include",
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        if (type === "LIKE") {
+          handleCommentRect(post.id, commentId, "LIKE" , data.currentReact);
+        } else if (type === "DISLIKE") {
+          handleCommentRect(post.id, commentId, "DISLIKE", data.currentReact);
+        }
+      } else {
+        console.log("Failed to like post");
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  }
 
   const getComments = async (postId) => {
     try {
@@ -329,13 +350,18 @@ export function Post({ post }) {
                 </div>
                 <div className="comment-actions">
                   <button className="action-button"
-                    onClick={() => handleCommentRect(post.id, comment.id, "LIKE")}
+                    onClick={() => {
+                      getCurrent(comment.id, "LIKE");
+                      
+                    }}
                   >
                     <FontAwesomeIcon icon={faThumbsUp} />
                     <span>{comment.likes}</span>
                   </button>
                   <button className="action-button"
-                    onClick={() => handleCommentRect(post.id, comment.id, "DISLIKE")}
+                    onClick={() => {
+                      getCurrent(comment.id, "DISLIKE");
+                    }}
                   >
                     <FontAwesomeIcon icon={faThumbsDown} />
                     <span>{comment.dislikes}</span>
