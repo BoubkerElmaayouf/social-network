@@ -151,7 +151,7 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
                   src={
                     userdata?.avatar
                       ? `http://localhost:8080/images?path=${userdata.avatar}`
-                      : "/default-avatar.svg"
+                      : "/default-img.jpg"
                   }
                   alt="Profile"
                   width={32}

@@ -135,7 +135,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                     <img
                       src={ friend?.Avatar
                         ? `http://localhost:8080/images?path=${friend.Avatar}`
-                        : "/default-avatar.svg"}
+                        : "/default-img.jpg"}
                       alt={`${friend.FirstName}'s avatar`}
                       className="avatar"
                       onError={(e) => {
@@ -165,7 +165,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                     <img
                       src={group?.Path
                         ? `http://localhost:8080/images?path=${group.Path}`
-                        : "/default-avatar.svg"}
+                        : "/default-img.jpg"}
                       alt={`${group.Title} group avatar`}
                       className="avatar group-avatar"
                       onError={(e) => {
