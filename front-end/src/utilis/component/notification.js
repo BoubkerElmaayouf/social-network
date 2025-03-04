@@ -240,25 +240,32 @@ export default function GroupsEvent({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
+        return
         if (!Array.isArray(data)) return;
 
         const elementsArray = data.map((d) => {
+            d.Path = "/" + d.Path;
+            let profile = "/profile/" + d.Sender.Id;
             let name = d.Sender.FirstName + " " + d.Sender.LastName;
-            let grouplink = "/group/" + d.Group.Id;
+
             return (
-                <div key={d.Sender.Id} className="notification-group-event">
-                    <div className="notification-group-image">
-                        {/* Placeholder for group image */}
-                    </div>
-                    <div className="notification-group-info">
-                        <div className="notification-group-name">{d.Group.Title}</div>
-                        <div className="notification-group-event-type">{name}</div>
-                        <div className="notification-group-actions">
-                            <Link href={grouplink} className="group-invitation-link">
-                                View Invitation
-                            </Link>
+                <div key={d.Sender.Id} className="follow-request">
+                    <div className="follow-avatar">
+                        <div className="follow-avatar-placeholder">
+                            <img
+                                className="follow-avatar"
+                                src={d.Sender.Path}
+                                alt="User Avatar"
+                            />
                         </div>
                     </div>
+                    <div className="follow-info">
+                        <div className="follow-name">{name}</div>
+                        <div className="follow-username">{d.Sender.Nickname}</div>
+                    </div>
+                    <Link href={profile} className="visit-account">
+                        Visit
+                    </Link>
                 </div>
             );
         });
@@ -266,20 +273,21 @@ export default function GroupsEvent({ activeTab }) {
     };
 
     useEffect(() => {
-        // if (activeTab === "follow-requests") {
-        //     // async function FetchData() {
-        //     //     try {
-        //     //         //const result = await FetchNotif("follow-requests");
-        //     //         addElement(result);
+        if (activeTab === "follow-requests") {
+            async function FetchData() {
+                try {
+                    const result = await FetchNotif("event");
+                    console.log(result);
 
-        //     //     } catch (error) {
-        //     //         console.error("Error fetching follow requests:", error);
-        //     //     }
-        //     // }
-        //     // FetchData();
-        // } else {
-        //     setElements([]); // Reset the elements array when the tab changes
-        // }
+                    addElement(result);
+                } catch (error) {
+                    console.error("Error fetching follow requests:", error);
+                }
+            }
+            FetchData();
+        } else {
+            setElements([]); // Reset the elements array when the tab changes
+        }
     }, [activeTab]);
 
     return (
