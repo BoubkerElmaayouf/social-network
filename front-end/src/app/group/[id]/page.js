@@ -459,32 +459,27 @@ const EventCard = ({ event }) => {
         return new Date(dateString).toLocaleString(undefined, options);
     };
 
-    const [attendeesCount, setAttendeesCount] = useState(event?.attendees_count || 0);
     const groupId = window.location.pathname.split("/").pop();
-
+    
+    const [attendeesCount, setAttendeesCount] = useState(event?.countattends || 0);
 
     const handleJoinEvent = async () => {
         try {
-            // Get the group ID from the current URL
-
             const response = await fetch(
                 `http://localhost:8080/api/groups/handleJoinEvent?groupId=${groupId}&eventId=${event.id}`,
                 {
                     method: "POST",
-                    credentials: "include", // Important for sending cookies/session
+                    credentials: "include",
                 }
             );
-
+    
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    setAttendeesCount(data.attendees_count);
-                    // // Increment attendees count
-                    // setAttendeesCount(prev => prev + 1);
+                    setAttendeesCount(prev => prev + 1); // Increment count
                     alert("You are now attending this event");
                 }
             } else {
-                // Handle different error scenarios
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to join event");
             }
@@ -493,7 +488,7 @@ const EventCard = ({ event }) => {
             alert(error.message);
         }
     };
-
+    
     const handleDeleteEvent = async () => {
         try {
             const response = await fetch(
@@ -503,16 +498,13 @@ const EventCard = ({ event }) => {
                     credentials: "include",
                 }
             );
-
+    
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    // Increment attendees count
-                    setAttendeesCount(data.attendees_count || 0);
+                    setAttendeesCount(prev => Math.max(0, prev - 1)); // Ensure count doesn't go below 0
                     alert("Event deleted successfully");
                 }
-             
-                // Optionally, you might want to remove the event from the UI
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to delete event");
@@ -522,6 +514,7 @@ const EventCard = ({ event }) => {
             alert(error.message);
         }
     };
+    
 
     return (
         <div className="event-card">
@@ -556,7 +549,9 @@ const EventCard = ({ event }) => {
                     
                     <div className="event-meta-item">
                         <FontAwesomeIcon icon={faUsers} />
+                        {/* <span>{event?.attendeesCount || 0} attending</span> */}
                         <span>{attendeesCount} attending</span>
+
                     </div>
                 </div>
             </div>
@@ -572,113 +567,5 @@ const EventCard = ({ event }) => {
                 </button>
             </div>
         </div>
-    );
-};
-
-// const EventCard = ({ event }) => {
-//         // Format the date for display
-//         const formatDate = (dateString) => {
-//             const options = { 
-//                 weekday: 'long', 
-//                 year: 'numeric', 
-//                 month: 'long', 
-//                 day: 'numeric',
-//                 hour: '2-digit',
-//                 minute: '2-digit'
-//             };
-//             return new Date(dateString).toLocaleString(undefined, options);
-//         };
-
-//         const groupId = window.location.pathname.split("/").pop();
-
-        
-//             const handleJoinEvent =  async () => {
-//                     const response = await fetch(
-//                         `http://localhost:8080/api/groups/handleJoinEvent?groupId=${groupId}&eventId=${event.id}`,
-//                         {
-//                             method: "POST",
-//                             credentials: "include",
-//                         }
-//                     );
-//                     if (response.ok) {
-//                         alert("you are attending this event");
-//                     } else {
-//                         throw new Error("Failed to join group");
-//                     }
-//                 }    
-//             const handleDeleteEvent = async () => {
-//                 try {
-//                     const response = await fetch(
-//                         `http://localhost:8080/api/groups/handleDeleteEvent?eventId=${event.id}`,
-//                         {
-//                             method: "POST",
-//                             credentials: "include",
-//                         }
-//                     );
-//                     if (response.ok) {
-//                         alert("Event deleted successfully");
-//                     } else {
-//                         throw new Error("Failed to delete event")
-//                     }
-//                 } catch (error) {
-//                     console.error("Error deleting event:", error)
-//                 }
-//             }
-//             useEffect(() => {
-//                 handleJoinEvent()
-//                 handleDeleteEvent()
-//             }, []);
-
-        
-
-//         return (
-//             <div className="event-card">
-//                 <div className="event-header">
-//                     <div className="event-creator">
-//                         <div className="event-creator-avatar">
-//                             <img 
-//                                 src={event?.user?.path ? `http://localhost:8080/images?path=${event.user.path}` : "/default-avatar.jpg"} 
-//                                 alt="Creator" 
-//                             />
-//                         </div>
-//                         <div className="event-creator-info">
-//                             <span className="event-creator-name">
-//                                 {event?.user?.nickname || event?.user?.firstname || "Loading..."}
-//                             </span>
-//                             <span className="event-date">
-//                                 {event?.created_at ? formatDate(event.created_at) : "Recent"}
-//                             </span>
-//                         </div>
-//                     </div>
-//                 </div>
-    
-//                 <div className="event-content">
-//                     <h3 className="event-title">{event?.title || "Loading..."}</h3>
-//                     <p className="event-description">{event?.Descreption || "Loading..."}</p>
-                    
-//                     <div className="event-meta">
-//                         <div className="event-meta-item">
-//                             <FontAwesomeIcon icon={faCalendarAlt} />
-//                             <span>{event?.eventtime ? formatDate(event.eventtime) : "Date TBD"}</span>
-//                         </div>
-                        
-//                         <div className="event-meta-item">
-//                             <FontAwesomeIcon icon={faUsers} />
-//                             <span>{event?.attendees_count || 0} attending</span>
-//                         </div>
-//                     </div>
-//                 </div>
-                
-//                 <div className="event-actions">
-//                     <button onClick={() => handleJoinEvent(event.id)} className="event-action-btn">
-//                         <FontAwesomeIcon icon={faThumbsUp} />
-//                         <span>Attend</span>
-//                     </button>
-//                     <button onClick={() => handleDeleteEvent(event.id)} className="event-action-btn">
-//                         <FontAwesomeIcon icon={faThumbsDown} />
-//                         <span>Not Interested</span>
-//                     </button>
-//                 </div>
-//             </div>
-//         );
-//     };    
+    )
+}
