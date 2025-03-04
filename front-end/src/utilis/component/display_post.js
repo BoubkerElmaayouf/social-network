@@ -20,6 +20,7 @@ export function Post({ post }) {
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState(post.likes);
   const [dislikes, setDislikes] = useState(post.dislikes);
+  // const [commentReactions, setCommentReactions] = useState({});
   // const [commentLike, setCommentLike] = useState(null)
   // const [commentDislike, setCommentDislike] = useState(null)
   const [image, setImage] = useState(null);
@@ -91,7 +92,7 @@ export function Post({ post }) {
         credentials: "include",
         body: JSON.stringify({ post_id: Id, reaction_type: type }),
       });
-      
+
       if (response.status === 200) {
         const data = await response.json();
         setLikes(data.like_count);
@@ -104,30 +105,60 @@ export function Post({ post }) {
     }
   };
 
-  const handleCommentRect = async (Id, CommentId ,type) => {
+  const handleCommentRect = async (Id, CommentId, type) => {
+    // const data.currentReact = commentReactions[CommentId];
+    // console.log(data.currentReact);
+
+    // if (data.currentReact === type) {
+    //   return;
+    // }
     try {
       const response = await fetch(`http://localhost:8080/api/reactComment/add`, {
         method: "post",
         credentials: "include",
         body: JSON.stringify({ post_id: Id, comment_id: CommentId, reaction_type: type }),
       });
-      
+
       if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
 
         const updatedComments = comments.map(comment => {
           if (comment.id === CommentId) {
+            let updatedLikes = comment.likes;
+            let updatedDislikes = comment.dislikes;
+        
+            if (type === 'LIKE') {
+              if (updatedLikes > 0 && data.currentReact === 'LIKE') {
+                updatedLikes -= 1;
+              } else if (data.currentReact === 'DISLIKE') {
+                updatedLikes += 1;
+                updatedDislikes -= 1;
+              } else {
+                updatedLikes += 1;
+              }
+            } 
+            // if (type === 'DISLIKE') {
+            //   if (updatedDislikes > 0 && data.currentReact === 'DISLIKE') {
+            //     updatedDislikes -= 1;
+            //   } else if (data.currentReact === 'LIKE') {
+            //     updatedDislikes += 1;
+            //     updatedLikes -= 1;
+            //   } else {
+            //     updatedDislikes += 1;
+            //   }
+            // }
+        
             return {
               ...comment,
-              likes: type === 'LIKE' ? comment.likes + 1 : comment.likes,
-              dislikes: type === 'DISLIKE' ? comment.dislikes + 1 : comment.dislikes
+              likes: updatedLikes,
+              dislikes: updatedDislikes,
             };
           }
           return comment;
         });
+        
         setComments(updatedComments);
-        // const data = await response.json();
-        // setCommentLike(data.like_count)
-        // setCommentDislike(data.dislike_count)
       } else {
         console.log("Failed to like post");
       }
@@ -151,28 +182,28 @@ export function Post({ post }) {
     <article className="post">
       <div className="post-header">
         <div className="post-user-info">
-        <Link href={`/profile/${post.creator?.id}`}>
-          <div className="user-avatar">
-            <img
-              src={
-                post.creator?.avatar
-                  ? `http://localhost:8080/images?path=${post.creator.avatar}`
-                  : "/default-img.jpg"
-              }
-              alt="User avatar"
-              width={40}
-              height={40}
-              className="avatar-image"
-            />
-          </div>
+          <Link href={`/profile/${post.creator?.id}`}>
+            <div className="user-avatar">
+              <img
+                src={
+                  post.creator?.avatar
+                    ? `http://localhost:8080/images?path=${post.creator.avatar}`
+                    : "/default-img.jpg"
+                }
+                alt="User avatar"
+                width={40}
+                height={40}
+                className="avatar-image"
+              />
+            </div>
           </Link>
           <div className="user-details">
             <Link href={`/profile/${post.creator?.id}`}>
-            <h3 className="user-name">
-              {post.creator?.first_name + " " + post.creator?.last_name}
-            </h3>
+              <h3 className="user-name">
+                {post.creator?.first_name + " " + post.creator?.last_name}
+              </h3>
             </Link>
-            
+
             <span className="post-timestamp">
               <FontAwesomeIcon icon={faClock} />
               <time>{post?.created_at}</time>
@@ -290,27 +321,27 @@ export function Post({ post }) {
                   </div>
                 </div>
                 <div className="comment-divider">
-                <p className="comment-content">{comment?.content}</p>
-                {comment?.pathimg && (
-                  <div className="comment-image">
-                    <img
-                      src={`http://localhost:8080/images?path=${comment.pathimg}`}
-                      alt="Comment image"
-                      className="comment-image01"
-                    />
-                  </div>
-                )}
+                  <p className="comment-content">{comment?.content}</p>
+                  {comment?.pathimg && (
+                    <div className="comment-image">
+                      <img
+                        src={`http://localhost:8080/images?path=${comment.pathimg}`}
+                        alt="Comment image"
+                        className="comment-image01"
+                      />
+                    </div>
+                  )}
 
                 </div>
                 <div className="comment-actions">
                   <button className="action-button"
-                  onClick={() => handleCommentRect(post.id, comment.id, "LIKE")}
+                    onClick={() => handleCommentRect(post.id, comment.id, "LIKE")}
                   >
                     <FontAwesomeIcon icon={faThumbsUp} />
                     <span>{comment.likes}</span>
                   </button>
                   <button className="action-button"
-                  onClick={() => handleCommentRect(post.id, comment.id ,"DISLIKE")}
+                    onClick={() => handleCommentRect(post.id, comment.id, "DISLIKE")}
                   >
                     <FontAwesomeIcon icon={faThumbsDown} />
                     <span>{comment.dislikes}</span>
@@ -349,14 +380,14 @@ export function PostList() {
 
   return (
     <div className="post-list">
-    {posts.length > 0 ? (
-      posts.map((post) => <Post key={post.id} post={post} />)
-    ) : (
-      <p>No posts available.</p>
-    )}
-  </div>
+      {posts.length > 0 ? (
+        posts.map((post) => <Post key={post.id} post={post} />)
+      ) : (
+        <p>No posts available.</p>
+      )}
+    </div>
 
-);
+  );
 }
 
 // ******** Post container: a function that displays a form to create a new post **********//
@@ -440,7 +471,7 @@ export function PostContainer() {
       if (imageFile) newPostForm.append("image", imageFile);
       if (selectedFriends.length > 0) {
         newPostForm.append("targetedFriends", selectedFriends);
-        newPostForm.set("privacy", "semi-private"); 
+        newPostForm.set("privacy", "semi-private");
       }
 
       const response = await fetch("http://localhost:8080/api/post/add", {
