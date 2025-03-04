@@ -129,25 +129,19 @@ export function Post({ post }) {
             let updatedDislikes = comment.dislikes;
         
             if (type === 'LIKE') {
-              if (updatedLikes > 0 && data.currentReact === 'LIKE') {
-                updatedLikes -= 1;
-              } else if (data.currentReact === 'DISLIKE') {
-                updatedLikes += 1;
-                updatedDislikes -= 1;
-              } else {
-                updatedLikes += 1;
+              if (data.currentReact == 'LIKE') {
+                updatedLikes += 1
+              } else if (updatedLikes > 0 && data.currentReact == '') {
+                updatedLikes -= 1
+              } 
+            } else if (type === 'DISLIKE')  {
+              if (data.currentReact == 'DISLIKE') {
+                updatedDislikes += 1
+              } else if (updatedDislikes > 0 && data.currentReact == '') {
+                updatedDislikes -= 1
               }
-            } 
-            // if (type === 'DISLIKE') {
-            //   if (updatedDislikes > 0 && data.currentReact === 'DISLIKE') {
-            //     updatedDislikes -= 1;
-            //   } else if (data.currentReact === 'LIKE') {
-            //     updatedDislikes += 1;
-            //     updatedLikes -= 1;
-            //   } else {
-            //     updatedDislikes += 1;
-            //   }
-            // }
+            }
+         
         
             return {
               ...comment,
