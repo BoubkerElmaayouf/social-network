@@ -170,7 +170,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                       className="avatar group-avatar"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/groups/default.jpg";
+                        e.target.src = "/default-img.jpg";
                       }}
                     />
                   </div>
