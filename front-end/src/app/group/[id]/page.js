@@ -68,7 +68,6 @@ export default function Group({ params }) {
     useEffect(() => {
         async function getPostData() {
             const postdata = await fetchUserInfo(`api/post/get?groupId=${groupId}`);
-            console.log("Posts data:", postdata)
             setPostdata(postdata);
         }
         getPostData();

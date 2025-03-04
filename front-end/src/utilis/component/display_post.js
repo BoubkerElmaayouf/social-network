@@ -20,6 +20,8 @@ export function Post({ post }) {
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState(post.likes);
   const [dislikes, setDislikes] = useState(post.dislikes);
+  // const [commentLike, setCommentLike] = useState(null)
+  // const [commentDislike, setCommentDislike] = useState(null)
   const [image, setImage] = useState(null);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -57,9 +59,6 @@ export function Post({ post }) {
       const response = await fetch("http://localhost:8080/api/comment/add", {
         method: "POST",
         credentials: "include",
-        headers: {
-          // "Content-Type": "application/json",
-        },
         body: newCommentForm,
       });
       if (response.status === 201) {
@@ -92,11 +91,43 @@ export function Post({ post }) {
         credentials: "include",
         body: JSON.stringify({ post_id: Id, reaction_type: type }),
       });
-
+      
       if (response.status === 200) {
         const data = await response.json();
-        setDislikes(data.dislike_count);
         setLikes(data.like_count);
+        setDislikes(data.dislike_count);
+      } else {
+        console.log("Failed to like post");
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleCommentRect = async (Id, CommentId ,type) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/reactComment/add`, {
+        method: "post",
+        credentials: "include",
+        body: JSON.stringify({ post_id: Id, comment_id: CommentId, reaction_type: type }),
+      });
+      
+      if (response.status === 200) {
+
+        const updatedComments = comments.map(comment => {
+          if (comment.id === CommentId) {
+            return {
+              ...comment,
+              likes: type === 'LIKE' ? comment.likes + 1 : comment.likes,
+              dislikes: type === 'DISLIKE' ? comment.dislikes + 1 : comment.dislikes
+            };
+          }
+          return comment;
+        });
+        setComments(updatedComments);
+        // const data = await response.json();
+        // setCommentLike(data.like_count)
+        // setCommentDislike(data.dislike_count)
       } else {
         console.log("Failed to like post");
       }
@@ -107,9 +138,9 @@ export function Post({ post }) {
 
   const getComments = async (postId) => {
     try {
-      const response = await fetchUserInfo(`/api/comment/get?PostId=${postId}`);
-      if (response) {
-        setComments(response);
+      const data = await fetchUserInfo(`/api/comment/get?PostId=${postId}`);
+      if (data) {
+        setComments(data);
       }
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -272,11 +303,15 @@ export function Post({ post }) {
 
                 </div>
                 <div className="comment-actions">
-                  <button className="action-button">
+                  <button className="action-button"
+                  onClick={() => handleCommentRect(post.id, comment.id, "LIKE")}
+                  >
                     <FontAwesomeIcon icon={faThumbsUp} />
                     <span>{comment.likes}</span>
                   </button>
-                  <button className="action-button">
+                  <button className="action-button"
+                  onClick={() => handleCommentRect(post.id, comment.id ,"DISLIKE")}
+                  >
                     <FontAwesomeIcon icon={faThumbsDown} />
                     <span>{comment.dislikes}</span>
                   </button>
@@ -410,9 +445,6 @@ export function PostContainer() {
 
       const response = await fetch("http://localhost:8080/api/post/add", {
         method: "POST",
-        headers: {
-          // "Content-Type": "application/json",
-        },
         body: newPostForm,
         credentials: "include",
       });
@@ -427,7 +459,6 @@ export function PostContainer() {
         });
         setImagePreview(null);
         setSelectedFriends([]);
-        // router.push("/content");
       } else {
         console.log(response.status);
       }
