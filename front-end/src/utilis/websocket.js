@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 // Create a context for the WebSocket
@@ -6,6 +7,7 @@ const WebSocketContext = createContext(null);
 
 // Create a provider component
 export function WebSocketProvider({ children }) {
+  const path = usePathname()
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export function WebSocketProvider({ children }) {
     return () => {
       newSocket.close();
     };
-  }, []);
+  }, [path]);
 
   return (
     <WebSocketContext.Provider value={socket}>

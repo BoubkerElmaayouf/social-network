@@ -4,20 +4,20 @@ import "./login.css";
 import { Navbarrend, Footer } from "../page.js";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
-import { checkAuth } from "@/utilis/ auth"; 
+import { useRouter } from "next/navigation";
+import { checkAuth } from "@/utilis/ auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { 
-  faUser, 
-  faEnvelope, 
-  faLock, 
-  faCalendar, 
-  faInfoCircle, 
+import {
+  faUser,
+  faEnvelope,
+  faLock,
+  faCalendar,
+  faInfoCircle,
   faImage,
   faExclamationTriangle,
-  faSpinner
-} from '@fortawesome/free-solid-svg-icons';
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function LoginButton({ text, path }) {
   return (
@@ -32,49 +32,43 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add a loading state
 
-
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-
-    // Check if the user is already authenticated
-    useEffect( () => {
-      const verifyAuth = async () => {
-        const isAuthenticated = await checkAuth();
-        if (isAuthenticated) {
-          router.push("/content"); // Redirect to the index page if authenticated
-        } else {
-          setLoading(false); // Update the loading state
-        }
-      };
-     verifyAuth();
-    }, [router]);
-
-
+  // Check if the user is already authenticated
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        router.push("/content"); // Redirect to the index page if authenticated
+      } else {
+        setLoading(false); // Update the loading state
+      }
+    };
+    verifyAuth();
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
-    
     // Handle login logic here
     const userData = {
-        email,
-        password,
-      };
-      
-      console.log(userData);
+      email,
+      password,
+    };
+
+    console.log(userData);
     try {
       const response = await fetch("http://localhost:8080/api/login", {
         method: "POST",
         headers: {
           // "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData), credentials: "include"
+        body: JSON.stringify(userData),
+        credentials: "include",
       });
 
-      
       if (response.status === 200) {
         router.push("/content");
       } else {
@@ -93,7 +87,7 @@ export default function Login() {
   };
 
   if (loading) {
-    return <div></div>
+    return <div></div>;
   }
 
   return (
@@ -145,8 +139,7 @@ export default function Login() {
             <h1>Welcome Back</h1>
             <p>Please sign in to continue</p>
           </div>
-          {error && <div className='error-msg'>{error}</div>}
-
+          {error && <div className="error-msg">{error}</div>}
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-group">
@@ -155,7 +148,10 @@ export default function Login() {
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg> */}
-              <FontAwesomeIcon className="input-icon" icon={faEnvelope}></FontAwesomeIcon>
+                <FontAwesomeIcon
+                  className="input-icon"
+                  icon={faEnvelope}
+                ></FontAwesomeIcon>
                 <input
                   type="email"
                   placeholder="Email"
@@ -167,7 +163,10 @@ export default function Login() {
 
             <div className="input-group">
               <div className="input-wrapper">
-              <FontAwesomeIcon className="input-icon" icon={faLock}></FontAwesomeIcon>
+                <FontAwesomeIcon
+                  className="input-icon"
+                  icon={faLock}
+                ></FontAwesomeIcon>
                 <input
                   type="password"
                   placeholder="Password"
@@ -187,7 +186,7 @@ export default function Login() {
           </form>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
