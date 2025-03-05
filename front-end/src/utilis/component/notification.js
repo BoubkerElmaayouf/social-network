@@ -59,20 +59,19 @@ export function GroupsNotif({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
-        if (!Array.isArray(data)) return;
+
 
         setElements((prevElements) => {
-            const existingKeys = new Set(prevElements.map((el) => el.key));
+
             const newElements = data
                 .filter((d) => d?.Sender?.Id && d?.Group?.Id) // Ensure valid structure
-                .map((d) => {
-                    const key = `${d.Sender.Id}-${d.Type}`;
-                    if (existingKeys.has(key)) return null; // Prevent duplicates
+                .map((d, index) => {
+
 
                     if (d.Type === "groupInvitation") {
                         let grouplink = "/group/" + d.Group.Id;
                         return (
-                            <div key={key} className="group-invitation">
+                            <div key={index} className="group-invitation">
                                 <p className="group-invitation-message">
                                     {d.Group.Title} is inviting you! Please check it out.
                                 </p>
@@ -82,8 +81,6 @@ export function GroupsNotif({ activeTab }) {
                             </div>
                         );
                     } else {
-                        console.log(d);
-
                         let name = `${d.Sender.FirstName} ${d.Sender.LastName}`;
 
                         let status;
@@ -99,7 +96,7 @@ export function GroupsNotif({ activeTab }) {
                             </div>
                         }
                         return (
-                            <div key={key} className="group-invitation">
+                            <div key={index} className="group-invitation">
                                 <p className="group-invitation-message">
                                     {name} wants to join your group {d.Group.Title}.
                                 </p>
@@ -124,7 +121,6 @@ export function GroupsNotif({ activeTab }) {
                     const result1 = (await FetchNotif("requestgroup")) || [];
                     const combinedResults = [...result, ...result1];
 
-                    console.log("Concatenated results:", combinedResults);
                     addElement(combinedResults);
                 } catch (error) {
                     console.error("Error fetching notifications:", error);
@@ -153,13 +149,10 @@ async function AcceptRejectRequest(type, groupId, target) {
     }
 
 
-    console.log(url);
+
 
     try {
         let response = await fetch(url, { credentials: "include" });
-
-        console.log(response.status);
-
 
         if (response.status === 401) {
             // useNavigate("/register"); // Uncomment if using React Router
@@ -180,20 +173,21 @@ export function FollowRequest({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
-        if (!Array.isArray(data)) return;
 
-        const elementsArray = data.map((d) => {
-            d.Path = "/" + d.Path;
+        const elementsArray = data.map((d, index) => {
+
+            let imgPath = "http://localhost:8080/images?path=" + d.Sender.Path;
+
             let profile = "/profile/" + d.Sender.Id;
             let name = d.Sender.FirstName + " " + d.Sender.LastName;
 
             return (
-                <div key={d.Sender.Id} className="follow-request">
+                <div key={index} className="follow-request">
                     <div className="follow-avatar">
                         <div className="follow-avatar-placeholder">
                             <img
                                 className="follow-avatar"
-                                src={d.Sender.Path}
+                                src={imgPath}
                                 alt="User Avatar"
                             />
                         </div>
@@ -236,25 +230,28 @@ export function FollowRequest({ activeTab }) {
     );
 }
 
-export default function GroupsEvent({ activeTab }) {
+export function GroupsEvent({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
-        return
-        if (!Array.isArray(data)) return;
 
-        const elementsArray = data.map((d) => {
-            d.Path = "/" + d.Path;
+
+
+        const elementsArray = data.map((d, index) => {
+
+            let imgPath = "http://localhost:8080/images?path=" + d.Sender.Path;
+
+
             let profile = "/profile/" + d.Sender.Id;
             let name = d.Sender.FirstName + " " + d.Sender.LastName;
 
             return (
-                <div key={d.Sender.Id} className="follow-request">
+                <div key={index} className="follow-request">
                     <div className="follow-avatar">
                         <div className="follow-avatar-placeholder">
                             <img
                                 className="follow-avatar"
-                                src={d.Sender.Path}
+                                src={imgPath}
                                 alt="User Avatar"
                             />
                         </div>
@@ -273,12 +270,10 @@ export default function GroupsEvent({ activeTab }) {
     };
 
     useEffect(() => {
-        if (activeTab === "follow-requests") {
+        if (activeTab === "group-events") {
             async function FetchData() {
                 try {
                     const result = await FetchNotif("event");
-                    console.log(result);
-
                     addElement(result);
                 } catch (error) {
                     console.error("Error fetching follow requests:", error);
@@ -286,7 +281,7 @@ export default function GroupsEvent({ activeTab }) {
             }
             FetchData();
         } else {
-            setElements([]); // Reset the elements array when the tab changes
+            setElements([]);
         }
     }, [activeTab]);
 
@@ -308,13 +303,12 @@ async function FetchNotif(type) {
         let response = await fetch(url, {
             credentials: "include",
         });
-        console.log("--------->", response.status);
 
         if (response.status === 401) {
             //   useNavigate("/register");
             return undefined;
         }
-        console.log("res", response);
+
         if (response.status !== 200) {
             return undefined;
         }
