@@ -10,9 +10,9 @@ import { useSearchParams } from "next/navigation";
 import { Navbar } from "@/utilis/component/navbar";
 import { useRouter } from "next/navigation";
 import { checkAuth } from "@/utilis/ auth";
-
+import { Suspense } from "react";
 // ***** search for groups or people ******//
-export default function Search() {
+function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [data, setData] = useState(null);
@@ -122,5 +122,14 @@ export default function Search() {
         </div>
       </div>
     </div>
+  );
+}
+
+
+export default function Search() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }

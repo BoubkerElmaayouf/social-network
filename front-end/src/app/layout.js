@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <WebSocketProvider>
           {children}
-          {/* <Footer /> */}
         </WebSocketProvider>
       </body>
     </html>

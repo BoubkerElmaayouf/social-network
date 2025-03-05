@@ -11,8 +11,8 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(8, 11, 17, 0.2);
-    backdrop-filter: blur(100px);
+    /* background: rgba(8, 11, 17, 0.2);
+    backdrop-filter: blur(100px); */
     border: 1px solid rgba(79, 248, 104, 0.2);
     border-radius: 12px;
     cursor: pointer;
@@ -489,8 +489,8 @@
 
 /******************  the post section **********************/
 .post {
-    background: rgba(8, 11, 17, 0.2);
-    backdrop-filter: blur(100px);
+    /* background: rgba(8, 11, 17, 0.2);
+    backdrop-filter: blur(100px); */
     border: 1px solid rgba(79, 248, 104, 0.1);
     border-radius: 12px;
     margin-bottom: 1.5rem;

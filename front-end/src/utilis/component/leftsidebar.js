@@ -6,7 +6,6 @@ config.autoAddCss = false;
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
-  faComments,
   faBell,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +16,6 @@ import "./css/leftsidebar.css"
 //****** leftsidebar that containes the navigation and it 
 //* displays in both sides leftside for large devices and in the bottom for small devices  *******/
 
-
 export function Leftsidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [notificationActive, setNotificationActive] = useState(false);
@@ -26,8 +24,7 @@ export function Leftsidebar() {
   const notificationBtnRef = useRef(null);
 
   const menuItems = [
-    { icon: faHouse, id: "home-btn", label: "Home", href: "/content" },
-    { icon: faComments, id: "chat-btn", label: "Chat", href: "/chat" },
+    { icon: faHouse, id: "home-btn", label: "Home", href: "/" },
     { icon: faBell, id: "notification-btn", label: "Notification", href: "#" },
     { icon: faUserFriends, id: "group-btn", label: "Groups", href: "/groups" },
   ];

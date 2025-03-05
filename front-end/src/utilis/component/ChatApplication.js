@@ -82,14 +82,14 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                       src={
                         group?.Path
                           ? `http://localhost:8080/images?path=${group.Path}`
-                          : "/default-avatar.svg"
+                          : "/default-img.jpg"
                       }
                       alt={`${group.Title} group avatar`}
                       className="avatar group-avatar"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/groups/default.jpg";
-                      }}
+                      // onError={(e) => {
+                      //   e.target.onerror = null;
+                      //   e.target.src = "/groups/default.jpg";
+                      // }}
                     />
                   </div>
                   <div className="item-details">
@@ -107,8 +107,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
   );
 }
 
-//******************** rendering the chatbox here it takes three params *************************//
-
+//********************** rendering the chatbox here it takes three params *************************** //
 export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
