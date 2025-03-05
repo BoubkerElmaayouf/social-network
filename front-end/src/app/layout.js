@@ -2,7 +2,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "./page";
-// import { useEffect } from "react";
+import { WebSocketProvider } from "../utilis/websocket.js";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,26 +14,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
 export default function RootLayout({ children }) {
-    // useEffect(() => {
-    //   document
-    //     .querySelectorAll("[cz-shortcut-listen]")
-    //     .forEach((el) => el.removeAttribute("cz-shortcut-listen"));
-    // }, []);
-
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="./favicon.png"/>
+        <link rel="icon" href="./favicon.png" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-            {/* <div className="background-shapes">
-                <div className="shape shape-1"></div>
-                <div className="shape shape-2"></div>
-            </div> */}
-        {children}
-        {/* <Footer/> */}
+        <WebSocketProvider>
+          {children}
+          {/* <Footer /> */}
+        </WebSocketProvider>
       </body>
     </html>
   );
