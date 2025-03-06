@@ -115,36 +115,40 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const socket = useWebSocket();
 
   useEffect(() => {
+
+
+    //fetch mesages here  and update the Messages state //oriax //
+    setMessages([]);
+  }, [activeChatuser.id]);
+
+  useEffect(() => {
     if (socket) {
       const handleMessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("Received message:", data);
-          console.log(activeChatuser)
-
-
-  
           if (data.type === "Private") {
             const message = data.data;
-            const newMsg = {
-              Content: message.Content,
-              sender: "other",
-            };
-            setMessages((prevMessages) => [...prevMessages, newMsg]);
+
+            if (activeChatuser.id === message.SenderID) {
+              const newMsg = {
+                Content: message.Content,
+                sender: "other",
+              };
+              setMessages((prevMessages) => [...prevMessages, newMsg]);
+            }
           }
         } catch (error) {
           console.error("Error parsing WebSocket message:", error);
         }
       };
-  
+
       socket.addEventListener("message", handleMessage);
-  
+
       return () => {
         socket.removeEventListener("message", handleMessage); // Cleanup the listener
       };
     }
-  }, [socket]);
-  
+  }, [activeChatuser.id]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
