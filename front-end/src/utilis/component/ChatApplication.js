@@ -113,9 +113,22 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const socket = useWebSocket();
-
+  let offset = 0
   useEffect(() => {
-    //fetch mesages here  and update the Messages state //oriax //
+    const fetchChatHistory = async () => {
+      try {
+          const response = await fetch(`http://localhost:8080/api/chathistory?recivierID=${activeChatuser.id}&offset=${offset}`);
+          const data = await response.json();
+          console.log(data);
+          
+          setMessages(data); // Mettre à jour avec les messages récupérés
+      } catch (error) {
+          console.error("Erreur lors du chargement des messages :", error);
+      }
+    }
+    if (activeChatuser.id) {
+      fetchChatHistory();
+    }
     setMessages([]);
   }, [activeChatuser.id]);
 
