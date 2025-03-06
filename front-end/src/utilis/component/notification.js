@@ -60,7 +60,7 @@ export function GroupsNotif({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
-
+        if (!data) return
 
         setElements((prevElements) => {
 
@@ -171,7 +171,7 @@ export function FollowRequest({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
-
+        if (!data) return
         const elementsArray = data.map((d, index) => {
 
             let imgPath = "http://localhost:8080/images?path=" + d.Sender.Path;
@@ -232,7 +232,7 @@ export function GroupsEvent({ activeTab }) {
     const [elements, setElements] = useState([]);
 
     const addElement = (data) => {
-
+        if (!data) return
 
 
         const elementsArray = data.map((d, index) => {
