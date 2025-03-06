@@ -4,6 +4,7 @@ import "./css/ChatApplication.css";
 import { fetchUserInfo } from "../fetching_data";
 import { useWebSocket } from "../websocket.js";
 import { Send, X, Smile } from 'lucide-react';
+import throttle from 'lodash/throttle';
 
 // ***************** this func is for rendering the right side-bar **************//
 export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
@@ -112,25 +113,50 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const [newMessage, setNewMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const socket = useWebSocket();
-  let offset = 0
-  useEffect(() => {
-    const fetchChatHistory = async () => {
-      try {
-          const response = await fetch(`http://localhost:8080/api/chathistory?recivierID=${activeChatuser.id}&offset=${offset}`);
-          const data = await response.json();
-          console.log(data);
-          
-          setMessages(data); // Mettre à jour avec les messages récupérés
-      } catch (error) {
-          console.error("Erreur lors du chargement des messages :", error);
+const [Offset , setOffset] = useState(0)
+  const handleChat = (totas, id) => {
+    const newMessages = totas.map(data => {
+      if (id === data.SenderID) {
+        return {
+          Content: data.Content,
+          sender: "other",
+          senderName: activeChatuser.name,
+          //timestamp: new Date().toLocaleTimeString(),
+        };
+      } else {
+        return {
+          Content: data.Content,
+          sender: "self",
+          senderName: "You",
+          //timestamp: new Date().toLocaleTimeString(),
+        };
       }
+    });
+    setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+  }
+
+  const fetchChatHistory = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/chathistory?recivierID=${activeChatuser.id}&Offset=${Offset}`, {
+        credentials: "include",
+      });
+      const data = await response.json();
+      data.reverse();
+      handleChat(data, activeChatuser.id);
+      //setMessages(data);
+    } catch (error) {
+      console.error("Erreur lors du chargement des messages :", error);
     }
+  };
+
+  useEffect(() => {    
     if (activeChatuser.id) {
       fetchChatHistory();
     }
     setMessages([]);
-  }, [activeChatuser.id]);
+  }, [activeChatuser.id, Offset]);
 
   useEffect(() => {
     if (socket) {
@@ -170,6 +196,23 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleScroll = throttle(() => {
+    if (messagesContainerRef.current.scrollTop === 50) { 
+      setOffset((prev) => prev + 10);
+    }
+  }, 100);
+  
+
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [activeChatuser.id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -220,7 +263,7 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
       </div>
 
       <div className="messages-container">
-        {messages?.map((message, index) => (
+        {messages && messages?.map((message, index) => (
           <div
             key={index}
             className={`message-wrapper ${
