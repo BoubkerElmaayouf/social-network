@@ -2,6 +2,7 @@
 
 import Link from "next/link.js";
 import { useState, useEffect } from "react";
+import "./css/notificatoin.css";
 // import { useNavigate } from "react-router-dom";
 
 export function Notification({ notificationRef, notificationActive }) {
@@ -147,9 +148,6 @@ async function AcceptRejectRequest(type, groupId, target) {
     } else {
         url = `http://localhost:8080/api/groups/rejectrequest?groupId=${groupId}&target=${target}`;
     }
-
-
-
 
     try {
         let response = await fetch(url, { credentials: "include" });
@@ -319,3 +317,21 @@ async function FetchNotif(type) {
         return undefined;
     }
 }
+
+export default function showPopupNotification(message, duration = 3000) {
+    const notification = document.createElement('div');
+    notification.className = 'popup-Notif';
+    const messageParagraph = document.createElement('p');
+    messageParagraph.textContent = message;
+    notification.appendChild(messageParagraph);
+    document.body.appendChild(notification);
+    notification.offsetHeight;
+    setTimeout(() => {
+      notification.classList.add('closing');
+      notification.addEventListener('animationend', () => {
+        document.body.removeChild(notification);
+      });
+    }, duration);
+    return notification;
+  }
+

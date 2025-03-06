@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import { fetchUserInfo } from "@/utilis/fetching_data";
 import { Post } from "@/utilis/component/display_post";
 import { useRouter } from "next/navigation";
+import showPopupNotification from '@/utilis/component/notification.js';
 
 export default function Group({ params }) {
     const [isMobileRightSidebarOpen, setIsMobileRightSidebarOpen] = useState(false);
@@ -95,7 +96,7 @@ export default function Group({ params }) {
             <div className="group-container">
                 <div className="group-header">
                     <div className="group-cover"></div>
-                    <div className="group-info">
+                    <div className="group-infos">
                         <div className="group-avatar">
                             {/* <FontAwesomeIcon icon={faUserGroup} size="2x" /> */}
                             <img
@@ -193,7 +194,7 @@ function Memberstatus({ status, pop, group }) {
                 throw new Error(`Erreur: ${response.status}`);
             }
 
-            alert('Bienvenue');
+            showPopupNotification("Invitation envoyée");
         } catch {
             console.error("Error Join Group");
         }
@@ -210,7 +211,7 @@ function Memberstatus({ status, pop, group }) {
                 throw new Error(`Erreur: ${response.status}`);
             }
 
-            alert('Bienvenue');
+            showPopupNotification("Invitation accepted");
         } catch {
             console.error("Error Join Group");
         }
@@ -477,7 +478,8 @@ const EventCard = ({ event }) => {
                 const data = await response.json();
                 if (data.success) {
                     setAttendeesCount(prev => prev + 1); // Increment count
-                    alert("You are now attending this event");
+                    showPopupNotification("You are now attending this event");
+                    // alert("You are now attending this event");
                 }
             } else {
                 const errorData = await response.json();
@@ -485,7 +487,7 @@ const EventCard = ({ event }) => {
             }
         } catch (error) {
             console.error("Error joining event:", error);
-            alert(error.message);
+            showPopupNotification(error.message);
         }
     };
     
@@ -503,7 +505,7 @@ const EventCard = ({ event }) => {
                 const data = await response.json();
                 if (data.success) {
                     setAttendeesCount(prev => Math.max(0, prev - 1)); // Ensure count doesn't go below 0
-                    alert("Event deleted successfully");
+                    showPopupNotification("Event deleted successfully");
                 }
             } else {
                 const errorData = await response.json();
@@ -511,7 +513,7 @@ const EventCard = ({ event }) => {
             }
         } catch (error) {
             console.error("Error deleting event:", error);
-            alert(error.message);
+            showPopupNotification(error.message);
         }
     };
     
