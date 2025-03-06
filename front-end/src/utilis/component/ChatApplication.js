@@ -4,7 +4,18 @@ import "./css/ChatApplication.css";
 import { fetchUserInfo } from "../fetching_data";
 import { useWebSocket } from "../websocket.js";
 import { Send, X, Smile } from 'lucide-react';
-import throttle from 'lodash/throttle';
+
+const throttle = (func, delay) => {
+  let lastCall = 0;
+  return function (...args) {
+    const now = new Date().getTime();
+    if (now - lastCall < delay) {
+      return;
+    }
+    lastCall = now;
+    return func(...args);
+  };
+};
 
 // ***************** this func is for rendering the right side-bar **************//
 export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
@@ -153,10 +164,16 @@ const [Offset , setOffset] = useState(0)
 
   useEffect(() => {    
     if (activeChatuser.id) {
+      // setMessages([]);
       fetchChatHistory();
     }
-    setMessages([]);
-  }, [activeChatuser.id, Offset]);
+  }, [activeChatuser.id]);
+
+  useEffect(() => {
+    if (activeChatuser.id) {
+      fetchChatHistory();
+    }
+  }, [Offset]);
 
   useEffect(() => {
     if (socket) {
@@ -198,7 +215,7 @@ const [Offset , setOffset] = useState(0)
   }, [messages]);
 
   const handleScroll = throttle(() => {
-    if (messagesContainerRef.current.scrollTop === 50) { 
+    if (messagesContainerRef.current.scrollTop === 0) { 
       setOffset((prev) => prev + 10);
     }
   }, 100);
@@ -212,7 +229,7 @@ const [Offset , setOffset] = useState(0)
         container.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [activeChatuser.id]);
+  }, [activeChatuser.id, messagesContainerRef.current]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
