@@ -126,7 +126,8 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const socket = useWebSocket();
-const [Offset , setOffset] = useState(0)
+  const [offset, setOffset] = useState(0)
+  let lastOffest = 0
   const handleChat = (totas, id) => {
     const newMessages = totas.map(data => {
       if (id === data.SenderID) {
@@ -145,35 +146,45 @@ const [Offset , setOffset] = useState(0)
         };
       }
     });
-    setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+    console.log(newMessages);
+
+    setMessages((prevMessages) => [ ...newMessages, ...prevMessages]);
   }
 
   const fetchChatHistory = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chathistory?recivierID=${activeChatuser.id}&Offset=${Offset}`, {
+      console.log("fetch",offset)
+      const response = await fetch(`http://localhost:8080/api/chathistory?recivierID=${activeChatuser.id}&offset=${offset}`, {
         credentials: "include",
       });
+
       const data = await response.json();
-      data.reverse();
-      handleChat(data, activeChatuser.id);
+      if (data) {
+        console.log(data)
+        data.reverse();
+        handleChat(data, activeChatuser.id);
+      }
       //setMessages(data);
     } catch (error) {
       console.error("Erreur lors du chargement des messages :", error);
     }
   };
 
-  useEffect(() => {    
-    if (activeChatuser.id) {
-      // setMessages([]);
-      fetchChatHistory();
-    }
-  }, [activeChatuser.id]);
+  useEffect(() => {
+    fetchChatHistory();
+
+  }, []);
 
   useEffect(() => {
-    if (activeChatuser.id) {
-      fetchChatHistory();
+    if (messages.length <= 10) {
+      scrollToBottom()
     }
-  }, [Offset]);
+  }, [messages])
+  // useEffect(() => {
+  //   if (activeChatuser.id) {
+  //     fetchChatHistory();
+  //   }
+  // }, [Offset]);
 
   useEffect(() => {
     if (socket) {
@@ -204,32 +215,51 @@ const [Offset , setOffset] = useState(0)
         socket.removeEventListener("message", handleMessage);
       };
     }
-  }, [activeChatuser.id]);
+  }, []);
 
-  const scrollToBottom = () => {
+  function scrollToBottom() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    lastOffest = messagesEndRef.current.scrollTop
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log("ACTIVE USER ------------------------",activeChatuser);
+  //   if (messages.length <= 10) {
 
-  const handleScroll = throttle(() => {
-    if (messagesContainerRef.current.scrollTop === 0) { 
-      setOffset((prev) => prev + 10);
+  //     scrollToBottom();
+  //   }
+  // }, [messages]);
+  useEffect(() =>  {
+    console.log("new offset", offset)
+    if (offset != 0) {
+      fetchChatHistory()
     }
-  }, 100);
-  
+  }, [offset])
+
+  const handleScroll = throttle((e) => {
+    console.log(messagesContainerRef.current.scrollTop)
+    if (messagesContainerRef.current.scrollTop <= 3) {
+      console.log("here")
+      setOffset((v) => v + 10);
+      const currentHeight = messagesEndRef.current.scrollHeight;
+      console.log("last",lastOffest,"current", currentHeight)
+      // messagesEndRef.current?.scrollIntoView({top: xxx, behavior: "smooth" });
+      console.log(offset)
+    }
+  }, 300);
+
 
   useEffect(() => {
+    console.log("event start")
     const container = messagesContainerRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
       return () => {
+        console.log("event remove");
         container.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [activeChatuser.id, messagesContainerRef.current]);
+  }, [messagesContainerRef]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -279,13 +309,12 @@ const [Offset , setOffset] = useState(0)
         </div>
       </div>
 
-      <div className="messages-container">
+      <div className="messages-container" ref={messagesContainerRef}>
         {messages && messages?.map((message, index) => (
           <div
             key={index}
-            className={`message-wrapper ${
-              message.sender === "self" ? "message-self" : "message-other"
-            }`}
+            className={`message-wrapper ${message.sender === "self" ? "message-self" : "message-other"
+              }`}
           >
             <div className="message">
               <span className="sender-name">{message.senderName}</span>
@@ -307,7 +336,7 @@ const [Offset , setOffset] = useState(0)
         >
           <Smile size={20} />
         </button>
-        
+
         {showEmojiPicker && (
           <div className="emoji-picker">
             {EMOJIS.map((emoji, index) => (
@@ -371,12 +400,12 @@ export function ChatApplication() {
         onFriendClick={handleFriendClick}
         onGroupClick={handleGroupClick}
       />
-
-      <Chatbox
+      {isChatVisible ? <Chatbox
         activeChatuser={activeChatuser}
         isVisible={isChatVisible}
         setIsVisible={setIsChatVisible}
-      />
+      /> : null}
+      
     </div>
   );
 }
