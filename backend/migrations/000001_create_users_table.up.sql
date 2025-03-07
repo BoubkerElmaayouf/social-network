@@ -6,9 +6,9 @@ CREATE TABLE
         firstName VARCHAR(255) NOT NULL,
         lastName VARCHAR(255) NOT NULL,
         datebirth DATE NOT NULL,
-        avatar TEXT,
-        nickname VARCHAR(255),
-        aboutme VARCHAR(255),
+        avatar TEXT DEFAULT '',
+        nickname VARCHAR(255) DEFAULT '',
+        aboutme VARCHAR(255) DEFAULT '',
         profileType BOOLEAN DEFAULT 0,
         createdAt DATETIME NOT NULL
     );

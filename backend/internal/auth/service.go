@@ -20,7 +20,7 @@ func ValidateCredentials(user User) bool {
 	if ValidateLength(user.LastName) {
 		return false
 	}
-	if ValidateLength(*user.Nickname) {
+	if ValidateLength(user.Nickname) {
 		return false
 	}
 	if ValidateLength(user.Password) {
@@ -78,8 +78,8 @@ func ReadUserInfo(w http.ResponseWriter, r *http.Request) (User, int, error) {
 		FirstName:   r.FormValue("firstName"),
 		LastName:    r.FormValue("lastName"),
 		DateOfBirth: r.FormValue("dateOfBirth"),
-		Nickname:    pkg.GetOptionalFormValue(r, "nickName"),
-		AboutMe:     pkg.GetOptionalFormValue(r, "aboutMe"),
+		Nickname:    r.FormValue("nickName"),
+		AboutMe:     r.FormValue("aboutMe"),
 	}
 	if err := validateUser(user); err != nil {
 		return user, http.StatusBadRequest, err
@@ -91,7 +91,7 @@ func ReadUserInfo(w http.ResponseWriter, r *http.Request) (User, int, error) {
 		if err == nil {
 
 			imgName, err := pkg.SaveImage(file, header)
-			user.Avatar = &imgName
+			user.Avatar = imgName
 			if err != nil {
 				return user, http.StatusInternalServerError, pkg.ErrProccessingFile
 			}
