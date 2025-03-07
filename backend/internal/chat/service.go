@@ -59,7 +59,7 @@ func GetGroupHistoryPrv(id, groupId, offset int) ([]Group_Mesaage, error) {
 	for rows.Next() {
 		var m Group_Mesaage
 
-		err = rows.Scan(&m.Id, &m.SenderID, &m.SenderID, &m.Group, &m.Content, &m.Created_at)
+		err = rows.Scan(&m.Id, &m.SenderID,  &m.Group, &m.Content, &m.Created_at)
 		if err != nil {
 			return messages, err
 		}
