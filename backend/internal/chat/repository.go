@@ -1,11 +1,14 @@
 package funcs
 
 import (
+	"database/sql"
+	"errors"
 	"time"
 
 	dataBase "funcs/internal/database"
-)
 
+	pkg "funcs/pkg"
+)
 
 func PrivateMessages(Sender, receiver int, Message string) error {
 	db := dataBase.GetDb()
@@ -70,6 +73,17 @@ func GetGroupusers(id int) ([]int, error) {
 	return userIDs, nil
 }
 
+func CheckIfMember(userId, groupId int) (STATUS, error) {
+	var status STATUS
+	query := "SELECT role,joined_at FROM group_members WHERE user_id=? AND group_id=?"
+	db := dataBase.GetDb()
+
+	err := db.QueryRow(query, userId, groupId).Scan(&status.Status, &status.Since)
+	if errors.Is(err, sql.ErrNoRows) {
+		err = pkg.ErrNotMember
+	}
+	return status, err
+}
 
 // func Getusernamebyid(id int) (string, error) {
 // 	db := dataBase.GetDb()

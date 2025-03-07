@@ -9,7 +9,11 @@ type WebsocketData struct {
 	Type string          `json:"type"`
 	Data json.RawMessage `json:"data"`
 }
-
+type STATUS struct {
+	Status string `json:"status"`
+	Since  string `json:"since"`
+	Sender SUser  `json:"sender"`
+}
 type Private_Message struct {
 	Id         int
 	SenderID   int

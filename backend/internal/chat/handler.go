@@ -10,10 +10,18 @@ import (
 
 	pkg "funcs/pkg"
 
-	group "funcs/internal/Groups"
-
 	"github.com/gorilla/websocket"
 )
+
+func SendRealTimeNotification(userId []int, notif interface{}) {
+	mu.Lock()
+	for _, user := range userId {
+		for _, conn := range conns[user] {
+			conn.WriteJSON(notif)
+		}
+	}
+	mu.Unlock()
+}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -179,7 +187,7 @@ func ChatGroupHistory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	///check if member
-	_, err = group.CheckIfMember(id, groupId)
+	_, err = CheckIfMember(id, groupId)
 	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusForbidden, err)
 		return

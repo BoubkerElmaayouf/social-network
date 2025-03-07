@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	ws "funcs/internal/chat"
 	database "funcs/internal/database"
 	structure "funcs/internal/notification"
 	pkg "funcs/pkg"
@@ -88,7 +89,7 @@ func request(w http.ResponseWriter, r *http.Request) {
 			Type:   "follow",
 			Sender: structure.SUser(userInfo),
 		}
-		structure.SendRealTimeNotification([]int{targetId}, follownotif)
+		ws.SendRealTimeNotification([]int{targetId}, follownotif)
 	} else {
 		err = UnFollow(id, targetId)
 		if err != nil {

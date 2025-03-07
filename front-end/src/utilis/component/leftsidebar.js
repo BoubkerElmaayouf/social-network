@@ -15,11 +15,11 @@ import "./css/leftsidebar.css"
 
 //****** leftsidebar that containes the navigation and it 
 //* displays in both sides leftside for large devices and in the bottom for small devices  *******/
-
+export let notifBTN = undefined
 export function Leftsidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [notificationActive, setNotificationActive] = useState(false);
-  
+
   const notificationRef = useRef(null);
   const notificationBtnRef = useRef(null);
 
@@ -48,10 +48,15 @@ export function Leftsidebar() {
     };
   }, []);
 
- 
 
+
+  notifBTN = notificationBtnRef.current;
   const handleNotificationClick = (e) => {
     e.preventDefault();
+
+    if (notifBTN) {
+      notifBTN.style.color = "white"
+    }
     setNotificationActive(!notificationActive);
   };
 
@@ -108,7 +113,7 @@ export function Leftsidebar() {
       </aside>
 
       {/* Notification Container */}
-      <Notification notificationRef={notificationRef} notificationActive={notificationActive}  />
+      <Notification notificationRef={notificationRef} notificationActive={notificationActive} />
     </>
   );
 }

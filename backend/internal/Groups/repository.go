@@ -182,6 +182,19 @@ func CheckIfMember(userId, groupId int) (STATUS, error) {
 	return status, err
 }
 
+func GetGroupCreator(groupId int) (SUser, error) {
+	db := database.GetDb()
+	query := "SELECT creator_id FROM groups WHERE id=?"
+	var user SUser
+
+	err := db.QueryRow(query, groupId).Scan(&user.Id)
+	if err != nil {
+		return user, err
+	}
+
+	return GetuserInfo(user.Id)
+}
+
 func CheckIfInveted(userId, groupId int) (STATUS, error) {
 	var status STATUS
 	query := "SELECT invited_by,invited_at FROM invitations WHERE invited_user=? AND group_id=? AND status='pending'"

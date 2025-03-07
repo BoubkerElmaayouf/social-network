@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	ws "funcs/internal/chat"
+	structure "funcs/internal/notification"
 	pkg "funcs/pkg"
 )
 
@@ -85,7 +87,7 @@ func GroupInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exist ,err := CheckGroupExists(groupId)
+	exist, err := CheckGroupExists(groupId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -103,7 +105,7 @@ func GroupInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	group.MemberStatus, err = GetMemberStatus(userId, groupId)
-	if err != nil  {
+	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
 		return
 	}
@@ -163,11 +165,20 @@ func InviteToGroup(w http.ResponseWriter, r *http.Request) {
 			pkg.SendResponseStatus(w, http.StatusBadRequest, pkg.ErrInvalidNamber)
 			return
 		}
+
 		err = InviteUser(userId, id, groupId)
 		if err != nil {
 			pkg.SendResponseStatus(w, http.StatusInternalServerError, pkg.ErrInvalidNamber)
 			return
 		}
+
+		userInfo, _ := structure.GetuserInfo(id)
+		var follownotif structure.NOTIF = structure.NOTIF{
+			Type:   "groupInvitation",
+			Sender: structure.SUser(userInfo),
+		}
+		ws.SendRealTimeNotification([]int{id}, follownotif)
+
 	}
 }
 
@@ -294,9 +305,17 @@ func RequestGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/****************************************/
-	/***send request to admin by websocket***/
-	/****************************************/
+	creator, err := GetGroupCreator(groupId)
+	if err != nil {
+		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	var follownotif structure.NOTIF = structure.NOTIF{
+		Type:   "groupRequest",
+		Sender: structure.SUser(creator),
+	}
+	ws.SendRealTimeNotification([]int{creator.Id}, follownotif)
 }
 
 func GetAllGroups(w http.ResponseWriter, r *http.Request) {
@@ -320,7 +339,6 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func RejectRequest(w http.ResponseWriter, r *http.Request) {
 	userId, err := pkg.GetIdBySession(w, r)
 	if err != nil {
@@ -334,42 +352,42 @@ func RejectRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = Reject(userId, groupId)	
-	if err != nil  {
+	err = Reject(userId, groupId)
+	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusBadRequest, err)
 		return
 	}
 }
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
-    _, err := pkg.GetIdBySession(w, r)
-    if err != nil {
-        pkg.SendResponseStatus(w, http.StatusUnauthorized, err)
-        return
-    }
+	_, err := pkg.GetIdBySession(w, r)
+	if err != nil {
+		pkg.SendResponseStatus(w, http.StatusUnauthorized, err)
+		return
+	}
 
-    group_id, err := strconv.Atoi(r.URL.Query().Get("groupId"))
-    if err != nil {
-        pkg.SendResponseStatus(w, http.StatusBadRequest, err)
-        return
-    }
+	group_id, err := strconv.Atoi(r.URL.Query().Get("groupId"))
+	if err != nil {
+		pkg.SendResponseStatus(w, http.StatusBadRequest, err)
+		return
+	}
 
-    events, err := GetGroupEvents(group_id)
-    if err != nil {
-        pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
-        return
-    }
+	events, err := GetGroupEvents(group_id)
+	if err != nil {
+		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
+		return
+	}
 
-    err = pkg.Encode(w, &events)
-    if err != nil {
-        fmt.Println(err)
-        pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
-        return
-    }
+	err = pkg.Encode(w, &events)
+	if err != nil {
+		fmt.Println(err)
+		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
+		return
+	}
 }
 
 func HandleJoinEvent(w http.ResponseWriter, r *http.Request) {
-	member_id, err := pkg.GetIdBySession(w, r) 
+	member_id, err := pkg.GetIdBySession(w, r)
 	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusUnauthorized, err)
 		return
@@ -417,11 +435,10 @@ func HandleJoinEvent(w http.ResponseWriter, r *http.Request) {
 	// Send success response with attendees count
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"success": true,
+		"success":         true,
 		"attendees_count": attendeesCount,
 	})
 }
-
 
 // delete the attending of the event
 func LeaveGroup(w http.ResponseWriter, r *http.Request) {
@@ -467,7 +484,7 @@ func LeaveGroup(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"success": true,
+		"success":         true,
 		"attendees_count": attendeesCount,
 	})
 }
@@ -498,5 +515,3 @@ func LeaveGroup(w http.ResponseWriter, r *http.Request) {
 // 	})
 
 // }
-
-

@@ -59,7 +59,7 @@ func GetGroupPost(w http.ResponseWriter, r *http.Request) {
 		pkg.SendResponseStatus(w, http.StatusUnauthorized, err)
 		return
 	}
-	
+
 	query := r.URL.Query()
 	groupId, _ := strconv.Atoi(query.Get("groupId"))
 	if groupId == 0 {
@@ -76,7 +76,6 @@ func GetGroupPost(w http.ResponseWriter, r *http.Request) {
 		pkg.SendResponseStatus(w, http.StatusBadRequest, pkg.ErrNotFollowing)
 		return
 	}
-
 
 	posts := GroupPost(id, groupId)
 	err = pkg.Encode(w, &posts)
