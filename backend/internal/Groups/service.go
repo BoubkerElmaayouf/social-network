@@ -112,3 +112,4 @@ func ReadEventInfo(r *http.Request) (Event, error) {
 
 	return event, nil
 }
+

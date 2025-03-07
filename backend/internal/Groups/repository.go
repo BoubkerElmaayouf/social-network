@@ -347,6 +347,9 @@ func Reject(userId, groupId int) error {
 	if err == sql.ErrNoRows {
 		err = nil
 	}
+
+	query = "DELETE  FROM join_requests WHERE (group_id = ? AND user_id = ? AND status = ?) ;"
+	_, err = db.Exec(query, groupId, userId, "pending")
 	return err
 }
 
@@ -416,3 +419,4 @@ func GetEventAttendeesCount(eventId int) (int, error) {
 	}
 	return count, nil
 }
+

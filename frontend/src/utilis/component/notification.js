@@ -145,12 +145,14 @@ async function AcceptRejectRequest(type, groupId, target) {
     let url = ""
     if (type == 1) {
         url = `/api/groups/acceptrequest?groupId=${groupId}&target=${target}`;
-    } else {
+    } else if (type == 2) {
         url = `/api/groups/rejectrequest?groupId=${groupId}&target=${target}`;
     }
 
     try {
         let response = await fetch(url, { credentials: "include" });
+        console.log(response.status);
+        
 
         if (response.status === 401) {
             // useNavigate("/register"); // Uncomment if using React Router
