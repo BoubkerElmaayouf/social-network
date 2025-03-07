@@ -45,6 +45,8 @@ export default function Profile({ params }) {
           fetchUserInfo(`api/users/userfollowing?profileId=${userId}`),
           fetchUserInfo(`api/users/nowRequest?profileId=${userId}`)
         ]);
+        console.log("3333333333333333333",userResponse.status);
+        
         if (userResponse.status === 303) {
           router.push("/profile");
         }
