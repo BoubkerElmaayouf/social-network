@@ -15,6 +15,7 @@ type STATUS struct {
 	Sender SUser  `json:"sender"`
 }
 type Private_Message struct {
+	Type string 
 	Id         int
 	SenderID   int
 	ReceiverID int
@@ -23,6 +24,8 @@ type Private_Message struct {
 }
 
 type Group_Mesaage struct {
+	Type string 
+	Vv string 
 	Id         int
 	SenderID   int
 	Sender     SUser

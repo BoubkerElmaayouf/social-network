@@ -31,6 +31,7 @@ func GetHistoryPrv(usr1, usr2, offset int) ([]Private_Message, error) {
 		if err != nil {
 			return message, err
 		}
+		m.Type = "Private"
 
 		message = append(message, m)
 	}
@@ -46,7 +47,7 @@ func GetGroupHistoryPrv(id, groupId, offset int) ([]Group_Mesaage, error) {
 				LIMIT 10 OFFSET ?;
 				`
 	db := dataBase.GetDb()
-	
+
 	rows, err := db.Query(query, groupId, offset)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -59,7 +60,7 @@ func GetGroupHistoryPrv(id, groupId, offset int) ([]Group_Mesaage, error) {
 	for rows.Next() {
 		var m Group_Mesaage
 
-		err = rows.Scan(&m.Id, &m.SenderID,  &m.Group, &m.Content, &m.Created_at)
+		err = rows.Scan(&m.Id, &m.SenderID, &m.Group, &m.Content, &m.Created_at)
 		if err != nil {
 			return messages, err
 		}
@@ -68,6 +69,14 @@ func GetGroupHistoryPrv(id, groupId, offset int) ([]Group_Mesaage, error) {
 		if err != nil {
 			return messages, err
 		}
+		if m.Sender.Id == id {
+m.Vv = "You"
+		} else {
+			m.Vv= "Other"
+		}
+
+		
+		m.Type = "Group"
 
 		messages = append(messages, m)
 	}

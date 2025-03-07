@@ -3,6 +3,7 @@ package funcs
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	dataBase "funcs/internal/database"
@@ -34,11 +35,12 @@ func GroupMessages(Sender, receiver int, Message string) error {
 	var isValide bool
 	err := db.QueryRow(`SELECT 1 FROM groups WHERE id = ?`, receiver).Scan(&isValide)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	if isValide {
-		_, err := db.Exec(`INSERT INTO groups_messages (sender, receiver_id, content, createdAt) VALUES (?, ?, ?, ?)`, Sender, receiver, Message, time.Now())
+		_, err := db.Exec(`INSERT INTO groups_messages (sender_id, group_id, content, createdAt) VALUES (?, ?, ?, ?)`, Sender, receiver, Message, time.Now())
 		if err != nil {
 			return err
 		}
@@ -50,7 +52,7 @@ func GroupMessages(Sender, receiver int, Message string) error {
 func GetGroupusers(id int) ([]int, error) {
 	db := dataBase.GetDb()
 
-	rows, err := db.Query(`SELECT user_id FROM groups_members WHERE group_id = ?`, id)
+	rows, err := db.Query(`SELECT user_id FROM group_members WHERE group_id = ?`, id)
 	if err != nil {
 		return []int{}, err
 	}
@@ -85,15 +87,15 @@ func CheckIfMember(userId, groupId int) (STATUS, error) {
 	return status, err
 }
 
-// func Getusernamebyid(id int) (string, error) {
-// 	db := dataBase.GetDb()
-// 	var nickname string
-// 	err := db.QueryRow(`SELECT nickname FROM users WHERE id=?`, id).Scan(&nickname)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return nickname, nil
-// }
+func Getusernamebyid(id int) (string, error) {
+	db := dataBase.GetDb()
+	var nickname string
+	err := db.QueryRow(`SELECT lastName FROM users WHERE id=?`, id).Scan(&nickname)
+	if err != nil {
+		return "", err
+	}
+	return nickname, nil
+}
 
 // func GetPrivatemessagescount(user1, user2 string, db *sql.DB) (int, error) {
 // 	var count int

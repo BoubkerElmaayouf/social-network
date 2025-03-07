@@ -64,7 +64,6 @@ func ChatService(w http.ResponseWriter, r *http.Request) {
 	mu.Unlock()
 
 	for {
-		fmt.Println("waiting for message means connected")
 		var exchangeData WebsocketData
 		err := conn.ReadJSON(&exchangeData)
 		if err != nil {
@@ -72,6 +71,7 @@ func ChatService(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println(exchangeData.Type)
 		mu.Lock()
 		switch exchangeData.Type {
 		case "Private":
@@ -105,11 +105,26 @@ func ChatService(w http.ResponseWriter, r *http.Request) {
 				log.Println("JSON Decode Error:", err)
 				break
 			}
+			fmt.Println(groupMsg.Group)
 			err = GroupMessages(id, groupMsg.Group, groupMsg.Content)
 			if err != nil {
+				fmt.Println(err)
 				break
 			}
-			broadcastToGroup(groupMsg.Group, exchangeData)
+
+			groupMsg.SenderID = id
+			groupMsg.SenderName , _ = Getusernamebyid(id) 
+
+
+
+			// Re-marshal the updated message back into the exchangeData.Data
+			updatedData, err := json.Marshal(groupMsg)
+			if err != nil {
+				log.Println("JSON Marshal Error:", err)
+				break
+			}
+			exchangeData.Data = updatedData
+			broadcastToGroup(id , groupMsg.Group, exchangeData)
 		}
 		mu.Unlock()
 	}
@@ -125,15 +140,18 @@ func broadcastMessage(receiverID int, message WebsocketData) {
 	// }
 }
 
-func broadcastToGroup(groupID int, message WebsocketData) {
+func broadcastToGroup(id int , groupID int, message WebsocketData) {
 	userIDs, err := GetGroupusers(groupID)
 	if err != nil {
 		log.Println("Error getting group users:", err)
 		return
 	}
 	for _, userID := range userIDs {
-		for _, conn := range conns[userID] {
-			conn.WriteJSON(message)
+		if userID != id {
+			for _, conn := range conns[userID] {
+				conn.WriteJSON(message)
+			}
+
 		}
 	}
 }
@@ -175,17 +193,18 @@ func ChatHistory(w http.ResponseWriter, r *http.Request) {
 func ChatGroupHistory(w http.ResponseWriter, r *http.Request) {
 	id, err := pkg.GetIdBySession(w, r)
 	if err != nil {
+		fmt.Println(err)
 		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
 		return
 	}
-
+	
 	query := r.URL.Query()
 	groupId, _ := strconv.Atoi(query.Get("groupId"))
 	if groupId == 0 {
 		pkg.SendResponseStatus(w, http.StatusBadRequest, pkg.ErrInvalidNamber)
 		return
 	}
-
+	
 	///check if member
 	_, err = CheckIfMember(id, groupId)
 	if err != nil {
@@ -205,6 +224,7 @@ func ChatGroupHistory(w http.ResponseWriter, r *http.Request) {
 		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
 		return
 	}
+
 
 	err = pkg.Encode(w, &message)
 	if err != nil {

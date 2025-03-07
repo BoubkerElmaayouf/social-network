@@ -137,22 +137,46 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
       setHasMore(false);
       return;
     }
+    console.log(totas);
+    
     
     const newMessages = totas.map(data => {
-      if (id === data.SenderID) {
-        return {
+
+      if (data.Type === "Private") {
+        if (id === data.SenderID) {
+          return {
+            Content: data.Content,
+            sender: "other",
+            senderName: activeChatuser.name,
+            timestamp: new Date(data.Created_at).toLocaleTimeString(),
+          };
+        } else {
+          return {
+            Content: data.Content,
+            sender: "self",
+            senderName: "You",
+            timestamp: new Date(data.Created_at).toLocaleTimeString(),
+          };
+        }
+      } else if (data.Type==="Group") {
+        if (data.Vv == "You") {
+          return {
+            Content: data.Content,
+            sender: "self",
+            senderName: "You",
+            timestamp: new Date(data.Created_at).toLocaleTimeString(),
+          };
+
+        } else {
+          return {
           Content: data.Content,
           sender: "other",
-          senderName: activeChatuser.name,
-          timestamp: new Date(data.CreatedAt).toLocaleTimeString(),
-        };
-      } else {
-        return {
-          Content: data.Content,
-          sender: "self",
-          senderName: "You",
-          timestamp: new Date(data.CreatedAt).toLocaleTimeString(),
-        };
+          senderName: data.Sender.lastname,
+          timestamp: new Date(data.Created_at).toLocaleTimeString(),
+
+        }
+
+      }
       }
     });
 
@@ -190,12 +214,23 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
       if (!isInitial && messagesContainerRef.current) {
         scrollPositionRef.current = messagesContainerRef.current.scrollHeight;
       }
-      
+      let response
       const currentOffset = isInitial ? 0 : offset;
-      const response = await fetch(
-        `/api/chathistory?recivierID=${activeChatuser.id}&offset=${currentOffset}`, 
-        { credentials: "include" }
-      );
+      if (activeChatuser.type =="Group") {
+        response = await fetch(
+          `/api/chatgrouphistory?groupId=${activeChatuser.id}&offset=${currentOffset}`, 
+          { credentials: "include" }
+        );
+
+      } else  if (activeChatuser.type=="Private") {
+
+        response = await fetch(
+         `/api/chathistory?recivierID=${activeChatuser.id}&offset=${currentOffset}`, 
+         { credentials: "include" }
+       );
+      }
+
+
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -258,11 +293,12 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
       const handleMessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.type === "Private") {
+          let newMsg
+          if (data.type === activeChatuser.type && data.type === "Private") {
             const message = data.data;
 
             if (activeChatuser.id === message.SenderID) {
-              const newMsg = {
+               newMsg = {
                 Content: message.Content,
                 sender: "other",
                 senderName: activeChatuser.name,
@@ -275,6 +311,22 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
                 messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
               }, 100);
             }
+          } else if (data.type === activeChatuser.type && data.type === "Group") {
+            const message = data.data;
+
+             newMsg = {
+              Content: message.Content,
+              sender: "other",
+              senderName: data.SenderName,
+              timestamp: new Date().toLocaleTimeString(),
+            };
+            setMessages((prevMessages) => [...prevMessages, newMsg]);
+            
+            // Scroll to bottom for new incoming messages
+            setTimeout(() => {
+              messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+
           }
         } catch (error) {
           console.error("Error parsing WebSocket message:", error);
@@ -315,13 +367,29 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newMessage.trim()) {
-      const newMsg = {
-        type: "Private",
-        data: {
-          ReceiverID: activeChatuser.id,
-          Content: newMessage,
-        },
-      };
+
+      let newMsg
+      if (activeChatuser.type === "Group") {
+        newMsg = {
+          type: "Group",
+          data: {
+            Group : activeChatuser.id ,
+            ReceiverID: activeChatuser.id,
+            Content: newMessage,
+          },
+        };
+
+      } else {
+        newMsg = {
+         type: "Private",
+         data: {
+           ReceiverID: activeChatuser.id,
+           Content: newMessage,
+         },
+       };
+
+      }
+
 
       const displayMsg = {
         Content: newMsg.data.Content,
@@ -439,14 +507,14 @@ export function ChatApplication() {
     useState(false);
 
   const handleFriendClick = (ID, Name) => {
-    setActiveChatuser({ id: ID, name: Name });
+    setActiveChatuser({ type :"Private" , id: ID, name: Name });
     setIsChatVisible(true);
     // Close mobile sidebar after selection on mobile devices
     setIsMobileRightSidebarOpen(false);
   };
 
   const handleGroupClick = (groupName, groupId) => {
-    setActiveChatuser({ id: groupId, name: groupName });
+    setActiveChatuser({ type:"Group",id: groupId, name: groupName });
     setIsChatVisible(true);
     // Close mobile sidebar after selection on mobile devices
     setIsMobileRightSidebarOpen(false);

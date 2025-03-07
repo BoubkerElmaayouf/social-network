@@ -25,11 +25,13 @@ export function WebSocketProvider({ children }) {
 
       newSocket.addEventListener("open", () => {
         console.log("WebSocket connected");
+        setSocket(newSocket)
       });
 
-      // newSocket.addEventListener("close", () => {
-      //   console.log("WebSocket disconnected");
-      //   setSocket(null);
+      newSocket.addEventListener("close", () => {
+        console.log("WebSocket disconnected");
+        setSocket(null);
+      })
 
       newSocket.addEventListener("message", (event) =>
         handleNotif(event)
