@@ -20,7 +20,7 @@ import { use } from "react";
 import { useEffect } from "react";
 import { fetchUserInfo } from "@/utilis/fetching_data";
 import { Post } from "@/utilis/component/display_post";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import showPopupNotification from '@/utilis/component/notification.js';
 
 export default function Group({ params }) {
@@ -44,8 +44,10 @@ export default function Group({ params }) {
         const fetchData = async () => {
             try {
                 const response = await fetchUserInfo(`api/groups/get?groupId=${groupId}`);
+                
                 if (response.status === 400 || response.status === 404) {
                     router.push("/notfound");
+                    
                 }
 
                 setGroupdata(response || []);
