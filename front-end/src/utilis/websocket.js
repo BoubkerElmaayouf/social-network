@@ -11,23 +11,33 @@ export function WebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Initialize WebSocket connection
-    const newSocket = new WebSocket("ws://localhost:8080/api/ws");
-    setSocket(newSocket);
+    if (socket) {
+      if (path === "/login" || path ==="/register") {
+        socket.close()
+        
+      }
+} else {
+  if (path === "/login" || path==="/register") {
+return    
+  }
 
-    newSocket.addEventListener("open", () => {
-      console.log("WebSocket connected");
-    });
 
-    newSocket.addEventListener("close", () => {
-      console.log("WebSocket disconnected");
-      setSocket(null);
-    });
+  // Initialize WebSocket connection
+  const newSocket = new WebSocket("/api/ws");
 
-    // Cleanup on unmount
-    return () => {
-      newSocket.close();
-    };
+  newSocket.addEventListener("open", () => {
+    console.log("WebSocket connected");
+  });
+
+  newSocket.addEventListener("close", () => {
+    console.log("WebSocket disconnected");
+    setSocket(null);
+  });
+  setSocket(newSocket);
+
+  // Cleanup on unmount
+}
+
   }, [path]);
 
   return (
