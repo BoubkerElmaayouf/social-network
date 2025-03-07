@@ -1,6 +1,7 @@
 package funcs
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -42,15 +43,20 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	targetId, _ := strconv.Atoi(query.Get("profileId"))
 	if targetId == id {
-		pkg.SendResponseStatus(w, http.StatusSeeOther, err)
+		http.Error(w, "see other", http.StatusSeeOther)
 		return
 	}
 
 	profile, err := GetProfileDB(targetId, id)
 	if err != nil {
-		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
+		if err == sql.ErrNoRows {
+			http.Error(w, "see other", http.StatusSeeOther)
+		}else {
+			pkg.SendResponseStatus(w, http.StatusInternalServerError, err)
+		}
 		return
 	}
+
 	err = pkg.Encode(w, profile)
 	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusInternalServerError, err)

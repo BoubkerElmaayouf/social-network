@@ -340,7 +340,7 @@ func GetAllGroups(w http.ResponseWriter, r *http.Request) {
 }
 
 func RejectRequest(w http.ResponseWriter, r *http.Request) {
-	userId, err := pkg.GetIdBySession(w, r)
+	_, err := pkg.GetIdBySession(w, r)
 	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusUnauthorized, err)
 		return
@@ -352,7 +352,14 @@ func RejectRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = Reject(userId, groupId)
+	targetId, _ := strconv.Atoi(r.URL.Query().Get("target"))
+	if targetId == 0 {
+		pkg.SendResponseStatus(w, http.StatusBadRequest, err)
+		return
+	}
+	
+
+	err = Reject(targetId, groupId)
 	if err != nil {
 		pkg.SendResponseStatus(w, http.StatusBadRequest, err)
 		return
