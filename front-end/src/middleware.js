@@ -37,7 +37,7 @@ export async function middleware(request) {
     if (response.ok) {
       // If authenticated and accessing login/register -> Redirect to content
       if (isAuthRoute) {
-        return NextResponse.redirect(new URL("/content", request.url));
+        return NextResponse.redirect(new URL("/", request.url));
       }
     } else {
       // If authentication check fails -> Redirect to login
