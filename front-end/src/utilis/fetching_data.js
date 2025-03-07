@@ -1,7 +1,7 @@
 
 export async function fetchUserInfo(path) {
   try {
-    const response = await fetch(`http://localhost:8080/${path}`, {
+    const response = await fetch(`/${path}`, {
       method: "GET",
       credentials: "include",
     });

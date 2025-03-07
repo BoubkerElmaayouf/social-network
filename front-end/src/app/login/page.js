@@ -56,7 +56,7 @@ export default function Login() {
       
       console.log(userData);
     try {
-      const response = await fetch("http://localhost:8080/api/login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
         },

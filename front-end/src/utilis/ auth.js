@@ -1,7 +1,7 @@
 // authHandler.js
 export async function checkAuth() {
   try {
-    const response = await fetch("http://localhost:8080/api/check-auth", {
+    const response = await fetch("/api/check-auth", {
       method: "GET",
       credentials: "include", // Include cookies in the request
     });

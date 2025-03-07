@@ -144,9 +144,9 @@ export function GroupsNotif({ activeTab }) {
 async function AcceptRejectRequest(type, groupId, target) {
     let url = ""
     if (type == 1) {
-        url = `http://localhost:8080/api/groups/acceptrequest?groupId=${groupId}&target=${target}`;
+        url = `/api/groups/acceptrequest?groupId=${groupId}&target=${target}`;
     } else {
-        url = `http://localhost:8080/api/groups/rejectrequest?groupId=${groupId}&target=${target}`;
+        url = `/api/groups/rejectrequest?groupId=${groupId}&target=${target}`;
     }
 
     try {
@@ -174,7 +174,7 @@ export function FollowRequest({ activeTab }) {
         if (!data) return
         const elementsArray = data.map((d, index) => {
 
-            let imgPath = "http://localhost:8080/images?path=" + d.Sender.Path;
+            let imgPath = "/api/images?path=" + d.Sender.Path;
 
             let profile = "/profile/" + d.Sender.Id;
             let name = d.Sender.FirstName + " " + d.Sender.LastName;
@@ -237,7 +237,7 @@ export function GroupsEvent({ activeTab }) {
 
         const elementsArray = data.map((d, index) => {
 
-            let imgPath = "http://localhost:8080/images?path=" + d.Sender.Path;
+            let imgPath = "/api/images?path=" + d.Sender.Path;
 
 
             let profile = "/profile/" + d.Sender.Id;
@@ -294,7 +294,7 @@ export function GroupsEvent({ activeTab }) {
 }
 
 async function FetchNotif(type) {
-    let url = "http://localhost:8080/api/notif/" + type;
+    let url = "/api/notif/" + type;
 
 
     try {

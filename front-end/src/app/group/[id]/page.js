@@ -101,7 +101,7 @@ export default function Group({ params }) {
                             {/* <FontAwesomeIcon icon={faUserGroup} size="2x" /> */}
                             <img
                                 className='group-image'
-                                src={groupdata?.image ? `http://localhost:8080/images?path=${groupdata?.image}` : "/default-img.jpg"}
+                                src={groupdata?.image ? `/api/images?path=${groupdata?.image}` : "/default-img.jpg"}
                                 alt='group-img'
                             />
                         </div>
@@ -186,7 +186,7 @@ function Memberstatus({ status, pop, group }) {
     const handleJoinGrp = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:8080/api/groups/request?groupId=${group}`, {
+            const response = await fetch(`/api/groups/request?groupId=${group}`, {
                 method: 'POST',
                 credentials: "include",
             });
@@ -203,7 +203,7 @@ function Memberstatus({ status, pop, group }) {
     const handleAccORejGrp = async (e, str) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:8080/api/groups/${str}?groupId=${group}`, {
+            const response = await fetch(`/api/groups/${str}?groupId=${group}`, {
                 method: 'POST',
                 credentials: "include",
             });
@@ -272,7 +272,7 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const data = await fetchUserInfo("/api/users/followers"); // Use fetchUserInfo for consistency
+            const data = await fetchUserInfo("api/users/followers"); // Use fetchUserInfo for consistency
             console.log(data)
             if (data && data.status !== 401) {
                 // Map API response to match expected format
@@ -328,7 +328,7 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
         data.append("group", groupId);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/groups/invitetogroup`, {
+            const response = await fetch(`/api/groups/invitetogroup`, {
                 method: 'POST',
                 credentials: "include",
                 body: data
@@ -412,7 +412,7 @@ export function InvitePopup({ groupId, isOpen, onClose }) {
 
                                 <div className="invite-user-avatar">
                                     <img
-                                        src={user.avatar ? `http://localhost:8080/images?path=${user.avatar}` : "/default-user.jpg"}
+                                        src={user.avatar ? `/api/images?path=${user.avatar}` : "/default-user.jpg"}
                                         alt={user.name || user.username}
                                     />
                                 </div>
@@ -467,7 +467,7 @@ const EventCard = ({ event }) => {
     const handleJoinEvent = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8080/api/groups/handleJoinEvent?groupId=${groupId}&eventId=${event.id}`,
+                `/api/groups/handleJoinEvent?groupId=${groupId}&eventId=${event.id}`,
                 {
                     method: "POST",
                     credentials: "include",
@@ -494,7 +494,7 @@ const EventCard = ({ event }) => {
     const handleDeleteEvent = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8080/api/groups/handleDeleteEvent?groupId=${groupId}&eventId=${event.id}`,
+                `/api/groups/handleDeleteEvent?groupId=${groupId}&eventId=${event.id}`,
                 {
                     method: "POST",
                     credentials: "include",
@@ -524,7 +524,7 @@ const EventCard = ({ event }) => {
                 <div className="event-creator">
                     <div className="event-creator-avatar">
                         <img 
-                            src={event?.user?.path ? `http://localhost:8080/images?path=${event.user.path}` : "/default-avatar.jpg"} 
+                            src={event?.user?.path ? `/api/images?path=${event.user.path}` : "/default-avatar.jpg"} 
                             alt="Creator" 
                         />
                     </div>

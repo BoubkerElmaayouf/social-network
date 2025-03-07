@@ -24,7 +24,7 @@ function SearchContent() {
     if (!searchParams) return;
 
     const queryParams = new URLSearchParams(searchParams);
-    const url = `http://localhost:8080/api/search?${queryParams}`;
+    const url = `/api/search?${queryParams}`;
 
     fetch(url 
       , {
@@ -88,7 +88,7 @@ function SearchContent() {
                   >
                     <div className="result-content">
                       <img
-                        src={`http://localhost:8080/images?path=${user.Path}`}
+                        src={`/api/images?path=${user.Path}`}
                         alt={`${user.FirstName}'s avatar`}
                         className="avatar"
                       />
@@ -109,7 +109,7 @@ function SearchContent() {
                   >
                     <div className="result-content">
                       <img
-                        src={`http://localhost:8080/images?path=${group.Path}`}
+                        src={`/api/images?path=${group.Path}`}
                         alt={`${group.Title} group avatar`}
                         className="avatar"
                       />

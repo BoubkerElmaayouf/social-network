@@ -60,7 +60,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                     <img
                       src={
                         friend?.Avatar
-                          ? `http://localhost:8080/images?path=${friend.Avatar}`
+                          ? `/api/images?path=${friend.Avatar}`
                           : "/default-avatar.svg"
                       }
                       alt={`${friend.FirstName}'s avatar`}
@@ -94,7 +94,7 @@ export function Rightsidebar({ isMobileOpen, onFriendClick, onGroupClick }) {
                     <img
                       src={
                         group?.Path
-                          ? `http://localhost:8080/images?path=${group.Path}`
+                          ? `/api/images?path=${group.Path}`
                           : "/default-img.jpg"
                       }
                       alt={`${group.Title} group avatar`}
@@ -126,66 +126,133 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const socket = useWebSocket();
-  const [offset, setOffset] = useState(0)
-  let lastOffest = 0
+  const [offset, setOffset] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const scrollPositionRef = useRef(null);
+  
   const handleChat = (totas, id) => {
+    if (!totas || totas.length === 0) {
+      setHasMore(false);
+      return;
+    }
+    
     const newMessages = totas.map(data => {
       if (id === data.SenderID) {
         return {
           Content: data.Content,
           sender: "other",
           senderName: activeChatuser.name,
-          //timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date(data.CreatedAt).toLocaleTimeString(),
         };
       } else {
         return {
           Content: data.Content,
           sender: "self",
           senderName: "You",
-          //timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date(data.CreatedAt).toLocaleTimeString(),
         };
       }
     });
-    console.log(newMessages);
 
-    setMessages((prevMessages) => [ ...newMessages, ...prevMessages]);
-  }
+    // messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // messagesContainerRef.current.scrollIntoView({ behavior : "smooth"})
 
-  const fetchChatHistory = async () => {
-    try {
-      console.log("fetch",offset)
-      const response = await fetch(`http://localhost:8080/api/chathistory?recivierID=${activeChatuser.id}&offset=${offset}`, {
-        credentials: "include",
-      });
-
-      const data = await response.json();
-      if (data) {
-        console.log(data)
-        data.reverse();
-        handleChat(data, activeChatuser.id);
-      }
-      //setMessages(data);
-    } catch (error) {
-      console.error("Erreur lors du chargement des messages :", error);
+    setMessages(prevMessages => [...newMessages,...prevMessages]);
+    
+    // Update offset for pagination
+    setOffset(prev => prev + totas.length);
+    
+    // If we received fewer messages than requested, we've reached the end
+    if (totas.length < 10) {
+      setHasMore(false);
     }
   };
 
-  useEffect(() => {
-    fetchChatHistory();
+  const fetchChatHistory = async (isInitial = false) => {
+    if (isFetching || !hasMore) return;
+    
+    try {
+      setIsFetching(true);
+      console.log("Fetching messages with offset:", offset);
+      
+      // If we're loading chat history for a new user, reset states
+      if (isInitial) {
+        setOffset(0);
+        setMessages([]);
+        setHasMore(true);
+        scrollPositionRef.current = messagesContainerRef.current.scrollHeight;
 
-  }, []);
+      }
+      
+      // Store current scroll position before loading more messages
+      if (!isInitial && messagesContainerRef.current) {
+        scrollPositionRef.current = messagesContainerRef.current.scrollHeight;
+      }
+      
+      const currentOffset = isInitial ? 0 : offset;
+      const response = await fetch(
+        `/api/chathistory?recivierID=${activeChatuser.id}&offset=${currentOffset}`, 
+        { credentials: "include" }
+      );
 
-  useEffect(() => {
-    if (messages.length <= 10) {
-      scrollToBottom()
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      data.reverse()
+      if (data && data.length > 0) {
+        const sortedData = [...data]
+        handleChat(sortedData, activeChatuser.id);
+
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    } finally {
+      setIsFetching(false);
+      setIsInitialLoad(false);
     }
-  }, [messages])
-  // useEffect(() => {
-  //   if (activeChatuser.id) {
-  //     fetchChatHistory();
-  //   }
-  // }, [Offset]);
+  };
 
+  // Initial load when active chat user changes
+  useEffect(() => {
+    if (activeChatuser && activeChatuser.id) {
+      setIsInitialLoad(true);
+      setOffset(0);
+      setMessages([]);
+      setHasMore(true);
+      fetchChatHistory(true);
+    }
+  }, [activeChatuser]);
+
+  // Scroll to bottom on initial load
+  useEffect(() => {
+    if (isInitialLoad && messages.length> 0 ) {
+      console.log("Scrolling to bottom...");
+      console.log(messagesEndRef.current);
+      
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100); // Small delay to allow rendering
+    }
+  }, [isInitialLoad , messages.length]);
+  
+
+  // Restore scroll position after loading older messages
+  useEffect(() => {
+    if (!isInitialLoad && scrollPositionRef.current && messagesContainerRef.current) {
+      const newScrollHeight = messagesContainerRef.current.scrollHeight;
+      const scrollDiff = newScrollHeight - scrollPositionRef.current;
+      messagesContainerRef.current.scrollTop = scrollDiff;
+      scrollPositionRef.current = null;
+    }
+  }, [messages, isInitialLoad]);
+
+  // Handle real-time messages via WebSocket
   useEffect(() => {
     if (socket) {
       const handleMessage = (event) => {
@@ -202,6 +269,11 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
                 timestamp: new Date().toLocaleTimeString(),
               };
               setMessages((prevMessages) => [...prevMessages, newMsg]);
+              
+              // Scroll to bottom for new incoming messages
+              setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+              }, 100);
             }
           }
         } catch (error) {
@@ -215,51 +287,30 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
         socket.removeEventListener("message", handleMessage);
       };
     }
-  }, []);
+  }, [socket, activeChatuser]);
 
-  function scrollToBottom() {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    lastOffest = messagesEndRef.current.scrollTop
-  };
-
-  // useEffect(() => {
-  //   console.log("ACTIVE USER ------------------------",activeChatuser);
-  //   if (messages.length <= 10) {
-
-  //     scrollToBottom();
-  //   }
-  // }, [messages]);
-  useEffect(() =>  {
-    console.log("new offset", offset)
-    if (offset != 0) {
-      fetchChatHistory()
-    }
-  }, [offset])
-
-  const handleScroll = throttle((e) => {
-    console.log(messagesContainerRef.current.scrollTop)
-    if (messagesContainerRef.current.scrollTop <= 3) {
-      console.log("here")
-      setOffset((v) => v + 10);
-      const currentHeight = messagesEndRef.current.scrollHeight;
-      console.log("last",lastOffest,"current", currentHeight)
-      // messagesEndRef.current?.scrollIntoView({top: xxx, behavior: "smooth" });
-      console.log(offset)
+  // Handle scrolling to load more messages
+  const handleScroll = throttle(() => {
+    if (!messagesContainerRef.current || isFetching || !hasMore) return;
+    
+    const { scrollTop } = messagesContainerRef.current;
+    
+    // Load more when scrolled near the top (within 50px)
+    if (scrollTop < 300) {
+      fetchChatHistory();
     }
   }, 300);
 
-
+  // Setup scroll event listener
   useEffect(() => {
-    console.log("event start")
     const container = messagesContainerRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
       return () => {
-        console.log("event remove");
         container.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [messagesContainerRef]);
+  }, [handleScroll, isFetching, hasMore]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -278,10 +329,15 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
         senderName: "You",
         timestamp: new Date().toLocaleTimeString(),
       };
-      setMessages([...messages, displayMsg]);
+      setMessages(prevMessages => [...prevMessages, displayMsg]);
 
       socket.send(JSON.stringify(newMsg));
       setNewMessage("");
+      
+      // Scroll to bottom after sending a message
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     }
   };
 
@@ -310,11 +366,16 @@ export function Chatbox({ activeChatuser, isVisible, setIsVisible }) {
       </div>
 
       <div className="messages-container" ref={messagesContainerRef}>
-        {messages && messages?.map((message, index) => (
+        {isFetching && (
+          <div className="loading-indicator">Loading messages...</div>
+        )}
+        
+        {messages && messages.map((message, index) => (
           <div
             key={index}
-            className={`message-wrapper ${message.sender === "self" ? "message-self" : "message-other"
-              }`}
+            className={`message-wrapper ${
+              message.sender === "self" ? "message-self" : "message-other"
+            }`}
           >
             <div className="message">
               <span className="sender-name">{message.senderName}</span>
@@ -384,8 +445,8 @@ export function ChatApplication() {
     setIsMobileRightSidebarOpen(false);
   };
 
-  const handleGroupClick = (groupName) => {
-    setActiveChatuser(groupName);
+  const handleGroupClick = (groupName, groupId) => {
+    setActiveChatuser({ id: groupId, name: groupName });
     setIsChatVisible(true);
     // Close mobile sidebar after selection on mobile devices
     setIsMobileRightSidebarOpen(false);

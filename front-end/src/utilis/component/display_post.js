@@ -57,7 +57,7 @@ export function Post({ post }) {
     newCommentForm.append("content", formComments.content);
     if (image) newCommentForm.append("image", image);
     try {
-      const response = await fetch("http://localhost:8080/api/comment/add", {
+      const response = await fetch("/api/comment/add", {
         method: "POST",
         credentials: "include",
         body: newCommentForm,
@@ -87,7 +87,7 @@ export function Post({ post }) {
 
   const handleRect = async (Id, type) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/reactPost/add`, {
+      const response = await fetch(`/api/reactPost/add`, {
         method: "post",
         credentials: "include",
         body: JSON.stringify({ post_id: Id, reaction_type: type }),
@@ -107,7 +107,7 @@ export function Post({ post }) {
 
   const handleCommentRect = async (Id, CommentId, type, current) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/reactComment/add`, {
+      const response = await fetch(`/api/reactComment/add`, {
         method: "post",
         credentials: "include",
         body: JSON.stringify({ post_id: Id, comment_id: CommentId, reaction_type: type }),
@@ -162,7 +162,7 @@ export function Post({ post }) {
 
   const getCurrent = async (commentId, type) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/reactComment/getCurrent?commentId=${commentId}`, {
+      const response = await fetch(`/api/reactComment/getCurrent?commentId=${commentId}`, {
         method: "post",
         credentials: "include",
       });
@@ -184,7 +184,7 @@ export function Post({ post }) {
 
   const getComments = async (postId) => {
     try {
-      const data = await fetchUserInfo(`/api/comment/get?PostId=${postId}`);
+      const data = await fetchUserInfo(`api/comment/get?PostId=${postId}`);
       if (data) {
         setComments(data);
       }
@@ -202,7 +202,7 @@ export function Post({ post }) {
               <img
                 src={
                   post.creator?.avatar
-                    ? `http://localhost:8080/images?path=${post.creator.avatar}`
+                    ? `/api/images?path=${post.creator.avatar}`
                     : "/default-img.jpg"
                 }
                 alt="User avatar"
@@ -233,7 +233,7 @@ export function Post({ post }) {
         {post?.image && (
           <div className="post-image">
             <img
-              src={`http://localhost:8080/images?path=${post.image}`}
+              src={`/api/images?path=${post.image}`}
               alt="Post image"
               className="post-image01"
             />
@@ -273,7 +273,7 @@ export function Post({ post }) {
           <form className="comment-form" onSubmit={handleSubmitComment}>
             <div className="user-avatar">
               <img
-                src={`http://localhost:8080/images?path=${userdata?.avatar}`}
+                src={`/api/images?path=${userdata?.avatar}`}
                 alt="Your avatar"
                 width={32}
                 height={32}
@@ -318,7 +318,7 @@ export function Post({ post }) {
                 <div className="comment-header">
                   <div className="user-avatar">
                     <img
-                      src={`http://localhost:8080/images?path=${comment.user?.avatar}`}
+                      src={`/api/images?path=${comment.user?.avatar}`}
                       alt="Commenter avatar"
                       width={32}
                       height={32}
@@ -340,7 +340,7 @@ export function Post({ post }) {
                   {comment?.pathimg && (
                     <div className="comment-image">
                       <img
-                        src={`http://localhost:8080/images?path=${comment.pathimg}`}
+                        src={`/api/images?path=${comment.pathimg}`}
                         alt="Comment image"
                         className="comment-image01"
                       />
@@ -494,7 +494,7 @@ export function PostContainer() {
         newPostForm.set("privacy", "semi-private");
       }
 
-      const response = await fetch("http://localhost:8080/api/post/add", {
+      const response = await fetch("/api/post/add", {
         method: "POST",
         body: newPostForm,
         credentials: "include",

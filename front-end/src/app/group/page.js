@@ -86,7 +86,7 @@ export function CreateGroupPost({ userdata , status}) {
         if (image) formData.append("image", image);
 
         try {
-            const response = await fetch("http://localhost:8080/api/post/add", {
+            const response = await fetch("/api/post/add", {
                 method: "POST",
                 body: formData, // No need for Content-Type when using FormData
                 credentials: "include",
@@ -122,7 +122,7 @@ export function CreateGroupPost({ userdata , status}) {
         
 
         try {
-            const response = await fetch("http://localhost:8080/api/groups/addevent", {
+            const response = await fetch("/api/groups/addevent", {
                 method: "POST",
                 body: formData, // No need for Content-Type when using FormData
                 credentials: "include",
@@ -151,7 +151,7 @@ export function CreateGroupPost({ userdata , status}) {
                 <div className='group-avatar01'>
                     <img
                         className='group-image'
-                        src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata?.avatar}` : "/default-img.jpg"}
+                        src={userdata?.avatar ? `/api/images?path=${userdata?.avatar}` : "/default-img.jpg"}
                         alt='group-img'
 
                     />

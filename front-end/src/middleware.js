@@ -4,6 +4,17 @@ const API_AUTH_CHECK_URL = "http://localhost:8080/api/check-auth";
 const AUTH_COOKIE_NAME = "session";
 
 export async function middleware(request) {
+
+
+  const url = request.nextUrl.clone();
+  const fullPath = url.pathname + url.search; // Preserve query params
+
+  console.log(`Rewriting: ${fullPath}`);
+
+  if (url.pathname.startsWith('/api')) {
+    // Rewrite request to the backend without modifying headers or body
+    return NextResponse.rewrite(`http://localhost:8080${fullPath}`);
+  }
   const authCookie = request.cookies.get(AUTH_COOKIE_NAME)?.value;
   const isAuthRoute = ["/login", "/register"].includes(request.nextUrl.pathname);
   

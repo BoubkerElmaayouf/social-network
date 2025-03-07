@@ -97,7 +97,7 @@ export default function Groups() {
                                         <img 
                                             src={
                                                 group?.image
-                                                  ? `http://localhost:8080/images?path=${group.image}`
+                                                  ? `/api/images?path=${group.image}`
                                                   : 'https://i.pinimg.com/736x/c1/e9/90/c1e990f02b655afa6bda4901bc1555f0.jpg'
                                               }
                                             alt={`${group.title} avatar`}
@@ -174,7 +174,7 @@ export function CreateGroupForm() {
         }
 
         // Example API call (replace with your actual API endpoint)
-        fetch('http://localhost:8080/api/groups/add', {
+        fetch('/api/groups/add', {
             method: 'POST',
             body: submitData,
             credentials: 'include',

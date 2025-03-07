@@ -61,7 +61,7 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
     };
     const handleLogout = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/logout", {
+        const response = await fetch("/api/logout", {
           method: "POST",
           credentials: "include",
         });
@@ -150,7 +150,7 @@ export function Navbar({ setIsMobileRightSidebarOpen }) {
                 <img
                   src={
                     userdata?.avatar
-                      ? `http://localhost:8080/images?path=${userdata.avatar}`
+                      ? `/api/images?path=${userdata.avatar}`
                       : "/default-img.jpg"
                   }
                   alt="Profile"

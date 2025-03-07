@@ -70,7 +70,7 @@ export default function Profile({ params }) {
   const handleFollow = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/api/users/request?profileId=${userId}`, {
+      const response = await fetch(`/api/users/request?profileId=${userId}`, {
         method: "GET",
         credentials: "include",
       });
@@ -86,7 +86,7 @@ export default function Profile({ params }) {
   const handleFollowRequest = async (e, state) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/api/users/handlerequest?profileId=${userId}&state=${state}`, {
+      const response = await fetch(`/api/users/handlerequest?profileId=${userId}&state=${state}`, {
         method: "GET",
         credentials: "include",
       });
@@ -144,7 +144,7 @@ export default function Profile({ params }) {
           <div className="profile-cover"></div>
           <div className="user_profile-info">
             <div className="user_profile-avatar">
-              <img src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata.avatar}` : "/default-img.jpg"} alt="Profile" />
+              <img src={userdata?.avatar ? `/api/images?path=${userdata.avatar}` : "/default-img.jpg"} alt="Profile" />
             </div>
             <div className="profile-details">
               <div className="profile-name-section">

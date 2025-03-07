@@ -97,7 +97,7 @@ export default function Profile() {
           <div className="profile-cover"></div>
           <div className="user_profile-info">
             <div className="user_profile-avatar">
-              <img src={userdata?.avatar ? `http://localhost:8080/images?path=${userdata.avatar}` : "/default-img.jpg"} alt="Profile" />
+              <img src={userdata?.avatar ? `/api/images?path=${userdata.avatar}` : "/default-img.jpg"} alt="Profile" />
             </div>
             <div className="profile-details">
               <div className="profile-name-section">
@@ -234,7 +234,7 @@ const SettingsPopup = ({ isOpen, onClose }) => {
     const formDataToSend = new FormData()
     formDataToSend.append("type", privacySetting);
     try {
-      const response = await fetch(`http://localhost:8080/api/users/changeprofiletype`, {
+      const response = await fetch(`/api/users/changeprofiletype`, {
         method: "POST",
         credentials: "include",
         body: formDataToSend

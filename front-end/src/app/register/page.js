@@ -91,7 +91,7 @@ export default function Register() {
         formDataToSend.append("avatar", formData.avatar);
       }
             
-      const response = await fetch('http://localhost:8080/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         body: formDataToSend
       });
