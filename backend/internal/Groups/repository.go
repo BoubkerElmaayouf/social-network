@@ -149,7 +149,7 @@ func CheckGroupExists(groupId int) (bool, error) {
 func CountMembers(groupId int) (int, error) {
 	var nbr int
 	db := database.GetDb()
-	query := "SELECT COUNT(*) FROM groups WHERE id=?"
+	query := "SELECT COUNT(*) FROM group_members WHERE group_id=?"
 	err := db.QueryRow(query, groupId).Scan(&nbr)
 	if err != nil && err != sql.ErrNoRows {
 		return nbr, err
