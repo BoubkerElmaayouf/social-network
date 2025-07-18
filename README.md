@@ -76,16 +76,3 @@ This project was developed by the following team members:
 - Yassine Ouzddou (yaouzddou)
 - Amine Habchi (ahabchi)
 
-
-## Peer Audits
-
-5 peer audits are required for project completion.  The following individuals conducted audits:
-
-- abenramd
-- sbeytour
-- faguenou
-- mfir
-- hkhlifi
-
-
-## Project Status: SUCCEEDED
