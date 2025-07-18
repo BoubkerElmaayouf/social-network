@@ -68,7 +68,6 @@ export default function Login() {
         router.push("/");
       } else {
         const data = await response.json();
-        console.log(data);
         setError(data.error);
       }
     } catch (error) {
