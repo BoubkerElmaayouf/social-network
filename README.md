@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This document details the INTRA OUJDA Social Network project, a comprehensive full-stack development undertaking designed to simulate a Facebook-like social networking platform.  The project utilizes a JavaScript frontend, a Go backend, and a SQLite database, all containerized using Docker.  The goal is to provide a hands-on learning experience encompassing various aspects of web development, including database management, authentication, real-time communication, and deployment.
+Social Network project, a comprehensive full-stack development undertaking designed to simulate a Facebook-like social networking platform.  The project utilizes a JavaScript frontend, a Go backend, and a SQLite database, all containerized using Docker.  The goal is to provide a hands-on learning experience encompassing various aspects of web development, including database management, authentication, real-time communication, and deployment.
 
 ## moke up:
 ![Mockup](https://github.com/BoubkerElmaayouf/social-network/blob/master/mokeup.png?raw=true)
